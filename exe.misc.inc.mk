@@ -8,11 +8,13 @@ LS_ALL = $(LS) -A
 $(foreach VAR,CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL,$(call make-lazy,$(VAR)))
 $(foreach VAR,DIFF_SS,$(call make-lazy-once,$(VAR)))
 
+COLUMN = $(call which,COLUMN,column)
 CURL = $(call which,CURL,curl) -qfsSL
+HEXDUMP = $(call which,HEXDUMP,hexdump)
+JD = $(call which,JD,jd)
 JQ = $(call which,JQ,jq)
-JSON = $(call which,JSON,json) -D " " # to allow / or . in a key
-SEMVER = $(call which,SEMVER,semver)
-$(foreach VAR,CURL JQ JSON SEMVER,$(call make-lazy,$(VAR)))
+YQ = $(call which,YQ,yq)
+$(foreach VAR,COLUMN CURL HEXDUMP JD JQ YQ,$(call make-lazy,$(VAR)))
 
 GIT = $(call which,GIT,git)
 GIT_LS = $(GIT) ls-files
@@ -22,8 +24,9 @@ $(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_SUB,$(call make-lazy,$(VAR)))
 
 PATCH_STDOUT = $(PATCH) -o -
 UNZIP = $(call which,UNZIP,unzip) -oq
+UNZIP_Z1 = $(call which,UNZIP,unzip) -Z1
 VISUAL ?= $(EDITOR)
 ZIP_NOSYM = $(call which,ZIP_NOSYM,zip) -r
 ZIP = $(ZIP_NOSYM) -y
 ZIPINFO = $(call which,ZIPINFO,zipinfo)
-$(foreach VAR,PATCH_STDOUT UNZIP VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
+$(foreach VAR,PATCH_STDOUT UNZIP UNZIP_Z1 VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))

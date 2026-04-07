@@ -11,31 +11,39 @@ MAKEFILE_ORIGINS := \
 	automatic \
 	\%
 
+PRINTVARS_VARIABLES_IGNORE += \
+	exportifdef \
+	global-which \
+	ifdef_any_of \
+	ifndef_any_of \
+	which \
+
 PRINTVARS_MAKEFILE_ORIGINS_TARGETS += \
 	$(patsubst %,printvars/%,$(MAKEFILE_ORIGINS)) \
 
 # ------------------------------------------------------------------------------
 
 .PHONY: printvars
-printvars: printvars/file ## Print all Makefile variables (file origin).
+printvars: printvars/file ## Print all Makefile variables (file origin). Use printvar/<var> for only one.
+	:
 
 
 .PHONY: $(PRINTVARS_MAKEFILE_ORIGINS_TARGETS)
 $(PRINTVARS_MAKEFILE_ORIGINS_TARGETS):
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
-			$(warning $V=$($V) ($(value $V))))))
+			$(info $V=$($V)$(\n)$(space) origin = $(origin $V)$(\n)$(space) flavor = $(flavor $V)$(\n)$(space) value = $(value  $V)))) # editorconfig-checker-disable-line
+	@$(foreach V, $(sort $(filter $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
+		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
+			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.)))
 
 
 .PHONY: printvars/lazy
 printvars/lazy:
 	@$(foreach V, $(sort $(.VARIABLES_LAZY)), \
-		$(warning $V=$($V)))
+		$(info $V=$($V)))
 
 
-.PHONY: printvar-%
-printvar-%: ## Print one Makefile variable.
-	@echo $*=$($*)
-	@echo '  origin = $(origin $*)'
-	@echo '  flavor = $(flavor $*)'
-	@echo '   value = $(value  $*)'
+.PHONY: printvar/%
+printvar/%:
+	$(info $*=$($*)$(\n)$(space) origin = $(origin $*)$(\n)$(space) flavor = $(flavor $*)$(\n)$(space) value = $(value  $*)) # editorconfig-checker-disable-line
