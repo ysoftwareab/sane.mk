@@ -1,23 +1,23 @@
-ifdef INSTALL_CORE_INC_MK
+ifdef INSTALL_SANE_MK
 else
 
-ifndef CORE_INC_MK_DIR
-CORE_INC_MK_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+ifndef SANE_MK_DIR
+SANE_MK_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
-include $(CORE_INC_MK_DIR)/chars.inc.mk
-include $(CORE_INC_MK_DIR)/core.inc.mk
+include $(SANE_MK_DIR)/chars.inc.mk
+include $(SANE_MK_DIR)/sane.mk
 
-include $(CORE_INC_MK_DIR)/exe.inc.mk
-include $(CORE_INC_MK_DIR)/os.inc.mk
-include $(CORE_INC_MK_DIR)/git.inc.mk
+include $(SANE_MK_DIR)/exe.inc.mk
+include $(SANE_MK_DIR)/os.inc.mk
+include $(SANE_MK_DIR)/git.inc.mk
 
-include $(CORE_INC_MK_DIR)/target.env.inc.mk
-include $(CORE_INC_MK_DIR)/target.help.inc.mk
-include $(CORE_INC_MK_DIR)/target.noop.inc.mk
-include $(CORE_INC_MK_DIR)/target.printvar.inc.mk
-include $(CORE_INC_MK_DIR)/target.verbose.inc.mk
-include $(CORE_INC_MK_DIR)/target.lazy.inc.mk
+include $(SANE_MK_DIR)/target.env.inc.mk
+include $(SANE_MK_DIR)/target.help.inc.mk
+include $(SANE_MK_DIR)/target.noop.inc.mk
+include $(SANE_MK_DIR)/target.printvar.inc.mk
+include $(SANE_MK_DIR)/target.verbose.inc.mk
+include $(SANE_MK_DIR)/target.lazy.inc.mk
 
 MAKEFILE_LAZY ?= true
 ifeq (true,$(MAKEFILE_LAZY))
@@ -32,5 +32,5 @@ include Makefile.lazy
 endif
 endif
 
-INSTALL_CORE_INC_MK := 1
+INSTALL_SANE_MK := 1
 endif
