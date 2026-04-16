@@ -144,6 +144,23 @@ $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
 
 # ------------------------------------------------------------------------------
 
+# NOTE can't use $(CAT), $(JQ) and $(YQ)
+ifneq (,$(wildcard package.json))
+PKG_NAME = $(shell cat package.json | jq -r ".name")
+PKG_VSN = $(shell cat package.json | jq -r ".version")
+PKG_PACKAGE_MANAGER = $(shell cat package.json | jq -r ".packageManager // empty")
+else ifneq (,$(wildcard pyproject.toml))
+PKG_NAME = $(shell cat pyproject.toml | yq -p toml -r ".project.name")
+PKG_VSN = $(shell cat pyproject.toml | yq -p toml -r ".project.version")
+PKG_PACKAGE_MANAGER = uv
+else
+PKG_NAME =
+PKG_VSN =
+PKG_PACKAGE_MANAGER =
+endif
+
+# ------------------------------------------------------------------------------
+
 export TMPDIR ?= /tmp
 export USER ?= $(shell $(ID) -un)
 
