@@ -46,6 +46,20 @@ PNPM = $(COREPACK) pnpm
 endif
 endif
 
+# node corepack
+COREPACK ?= $(call which,COREPACK,corepack)
+ifeq (COREPACK_NOT_FOUND,$(COREPACK))
+COREPACK = $(NPX) --yes corepack
+endif
+ifneq (,$(PKG_PACKAGE_MANAGER))
+ifneq ($(PKG_PACKAGE_MANAGER),$(patsubst npm@%,%,$(PKG_PACKAGE_MANAGER)))
+NPM = $(COREPACK) npm
+endif
+ifneq ($(PKG_PACKAGE_MANAGER),$(patsubst pnpm@%,%,$(PKG_PACKAGE_MANAGER)))
+PNPM = $(COREPACK) pnpm
+endif
+endif
+
 # python
 PYTHON ?= $(call which,PYTHON,python)
 PYTHON3 ?= $(call which,PYTHON3,python3)
