@@ -72,3 +72,9 @@ ZIP_NOSYM = $(call which,ZIP_NOSYM,zip) -r
 ZIP = $(ZIP_NOSYM) -y
 ZIPINFO = $(call which,ZIPINFO,zipinfo)
 $(foreach VAR,UNZIP UNZIP_Z1 VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
+
+# zz
+BREW ?= $(call which,BREW,brew)
+CODE ?= $(call which,CODE,code)
+DOT ?= $(call which,DOT,dot)
+GCLOUD = $(call which,GCLOUD,gcloud)
