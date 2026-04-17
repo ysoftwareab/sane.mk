@@ -1,6 +1,7 @@
 SANE_BUILD ?=
 SANE_CHECK ?=
 SANE_CI ?=
+SANE_CLEAN ?=
 SANE_DEBUG ?=
 SANE_DEPS ?=
 SANE_DEPS_FILES ?=
@@ -102,6 +103,13 @@ test: ## Test.
 ci: prehook/ci
 ci: $(SANE_CI)
 ci: ## CI.
+	$(MAKE) posthook/$@
+
+
+.PHONY: clean
+clean: prehook/clean
+clean: $(SANE_CLEAN)
+clean: ## Clean.
 	$(MAKE) posthook/$@
 
 
