@@ -75,7 +75,6 @@ $(foreach VAR,UNZIP UNZIP_Z1 VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR
 
 # zz
 BREW ?= $(call which,BREW,brew)
-CODE ?= $(call which,CODE,code)
 DOT ?= $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
