@@ -161,6 +161,7 @@ endif
 
 # ------------------------------------------------------------------------------
 
+IS_DECRYPTED ?= false
 export TMPDIR ?= /tmp
 export USER ?= $(shell $(ID) -un)
 

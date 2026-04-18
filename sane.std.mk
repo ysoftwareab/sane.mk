@@ -22,7 +22,9 @@ include $(SANE_MK_ROOT)/target.env.inc.mk
 include $(SANE_MK_ROOT)/target.help.inc.mk
 include $(SANE_MK_ROOT)/target.lazy.inc.mk
 include $(SANE_MK_ROOT)/target.noop.inc.mk
+include $(SANE_MK_ROOT)/target.password.inc.mk
 include $(SANE_MK_ROOT)/target.printvar.inc.mk
+include $(SANE_MK_ROOT)/target.transcrypt.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 include $(SANE_MK_ROOT)/target.std.inc.mk
