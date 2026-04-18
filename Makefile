@@ -8,7 +8,11 @@ endif
 include $(SANE_MK_DIR)/chars.inc.mk
 include $(SANE_MK_DIR)/sane.mk
 
-include $(SANE_MK_DIR)/exe.inc.mk
+include $(SANE_MK_DIR)/exe.which.inc.mk
+include $(SANE_MK_DIR)/exe.gnu.inc.mk
+include $(SANE_MK_DIR)/exe.echo.inc.mk
+include $(SANE_MK_DIR)/exe.misc.inc.mk
+
 include $(SANE_MK_DIR)/os.inc.mk
 include $(SANE_MK_DIR)/git.inc.mk
 
