@@ -21,7 +21,7 @@ TRANSCRYPT_SET = $(TRANSCRYPT) --yes --set-openssl-path=$(OPENSSL3) --cipher "$(
 
 .PHONY: transcrypt
 transcrypt: ## Generate a transcrypt password.
-ifneq (true,$(CI))
+ifeq (,$(CI))
 	$(ECHO_ERR) "Cannot run 'make transcrypt' in CI."
 	exit 1
 endif
@@ -29,12 +29,10 @@ ifeq (true,$(IS_TRANSCRYPTED))
 	$(ECHO_ERR) "Already transcrypted."
 	$(ECHO_INFO) "Run 'make transcrypt/rekey' if you would like to change the transcrypt password."
 	exit 1
-else
-ifeq (,$(TRANSCRYPT_PASSWORD))
+else ifeq (,$(TRANSCRYPT_PASSWORD))
 	$(TRANSCRYPT_SET)
 else
 	$(TRANSCRYPT_SET) --password "$(TRANSCRYPT_PASSWORD)"
-endif
 endif
 ifneq (,$(wildcard $(GIT_ROOT)/transcrypt))
 	$(CP) $(TRANSCRYPT) $(GIT_ROOT)/transcrypt
@@ -46,7 +44,7 @@ endif
 
 .PHONY: transcrypt/rekey
 transcrypt/rekey:
-ifneq (true,$(CI))
+ifeq (,$(CI))
 	$(ECHO_ERR) "Cannot run 'make transcrypt/rekey' in CI."
 	exit 1
 endif
@@ -63,8 +61,7 @@ endif
 decrypt: ## Decrypt with transcrypt. Encrypt back with 'make decrypt/nuke'.
 ifeq (true,$(IS_TRANSCRYPTED))
 		$(ECHO_INFO) "Already transcrypted."
-else
-ifeq (true,$(CI)$(TRANSCRYPT_PASSWORD))
+else ifeq (true,$(CI)$(TRANSCRYPT_PASSWORD))
 	$(ECHO_ERR) "No TRANSCRYPT_PASSWORD found."
 	exit 1
 else
@@ -77,7 +74,6 @@ else
 	$(ECHO); \
 	$(ECHO_INFO) "TRANSCRYPT_PASSWORD=$${TRANSCRYPT_PASSWORD:0:2}***$${TRANSCRYPT_PASSWORD: -2}"; \
 	$(TRANSCRYPT_SET) --force --password "$${TRANSCRYPT_PASSWORD}"
-endif
 endif
 
 
