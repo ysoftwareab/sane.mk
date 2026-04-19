@@ -13,9 +13,9 @@ just after setting the `TOP` (root path for the current project):
 
 ```make
 ifeq (,$(wildcard sane.mk/Makefile))
-INSTALL_SANE_MK := $(shell git submodule update --init --recursive sane.mk)
+SANE_MK_INSTALL := $(shell git submodule update --init --recursive sane.mk)
 ifneq (,$(filter undefine,$(.FEATURES)))
-undefine INSTALL_SANE_MK
+undefine SANE_MK_INSTALL
 endif
 endif
 
@@ -27,9 +27,9 @@ Similarly, if I just want bits and pieces of this:
 
 ```make
 ifeq (,$(wildcard sane.mk/Makefile))
-INSTALL_SANE_MK := $(shell git submodule update --init --recursive sane.mk)
+SANE_MK_INSTALL := $(shell git submodule update --init --recursive sane.mk)
 ifneq (,$(filter undefine,$(.FEATURES)))
-undefine INSTALL_SANE_MK
+undefine SANE_MK_INSTALL
 endif
 endif
 

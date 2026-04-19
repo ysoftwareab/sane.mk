@@ -1,4 +1,4 @@
-ifdef INSTALL_SANE_MK
+ifdef SANE_MK_INCLUDED
 else
 
 ifndef SANE_MK_DIR
@@ -36,5 +36,5 @@ include Makefile.lazy
 endif
 endif
 
-INSTALL_SANE_MK := 1
+SANE_MK_INCLUDED := 1
 endif
