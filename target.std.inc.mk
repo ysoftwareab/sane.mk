@@ -6,6 +6,7 @@ SANE_DEBUG ?=
 SANE_DEPS ?=
 SANE_DEPS_FILES ?=
 SANE_DEPS_GITIGNORE ?=
+SANE_DEPS_UPGRADE ?=
 SANE_SYSTEM ?=
 SANE_TEST ?=
 
@@ -74,6 +75,13 @@ deps/files: ## Install file dependencies.
 deps/gitignore: prehook/deps/gitignore
 deps/gitignore: $(SANE_DEPS_GITIGNORE)
 deps/gitignore: ## Install gitignore dependencies.
+	$(MAKE) posthook/$@
+
+
+.PHONY: deps/upgrade
+deps/upgrade: prehook/deps/upgrade
+deps/upgrade: $(SANE_DEPS_UPGRADE)
+deps/upgrade: ## Upgrade local dependencies.
 	$(MAKE) posthook/$@
 
 
