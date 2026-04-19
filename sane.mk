@@ -31,6 +31,12 @@ ifeq (1,$(VERBOSE))
 VERBOSE := true
 endif
 
+# $(\n)
+define \n
+
+
+endef
+
 ifeq (2,$(VERBOSE))
 VERBOSE := true
 # see https://www.runscripts.com/support/guides/scripting/bash/debugging-bash/verbose-tracing
