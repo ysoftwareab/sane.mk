@@ -23,7 +23,7 @@ check/markdownlint:
 
 .PHONY: check/shellcheck
 check/shellcheck:
-	$(SHELLCHECK) sane.std.mk.tpl
+	$(SHELLCHECK) *.mk.tpl
 
 
 .PHONY: dist
@@ -31,3 +31,4 @@ dist: ## Build distribution files
 	$(MKDIR) dist
 	$(CP) sane.mk dist/
 	./sane.std.mk.tpl > dist/sane.std.mk
+	./sane.extra.mk.tpl > dist/sane.extra.mk

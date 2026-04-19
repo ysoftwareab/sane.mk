@@ -25,11 +25,42 @@ include $(SANE_MK_ROOT)/target.noop.inc.mk
 include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
+include $(SANE_MK_ROOT)/extra/target.password.inc.mk
+include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
+
+include $(SANE_MK_ROOT)/extra/deps.corepack.inc.mk
+include $(SANE_MK_ROOT)/extra/deps.uv.inc.mk
+include $(SANE_MK_ROOT)/extra/deps.vscode.inc.mk
+
+include $(SANE_MK_ROOT)/extra/check.actionlint.inc.mk
+include $(SANE_MK_ROOT)/extra/check.black.inc.mk
+include $(SANE_MK_ROOT)/extra/check.editorconfig-checker.inc.mk
+include $(SANE_MK_ROOT)/extra/check.markdownlint.inc.mk
+include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
+include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
+include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
+include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
+
 include $(SANE_MK_ROOT)/target.std.inc.mk
 
 include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 # END # includes
+
+SANE_DEPS += \
+	deps/corepack \
+	deps/uv \
+	deps/vscode \
+
+SANE_CHECK += \
+	check/actionlint \
+	check/black \
+	check/editorconfig-checker \
+	check/markdownlint \
+	check/shellcheck \
+	check/shfmt \
+	check/trufflehog \
+	check/yamllint \
 
 SANE_MK_INCLUDED := 1
 
