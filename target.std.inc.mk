@@ -6,8 +6,8 @@ SANE_DEBUG ?=
 SANE_DEPS ?=
 SANE_DEPS_FILES ?=
 SANE_DEPS_GITIGNORE ?=
+SANE_DEPS_SYSTEM ?=
 SANE_DEPS_UPGRADE ?=
-SANE_SYSTEM ?=
 SANE_TEST ?=
 
 SANE_ALL_DEFAULT := deps check build
@@ -78,6 +78,13 @@ deps/gitignore:
 	$(MAKE) posthook/$@
 
 
+.PHONY: deps/system
+deps/system: prehook/deps/system
+deps/system: $(SANE_DEPS_SYSTEM)
+deps/system: ## Install system dependencies.
+	$(MAKE) posthook/$@
+
+
 .PHONY: deps/upgrade
 deps/upgrade: prehook/deps/upgrade
 deps/upgrade: $(SANE_DEPS_UPGRADE)
@@ -125,11 +132,4 @@ clean: ## Clean.
 debug: prehook/debug
 debug: $(SANE_DEBUG)
 debug: ## Debug environment and software versions.
-	$(MAKE) posthook/$@
-
-
-.PHONY: system
-system: prehook/system
-system: $(SANE_SYSTEM)
-system: ## Install system dependencies.
 	$(MAKE) posthook/$@
