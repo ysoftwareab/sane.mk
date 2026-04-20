@@ -23,8 +23,9 @@ $(foreach VAR,COLUMN CURL HEXDUMP JD JQ YQ,$(call make-lazy,$(VAR)))
 GIT = $(call which,GIT,git)
 GIT_LS = $(GIT) ls-files
 GIT_LS_NEW = $(GIT_LS) --others --directory --no-empty-directory
+GIT_LS_NOSYM = $(shell $(GIT_LS) | $(XARGS) -I{} sh -c 'test -L "$$1" || echo "$$1"' _ {})
 GIT_LS_SUB = $(CAT) .gitmodules | $(GREP) "path =" | $(SED) "s/.\{0,\}path = //"
-$(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_SUB,$(call make-lazy,$(VAR)))
+$(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_NOSYM GIT_LS_SUB,$(call make-lazy,$(VAR)))
 
 # node
 export N_PREFIX = $(TMPDIR)
@@ -34,20 +35,6 @@ NPX = $(call which,NPX,npx)
 
 # node corepack
 COREPACK = $(call which,COREPACK,corepack)
-ifeq (COREPACK_NOT_FOUND,$(COREPACK))
-COREPACK = $(NPX) --yes corepack
-endif
-ifneq (,$(PKG_PACKAGE_MANAGER))
-ifneq ($(PKG_PACKAGE_MANAGER),$(patsubst npm@%,%,$(PKG_PACKAGE_MANAGER)))
-NPM = $(COREPACK) npm
-endif
-ifneq ($(PKG_PACKAGE_MANAGER),$(patsubst pnpm@%,%,$(PKG_PACKAGE_MANAGER)))
-PNPM = $(COREPACK) pnpm
-endif
-endif
-
-# node corepack
-COREPACK ?= $(call which,COREPACK,corepack)
 ifeq (COREPACK_NOT_FOUND,$(COREPACK))
 COREPACK = $(NPX) --yes corepack
 endif
