@@ -24,7 +24,8 @@ PRINTVARS_MAKEFILE_ORIGINS_TARGETS += \
 # ------------------------------------------------------------------------------
 
 .PHONY: printvars
-printvars: printvars/file ## Print all Makefile variables (file origin). Use printvar/<var> for only one.
+printvars: printvars/file
+printvars: ## Print all Makefile variables (file origin). Use printvar/<var> for only one.
 	:
 
 
@@ -47,3 +48,15 @@ printvars/lazy:
 .PHONY: printvar/%
 printvar/%:
 	$(info $*=$($*)$(\n)$(space) origin = $(origin $*)$(\n)$(space) flavor = $(flavor $*)$(\n)$(space) value = $(value  $*)) # editorconfig-checker-disable-line
+
+
+.PHONY: printenv
+printenv: ## Print all Makefile variables (printenv style). Use printenv/<var> for only one.
+	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
+		$(if $(filter file, $(origin $V)), \
+			$(info $V=$($V))))
+
+
+.PHONY: printenv/%
+printenv/%:
+	$(info $*=$($*))
