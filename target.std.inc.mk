@@ -67,14 +67,14 @@ deps: ## Install local dependencies.
 .PHONY: deps/files
 deps/files: prehook/deps/files
 deps/files: $(SANE_DEPS_FILES)
-deps/files: ## Install file dependencies.
+deps/files:
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/gitignore
 deps/gitignore: prehook/deps/gitignore
 deps/gitignore: $(SANE_DEPS_GITIGNORE)
-deps/gitignore: ## Install gitignore dependencies.
+deps/gitignore:
 	$(MAKE) posthook/$@
 
 
