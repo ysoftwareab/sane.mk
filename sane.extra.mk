@@ -29,6 +29,7 @@ include $(SANE_MK_ROOT)/extra/target.password.inc.mk
 include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
 include $(SANE_MK_ROOT)/extra/target.version.inc.mk
 
+include $(SANE_MK_ROOT)/extra/deps.brewfile.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.corepack.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.uv.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.vscode.inc.mk
@@ -47,6 +48,9 @@ include $(SANE_MK_ROOT)/target.std.inc.mk
 include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 # END # includes
+
+SANE_DEPS_SYSTEM += \
+	deps/system/brewfile \
 
 SANE_DEPS += \
 	deps/corepack \
