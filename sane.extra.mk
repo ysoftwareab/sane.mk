@@ -27,6 +27,7 @@ include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 include $(SANE_MK_ROOT)/extra/target.password.inc.mk
 include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
+include $(SANE_MK_ROOT)/extra/target.version.inc.mk
 
 include $(SANE_MK_ROOT)/extra/deps.corepack.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.uv.inc.mk
