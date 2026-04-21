@@ -1,5 +1,5 @@
 DEFAULT_FILES_FILTER_OUT += \
-	$(GIT_ROOT)/transcrypt \
+	transcrypt $(GIT_ROOT_REL)/transcrypt \
 
 TRANSCRYPT_CIPHER ?= aes-256-cbc
 TRANSCRYPT_PASSWORD ?=

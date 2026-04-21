@@ -139,7 +139,7 @@ MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
 TOP_BASENAME = $(shell basename "$(TOP)")
 # NOTE can't use $(PYTHON)
-TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
+TOP_REL = $(shell python3 -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
 
 # ------------------------------------------------------------------------------

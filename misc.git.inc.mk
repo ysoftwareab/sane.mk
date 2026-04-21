@@ -30,7 +30,8 @@ GIT_REMOTE = $(shell $(GIT) config branch.$(GIT_BRANCH).remote 2>/dev/null)
 GIT_REMOTE_ORIGIN = origin
 GIT_REMOTE_OR_ORIGIN = $(shell GIT_REMOTE=$(GIT_REMOTE); $(ECHO) $${GIT_REMOTE:-$(GIT_REMOTE_ORIGIN)})
 GIT_ROOT = $(shell $(GIT) rev-parse --show-toplevel 2>/dev/null)
-$(foreach VAR,GIT_REMOTE GIT_REMOTE_OR_ORIGIN GIT_ROOT,$(call make-lazy-once,$(VAR)))
+GIT_ROOT_REL = $(shell python3 -c "import os.path; print('%s' % os.path.relpath('$(GIT_ROOT)', '$(MAKE_PATH)'))")
+$(foreach VAR,GIT_REMOTE GIT_REMOTE_OR_ORIGIN GIT_ROOT GIT_ROOT_REL,$(call make-lazy-once,$(VAR)))
 
 # editorconfig-checker-disable max_line_length
 # NOTE cannot use # editorconfig-checker-disable-line because it might add faux whitespace

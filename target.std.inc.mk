@@ -22,7 +22,7 @@ SANE_DEPS_DEFAULT += deps/gitignore
 endif
 
 # NOTE use *.generated.* to mark generated files
-GENERATED_FILES_FILTER_OUT := \
+GENERATED_FILES_FILTER_OUT = \
 	$(wildcard *.generated.*) \
 	$(wildcard */*.generated.*) \
 	$(wildcard */*/*.generated.*) \
@@ -36,7 +36,10 @@ GENERATED_FILES_FILTER_OUT := \
 	$(wildcard */*/*/*/*/*/*/*/*/*/*.generated.*) \
 
 # NOTE variable for filtering out files from checks
-DEFAULT_FILES_FILTER_OUT := \
+DEFAULT_FILES_FILTER_OUT += \
+	LICENSE $(GIT_ROOT_REL)/LICENSE \
+	NOTICE $(GIT_ROOT_REL)/NOTICE \
+	UNLICENSE $(GIT_ROOT_REL)/UNLICENSE \
 	$(GENERATED_FILES_FILTER_OUT) \
 
 # ------------------------------------------------------------------------------
