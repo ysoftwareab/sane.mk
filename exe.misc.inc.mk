@@ -31,6 +31,7 @@ $(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_NOSYM GIT_LS_SUB,$(call make-lazy,$(V
 export N_PREFIX = $(TMPDIR)
 N = $(call which,N,n)
 NODE = $(call which,NODE,node)
+NPM = $(call which,NPM,npm)
 NPX = $(call which,NPX,npx)
 
 # node corepack
