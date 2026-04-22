@@ -65,5 +65,6 @@ $(foreach VAR,UNZIP UNZIP_Z1 VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR
 BREW ?= $(call which,BREW,brew)
 DOT ?= $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
+GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
