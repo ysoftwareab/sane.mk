@@ -50,6 +50,16 @@ include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 # END # includes
 
+SANE_DEBUG_CHECK += \
+	debug/brew \
+	debug/black	\
+	debug/editorconfig-checker \
+	debug/markdownlint \
+	debug/shellcheck \
+	debug/shfmt \
+	debug/trufflehog \
+	debug/yamllint \
+
 SANE_DEPS_SYSTEM += \
 	deps/system/brewfile \
 
@@ -57,6 +67,11 @@ SANE_DEPS += \
 	deps/corepack \
 	deps/uv \
 	deps/vscode \
+
+SANE_DEBUG_DEPS += \
+	debug/corepack \
+	debug/uv \
+	debug/vscode \
 
 SANE_CHECK += \
 	check/actionlint \
@@ -67,6 +82,12 @@ SANE_CHECK += \
 	check/shfmt \
 	check/trufflehog \
 	check/yamllint \
+
+SANE_DEBUG += \
+	$(SANE_DEBUG_OS) \
+	$(SANE_DEBUG_ENV) \
+	$(SANE_DEBUG_DEPS) \
+	$(SANE_DEBUG_CHECK) \
 
 SANE_MK_INCLUDED := 1
 

@@ -20,6 +20,11 @@ OS = $(shell $(UNAME) | $(TR) "[:upper:]" "[:lower:]")
 OS_SHORT = $(shell $(ECHO) $(OS) | $(SED) "s/^\([[:alpha:]]\{1,\}\).*\$$/\1/g")
 $(foreach VAR,OS OS_SHORT,$(call make-lazy,$(VAR)))
 
+SANE_DEBUG_OS = \
+	debug/os \
+	debug/os/darwin \
+	debug/os/linux \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: debug/os

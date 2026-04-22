@@ -1,3 +1,11 @@
+SANE_DEBUG_ENV = \
+	debug/env \
+	debug/env/docker \
+	debug/env/git \
+	debug/env/homebrew \
+	debug/env/node \
+	debug/env/python \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: debug/env
