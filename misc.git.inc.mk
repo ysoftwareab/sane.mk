@@ -62,15 +62,3 @@ GIT_TRACKED := false
 ifeq (truefalse,$(GIT_INSIDE_WORK_TREE)$(GIT_CHECK_IGNORE))
 GIT_TRACKED := true
 endif
-
-# ------------------------------------------------------------------------------
-
-.PHONY: debug/git
-debug/git:
-	$(ECHO)
-	$(ECHO_DO) "Debug git..."
-	$(ECHO) "GIT=$(GIT)"
-	$(ECHO) "GIT_BRANCH=$(GIT_BRANCH)"
-	$(ECHO) "GIT_DESCRIBE=$(GIT_DESCRIBE)"
-	$(ECHO) "GIT_HASH=$(GIT_HASH)"
-	$(ECHO) "GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL)"

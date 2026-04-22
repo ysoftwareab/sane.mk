@@ -43,6 +43,20 @@ debug/env/docker:
 	$(ECHO_DONE)
 
 
+.PHONY: debug/env/git
+debug/env/git:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (Git)..."
+	$(ECHO) "GIT=$(GIT)"
+	$(ECHO) "GIT_BRANCH=$(GIT_BRANCH)"
+	$(ECHO) "GIT_DESCRIBE=$(GIT_DESCRIBE)"
+	$(ECHO) "GIT_HASH=$(GIT_HASH)"
+	$(ECHO) "GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL)"
+	$(ECHO) "GH=$(GH)"
+	set -x && $(GIT) --version || true
+	$(ECHO_DONE)
+
+
 .PHONY: debug/env/homebrew
 debug/env/homebrew:
 	$(ECHO)
