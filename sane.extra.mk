@@ -18,6 +18,7 @@ include $(SANE_MK_ROOT)/misc.git.inc.mk
 include $(SANE_MK_ROOT)/misc.github.inc.mk
 include $(SANE_MK_ROOT)/misc.os.inc.mk
 
+include $(SANE_MK_ROOT)/target.brew.inc.mk
 include $(SANE_MK_ROOT)/target.env.inc.mk
 include $(SANE_MK_ROOT)/target.help.inc.mk
 include $(SANE_MK_ROOT)/target.lazy.inc.mk
