@@ -17,6 +17,7 @@ include $(SANE_MK_ROOT)/misc.chars.inc.mk
 include $(SANE_MK_ROOT)/misc.git.inc.mk
 include $(SANE_MK_ROOT)/misc.github.inc.mk
 include $(SANE_MK_ROOT)/misc.os.inc.mk
+include $(SANE_MK_ROOT)/misc.source-const.inc.mk
 
 include $(SANE_MK_ROOT)/target.brew.inc.mk
 include $(SANE_MK_ROOT)/target.env.inc.mk

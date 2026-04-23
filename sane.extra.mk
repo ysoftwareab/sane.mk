@@ -17,6 +17,7 @@ include $(SANE_MK_ROOT)/misc.chars.inc.mk
 include $(SANE_MK_ROOT)/misc.git.inc.mk
 include $(SANE_MK_ROOT)/misc.github.inc.mk
 include $(SANE_MK_ROOT)/misc.os.inc.mk
+include $(SANE_MK_ROOT)/misc.source-const.inc.mk
 
 include $(SANE_MK_ROOT)/target.brew.inc.mk
 include $(SANE_MK_ROOT)/target.env.inc.mk
@@ -26,6 +27,8 @@ include $(SANE_MK_ROOT)/target.noop.inc.mk
 include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.shell.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
+
+# BEGIN # extra
 
 include $(SANE_MK_ROOT)/extra/target.password.inc.mk
 include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
@@ -44,6 +47,8 @@ include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
+
+# END # extra
 
 include $(SANE_MK_ROOT)/target.std.inc.mk
 
