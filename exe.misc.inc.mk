@@ -8,7 +8,8 @@ GREP_FILENAME = $(GREP) -rl
 LS_ALL = $(LS) -A
 MVBAK = $(MV) --backup=numbered
 PATCH_STDOUT = $(PATCH) -o -
-$(foreach VAR,CPBAK CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL MVBAK PATCH_STDOUT,$(call make-lazy,$(VAR)))
+VISUAL ?= $(EDITOR)
+$(foreach VAR,CPBAK CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL MVBAK PATCH_STDOUT VISUAL,$(call make-lazy,$(VAR)))
 $(foreach VAR,DIFF_SS,$(call make-lazy-once,$(VAR)))
 
 COLUMN = $(call which,COLUMN,column)
@@ -49,21 +50,20 @@ endif
 endif
 
 # python
-PYTHON ?= $(call which,PYTHON,python)
-PYTHON3 ?= $(call which,PYTHON3,python3)
+PYTHON = $(call which,PYTHON,python)
+PYTHON3 = $(call which,PYTHON3,python3)
 
 # zip
 UNZIP = $(call which,UNZIP,unzip) -oq
 UNZIP_Z1 = $(call which,UNZIP,unzip) -Z1
-VISUAL ?= $(EDITOR)
 ZIP_NOSYM = $(call which,ZIP_NOSYM,zip) -r
 ZIP = $(ZIP_NOSYM) -y
 ZIPINFO = $(call which,ZIPINFO,zipinfo)
-$(foreach VAR,UNZIP UNZIP_Z1 VISUAL ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
+$(foreach VAR,UNZIP UNZIP_Z1 ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
 
 # zz
-BREW ?= $(call which,BREW,brew)
-DOT ?= $(call which,DOT,dot)
+BREW = $(call which,BREW,brew)
+DOT = $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
