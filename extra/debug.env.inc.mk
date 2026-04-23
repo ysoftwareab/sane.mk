@@ -2,6 +2,7 @@ SANE_DEBUG_ENV = \
 	debug/env \
 	debug/env/docker \
 	debug/env/git \
+	debug/env/gh \
 	debug/env/homebrew \
 	debug/env/node \
 	debug/env/python \
@@ -60,8 +61,19 @@ debug/env/git:
 	$(ECHO) "GIT_DESCRIBE=$(GIT_DESCRIBE)"
 	$(ECHO) "GIT_HASH=$(GIT_HASH)"
 	$(ECHO) "GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL)"
-	$(ECHO) "GH=$(GH)"
 	set -x && $(GIT) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/gh
+debug/env/gh:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (GitHub)..."
+	$(ECHO) "GH=$(GH)"
+	$(ECHO) "GH_HOST=$(GH_HOST)"
+	set -x && $(GH) --version || true
+	set -x && $(GH) auth status || true
+	set -x && $(GH) api /user || true
 	$(ECHO_DONE)
 
 
