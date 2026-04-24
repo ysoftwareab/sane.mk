@@ -1,0 +1,41 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+tab_width = 2
+trim_trailing_whitespace = true
+
+[*.bats]
+indent_size = 4
+
+[*.csv]
+max_line_length = unset
+
+[*.md]
+max_line_length = unset
+
+[*.mk]
+indent_style = tab
+
+[*.py]
+indent_size = 4
+
+[*.sh]
+indent_size = 4
+
+[.gitmodules]
+indent_style = unset
+
+[.mailmap]
+max_line_length = unset
+
+[Makefile*]
+indent_style = tab
+
+[package.json]
+max_line_length = unset

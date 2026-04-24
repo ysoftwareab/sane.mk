@@ -1,0 +1,31 @@
+enable=add-default-case
+enable=avoid-nullary-conditions
+enable=check-unassigned-uppercase
+enable=deprecate-which
+enable=quote-safe-variables
+enable=require-variable-braces
+
+# SC1090: Can't follow non-constant source. Use a directive to specify location
+disable=SC1090
+
+# SC2001: See if you can use ${variable//search/replace} instead.
+disable=SC2001
+
+# SC2002: Useless cat. Consider 'cmd < file | ..' or 'cmd file | ..' instead.
+disable=SC2002
+
+# SC2004: $/${} is unnecessary on arithmetic variables.
+disable=SC2004
+
+# SC2129: Consider using { cmd1; cmd2; } >> file instead of individual redirects.
+disable=SC2129
+
+# SC2155: Declare and assign separately to avoid masking return values.
+disable=SC2155
+
+# SC2164: Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+disable=SC2164
+
+# SC2317: Command appears to be unreachable. Check usage (or ignore if invoked indirectly).
+# false positives https://github.com/koalaman/shellcheck/issues?q=is%3Aissue+sort%3Aupdated-desc+SC2317
+disable=SC2317

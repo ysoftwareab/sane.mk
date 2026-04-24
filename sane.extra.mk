@@ -74,6 +74,15 @@ SANE_DEPS += \
 	deps/uv \
 	deps/vscode \
 
+SANE_DEPS_FILES += \
+	.editorconfig \
+	.gitignore \
+	.gitattributes \
+	.mailmap \
+	.markdownlint.json \
+	.shellcheckrc \
+	.yamllint \
+
 SANE_DEBUG_DEPS += \
 	debug/corepack \
 	debug/uv \
@@ -94,6 +103,27 @@ SANE_DEBUG += \
 	$(SANE_DEBUG_ENV) \
 	$(SANE_DEBUG_DEPS) \
 	$(SANE_DEBUG_CHECK) \
+
+.editorconfig:
+	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+
+.gitignore:
+	$(TOUCH) $@
+
+.gitattributes:
+	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+
+.mailmap:
+	$(TOUCH) $@
+
+.markdownlint.json:
+	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+
+.shellcheckrc:
+	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+
+.yamllint:
+	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
 
 SANE_MK_INCLUDED := 1
 

@@ -1,0 +1,32 @@
+{
+  "default": true,
+  "MD003": {
+    "style": "atx"
+  },
+  "MD004": {
+    "style": "asterisk"
+  },
+  "MD013": {
+    "line_length": 120
+  },
+  "MD024": {
+    "siblings_only": true
+  },
+  "MD033": false,
+  "MD034": false,
+  "MD035": {
+    "style": "---"
+  },
+  "MD046": {
+    "style": "fenced"
+  },
+  "MD048": {
+    "style": "backtick"
+  },
+  "MD049": {
+    "style": "asterisk"
+  },
+  "MD050": {
+    "style": "asterisk"
+  }
+}
