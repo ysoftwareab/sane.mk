@@ -1,6 +1,9 @@
 UV = $(call which,UV,uv)
 UVX = $(call which,UVX,uvx)
 
+DEFAULT_FILES_FILTER_OUT += \
+	$(shell $(GIT_LS_NOSYM) . | $(GREP) -e "uv\.lock$$") \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: debug/uv

@@ -4,6 +4,10 @@ ifeq (COREPACK_NOT_FOUND,$(COREPACK))
 COREPACK = $(NPX) --yes corepack
 endif
 
+DEFAULT_FILES_FILTER_OUT += \
+	$(shell $(GIT_LS_NOSYM) . | $(GREP) -e "package-lock\.json$$") \
+	$(shell $(GIT_LS_NOSYM) . | $(GREP) -e "pnpm-lock\.yaml$$") \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: debug/corepack
