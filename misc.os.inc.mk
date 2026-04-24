@@ -22,8 +22,7 @@ $(foreach VAR,OS OS_SHORT,$(call make-lazy,$(VAR)))
 
 SANE_DEBUG_OS = \
 	debug/os \
-	debug/os/darwin \
-	debug/os/linux \
+	debug/os/$(OS_SHORT) \
 
 # ------------------------------------------------------------------------------
 
