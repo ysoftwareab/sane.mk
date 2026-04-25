@@ -1,3 +1,5 @@
+ifndef SANE_MK_INCLUDED
+
 ifndef SANE_MK_DIR
 SANE_MK_DIR = $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
@@ -135,3 +137,5 @@ TOP ?= $(MAKE_PATH)
 # NOTE can't use $(PYTHON)
 TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
+
+endif
