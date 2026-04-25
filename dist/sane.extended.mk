@@ -416,6 +416,8 @@ guard-env-has-%: # Guard on environment executable.
 # END # target.env.inc.mk
 
 # BEGIN # target.help.inc.mk
+# editorconfig-checker-disable max-line-length
+
 .PHONY: help
 help: help/main
 help: ## Show this help message.
@@ -479,6 +481,8 @@ help/all: ## Show this help message, including all targets and source Makefiles.
 		$(SORT) -u | \
 		$(COLUMN) -t -s "##"
 	@$(ECHO)
+
+# editorconfig-checker-enable max-line-length
 # END # target.help.inc.mk
 
 # BEGIN # target.lazy.inc.mk
