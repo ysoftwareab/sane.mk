@@ -1,5 +1,4 @@
-ifdef SANE_MK_INCLUDED
-else
+ifndef SANE_MK_INCLUDED
 
 ifndef SANE_MK_DIR
 SANE_MK_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
