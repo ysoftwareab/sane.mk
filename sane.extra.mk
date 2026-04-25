@@ -42,6 +42,7 @@ include $(SANE_MK_ROOT)/extra/deps.vscode.inc.mk
 include $(SANE_MK_ROOT)/extra/check.actionlint.inc.mk
 include $(SANE_MK_ROOT)/extra/check.black.inc.mk
 include $(SANE_MK_ROOT)/extra/check.editorconfig-checker.inc.mk
+include $(SANE_MK_ROOT)/extra/check.jscpd.inc.mk
 include $(SANE_MK_ROOT)/extra/check.markdownlint.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
@@ -60,6 +61,7 @@ SANE_DEBUG_CHECK += \
 	debug/brew \
 	debug/black	\
 	debug/editorconfig-checker \
+	debug/jscpd \
 	debug/markdownlint \
 	debug/shellcheck \
 	debug/shfmt \
@@ -92,6 +94,7 @@ SANE_CHECK += \
 	check/actionlint \
 	check/black \
 	check/editorconfig-checker \
+	check/jscpd \
 	check/markdownlint \
 	check/shellcheck \
 	check/shfmt \
