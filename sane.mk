@@ -1,7 +1,7 @@
 ifndef SANE_MK_INCLUDED
 
-ifndef SANE_MK_DIR
-SANE_MK_DIR = $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+ifndef SANE_MK_ROOT
+SANE_MK_ROOT = $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
 # NOTE GNU Make sets $SHELL to /bin/sh rather than the env ${SHELL}

@@ -1,26 +1,26 @@
 ifndef SANE_MK_INCLUDED
 
-ifndef SANE_MK_DIR
-SANE_MK_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+ifndef SANE_MK_ROOT
+SANE_MK_ROOT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
-include $(SANE_MK_DIR)/sane.mk
+include $(SANE_MK_ROOT)/sane.mk
 
-include $(SANE_MK_DIR)/exe.which.inc.mk # needed by the other exe.*.inc.mk files
-include $(SANE_MK_DIR)/exe.echo.inc.mk
-include $(SANE_MK_DIR)/exe.gnu.inc.mk
-include $(SANE_MK_DIR)/exe.misc.inc.mk
+include $(SANE_MK_ROOT)/exe.which.inc.mk # needed by the other exe.*.inc.mk files
+include $(SANE_MK_ROOT)/exe.echo.inc.mk
+include $(SANE_MK_ROOT)/exe.gnu.inc.mk
+include $(SANE_MK_ROOT)/exe.misc.inc.mk
 
-include $(SANE_MK_DIR)/chars.inc.mk
-include $(SANE_MK_DIR)/git.inc.mk
-include $(SANE_MK_DIR)/os.inc.mk
+include $(SANE_MK_ROOT)/chars.inc.mk
+include $(SANE_MK_ROOT)/git.inc.mk
+include $(SANE_MK_ROOT)/os.inc.mk
 
-include $(SANE_MK_DIR)/target.env.inc.mk
-include $(SANE_MK_DIR)/target.help.inc.mk
-include $(SANE_MK_DIR)/target.lazy.inc.mk
-include $(SANE_MK_DIR)/target.noop.inc.mk
-include $(SANE_MK_DIR)/target.printvar.inc.mk
-include $(SANE_MK_DIR)/target.verbose.inc.mk
+include $(SANE_MK_ROOT)/target.env.inc.mk
+include $(SANE_MK_ROOT)/target.help.inc.mk
+include $(SANE_MK_ROOT)/target.lazy.inc.mk
+include $(SANE_MK_ROOT)/target.noop.inc.mk
+include $(SANE_MK_ROOT)/target.printvar.inc.mk
+include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 MAKEFILE_LAZY ?= true
 ifeq (true,$(MAKEFILE_LAZY))
