@@ -1,5 +1,8 @@
 include sane.extra.mk
 
+DEFAULT_FILES_FILTER_OUT += \
+	$(wildcard bin/transcrypt@*/transcrypt) \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: dist
