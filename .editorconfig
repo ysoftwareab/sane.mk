@@ -13,5 +13,8 @@ trim_trailing_whitespace = true
 [Makefile]
 indent_style = tab
 
+[*.mk]
+indent_style = tab
+
 [README.md]
 max_line_length = none
