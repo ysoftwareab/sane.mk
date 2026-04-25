@@ -22,18 +22,7 @@ include $(SANE_MK_ROOT)/target.noop.inc.mk
 include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
-MAKEFILE_LAZY ?= true
-ifeq (true,$(MAKEFILE_LAZY))
-ifeq ($(MAKECMDGOALS),$(filter-out %Makefile.lazy,$(MAKECMDGOALS)))
-ifeq (,$(wildcard Makefile.lazy))
-$(info [DO  ] Generating Makefile.lazy...)
-$(info $(shell $(MAKE) Makefile.lazy))
-$(info [DONE])
-$(info )
-endif
-include Makefile.lazy
-endif
-endif
+include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 SANE_MK_INCLUDED := 1
 
