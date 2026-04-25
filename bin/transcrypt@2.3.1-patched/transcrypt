@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+[[ -z "${V:-}" ]] || set -x
 
 #
 # transcrypt - https://github.com/elasticdog/transcrypt
@@ -22,7 +23,7 @@ GREP_OPTIONS=""
 ##### CONSTANTS
 
 # the release version of this script
-readonly VERSION='2.3.1'
+readonly VERSION='2.3.2-pre'
 
 # the default cipher to utilize
 readonly DEFAULT_CIPHER='aes-256-cbc'
@@ -173,20 +174,25 @@ _list_encrypted_files() {
 	# List files with -z option to disable quoting of filenames, then
 	# immediately convert NUL-delimited filenames to be newline-delimited to be
 	# compatibility with bash variables
-	for file in $(git ls-files -z | tr '\0' '\n'); do
-		# Check for the suffix ': filter: crypt' that identifies encrypted file
-		local check
-		check=$(git check-attr filter "$file" 2>/dev/null)
-
-		# Only output names of encrypted files matching the context, either
-		# strictly (if $1 = "true") or loosely (if $1 is false or unset)
-		if [[ "$strict_context" == "true" ]] &&
-			[[ "$check" == *": filter: crypt${CONTEXT_CRYPT_SUFFIX:-}" ]]; then
-			echo "$file"
-		elif [[ "$check" == *": filter: crypt${CONTEXT_CRYPT_SUFFIX:-}"* ]]; then
-			echo "$file"
-		fi
-	done
+	# List files with -z option to disable quoting of filenames,
+	# then filter for files marked for encryption (git check-attr + grep),
+	# then only keep filenames (sed)
+	# then evaluate escaped characters like double-quotes, backslash and control characters (eval)
+	# which are part of the output regardless of core.quotePath=false as per
+	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-corequotePath
+	git -c core.quotePath=false ls-files -z | tr '\0' '\n' |
+		git -c core.quotePath=false check-attr filter --stdin 2>/dev/null |
+		{
+			# Only output names of encrypted files matching the context, either
+			# strictly (if $1 = "true") or loosely (if $1 is false or unset)
+			if [[ "$strict_context" == "true" ]]; then
+				grep ": filter: crypt${CONTEXT_CRYPT_SUFFIX:-}$" || true
+			else
+				grep ": filter: crypt${CONTEXT_CRYPT_SUFFIX:-}.*$" || true
+			fi
+		} |
+		sed "s|: filter: crypt${CONTEXT_CRYPT_SUFFIX:-}.*||" |
+		while read -r file; do eval "echo $file"; done
 }
 
 # Detect OpenSSL major version 3 or later which requires a compatibility
@@ -266,12 +272,12 @@ git_clean() {
 			(
 				echo -n "Salted__" && echo -n "$salt" | hex_to_bin &&
 					# Encrypt file to binary ciphertext
-					ENC_PASS=$password "$openssl_path" enc -e "-${cipher}" -md MD5 -pass env:ENC_PASS -S "$salt" -in "$tempfile"
+					ENC_PASS=$password "$openssl_path" enc -e "-${cipher}" -md MD5 -pass env:ENC_PASS -pbkdf2 -S "$salt" -in "$tempfile"
 			) |
 				openssl base64
 		else
 			# Encrypt file to base64 ciphertext
-			ENC_PASS=$password "$openssl_path" enc -e -a "-${cipher}" -md MD5 -pass env:ENC_PASS -S "$salt" -in "$tempfile"
+			ENC_PASS=$password "$openssl_path" enc -e -a "-${cipher}" -md MD5 -pass env:ENC_PASS -pbkdf2 -S "$salt" -in "$tempfile"
 		fi
 	fi
 }
@@ -284,7 +290,7 @@ git_smudge() {
 	cipher=$(git config --get --local "transcrypt${context_config_group}.cipher")
 	password=$(load_password "$context_config_group")
 	openssl_path=$(git config --get --local transcrypt.openssl-path)
-	tee "$tempfile" | ENC_PASS=$password "$openssl_path" enc -d "-${cipher}" -md MD5 -pass env:ENC_PASS -a 2>/dev/null || cat "$tempfile"
+	tee "$tempfile" | ENC_PASS=$password "$openssl_path" enc -d "-${cipher}" -md MD5 -pass env:ENC_PASS -pbkdf2 -a 2>/dev/null || cat "$tempfile"
 }
 
 git_textconv() {
@@ -301,7 +307,7 @@ git_textconv() {
 	cipher=$(git config --get --local "transcrypt${context_config_group}.cipher")
 	password=$(load_password "$context_config_group")
 	openssl_path=$(git config --get --local transcrypt.openssl-path)
-	ENC_PASS=$password "$openssl_path" enc -d "-${cipher}" -md MD5 -pass env:ENC_PASS -a -in "$filename" 2>/dev/null || cat "$filename"
+	ENC_PASS=$password "$openssl_path" enc -d "-${cipher}" -md MD5 -pass env:ENC_PASS -pbkdf2 -a -in "$filename" 2>/dev/null || cat "$filename"
 }
 
 # shellcheck disable=SC2005,SC2002,SC2181
@@ -392,13 +398,15 @@ git_pre_commit() {
 		# Get prefix of raw file in Git's index using the :FILENAME revision syntax
 		# The first bytes of an encrypted file are always "Salted" in Base64
 		local firstbytes=$(git show :"${secret_file}" | head -c8)
-		if [[ $firstbytes != "U2FsdGVk" ]]; then
+		if [[ $firstbytes == "" ]]; then
+			: # Do nothing
+		elif [[ $firstbytes != "U2FsdGVk" ]]; then
 			echo "true" >>"${tmp}"
 		fi
 	}
 
-	# if bash version is 4.4 or greater than fork to number of threads otherwise run normally
-	if [[ "${BASH_VERSINFO[0]}" -ge 4 ]] && [[ "${BASH_VERSINFO[1]}" -ge 4 ]]; then
+	# if bash version is greater than or equal to 4.4, fork to number of threads otherwise run normally
+	if [[ "${BASH_VERSINFO[0]}" -gt 4 ]] || { [[ "${BASH_VERSINFO[0]}" == 4 ]] && [[ "${BASH_VERSINFO[1]}" -ge 4 ]]; }; then
 		num_procs=$(nproc)
 		num_jobs="\j"
 		for secret_file in $(_list_encrypted_files); do
@@ -1033,7 +1041,14 @@ upgrade_transcrypt() {
 list_files() {
 	if [[ $IS_BARE == 'false' ]]; then
 		cd "$REPO" >/dev/null || die 1 'could not change into the "%s" directory' "$REPO"
-		_list_encrypted_files true
+
+		if [[ -z "$CONTEXT_CRYPT_SUFFIX" ]]; then
+			# Non-strict listing of files when context is unset / default
+			_list_encrypted_files
+		else
+			# Strict listing of files when a specific context is set
+			_list_encrypted_files true
+		fi
 	fi
 }
 
@@ -1594,6 +1609,13 @@ elif [[ $cipher ]]; then
 	validate_cipher
 fi
 
+list_dirty_files() {
+	{ git diff-index --name-status HEAD -- || git diff-index --stat HEAD -- || git diff-index HEAD -- || true; } 2>/dev/null
+}
+
+# shellcheck disable=SC2155
+readonly GIT_DIRTY_FILES_BEFORE_INIT="$(list_dirty_files | grep $'\n' -c)"
+
 # perform function calls to configure transcrypt
 get_cipher
 get_password
@@ -1610,20 +1632,17 @@ if [[ $rekey ]]; then
 	stage_rekeyed_files
 else
 	force_checkout
+	# check for newly modified (dirty) files after transcrypt configuration which could
+	# indicate an incorrect password
+	if [[ ${GIT_DIRTY_FILES_BEFORE_INIT} -lt $(list_dirty_files | grep $'\n' -c) ]]; then
+	  die 1 'Unexpected new dirty files in the repository when configured by transcrypt%s, please check your password.\n' "$CONTEXT_DESCRIPTION"
+	fi
 fi
 
 # ensure the git attributes file exists
 if [[ ! -f $GIT_ATTRIBUTES ]]; then
 	mkdir -p "${GIT_ATTRIBUTES%/*}"
 	printf '#pattern  filter=crypt diff=crypt merge=crypt\n' >"$GIT_ATTRIBUTES"
-fi
-
-# check for modified (dirty) files after transcrypt configuration which could
-# indicate an incorrect password
-#
-# check if the repo is dirty
-if git status --porcelain 2>/dev/null | grep "^ M" >/dev/null; then
-	die 1 'Unexpected dirty files in the repository when configured by transcrypt%s, check your password.\n' "$CONTEXT_DESCRIPTION"
 fi
 
 printf 'The repository has been successfully configured by transcrypt%s.\n' "$CONTEXT_DESCRIPTION"
