@@ -1,14 +1,11 @@
 # sane.mk
 
-I make (pun) a lot of things, and I want to keep them DRY.
-
-The `docs` folder has some tips and tricks as well.
+For the future you to keep on enjoying GNU Make.
 
 ## Usage
 
-I would have this repository as a submodule e.g. as a `sane.mk` folder,
-and then fetch the submodule, if not already there,
-and reference it at the top of the real `Makefile`:
+You can either have this repository as a submodule,
+and reference it at the top of the `Makefile`:
 
 ```make
 ifeq (,$(wildcard sane.mk/sane.extended.mk))
@@ -19,21 +16,15 @@ endif
 endif
 
 include sane.mk/sane.extended.mk
+
+# alternatively, include only specific features
+# include sane.mk/sane.mk
+# include sane.mk/target.help.inc.mk
 ```
 
-Similarly, if I just want bits and pieces of this:
-
-```make
-ifeq (,$(wildcard sane.mk/sane.mk))
-SANE_MK_INSTALL := $(shell git submodule update --init --recursive sane.mk)
-ifneq (,$(filter undefine,$(.FEATURES)))
-undefine SANE_MK_INSTALL
-endif
-endif
-
-include sane.mk/sane.mk
-include sane.mk/target.help.inc.mk
-```
+or you can copy [`dist/sane.extended.mk`](./dist/sane.extended.mk)
+(or just the core [`dist/sane.mk`](./dist/sane.mk))
+to your project and include it at the top of the `Makefile`.
 
 ## Ref
 
