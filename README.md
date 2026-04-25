@@ -4,7 +4,7 @@ I make (pun) a lot of things, and I want to keep them DRY.
 
 The `docs` folder has some tips and tricks as well.
 
-# Usage
+## Usage
 
 I would have this repository as a submodule e.g. as a `sane.mk` folder,
 and then fetch the submodule, if not already there,
@@ -37,11 +37,11 @@ include sane.mk/sane.mk
 include sane.mk/target.help.inc.mk
 ```
 
-# Ref
+## Ref
 
 * http://blog.jgc.org/2013/02/updated-list-of-my-gnu-make-articles.html
 * https://tech.davis-hansson.com/p/make/
 
-# License
+## License
 
 [MIT](LICENSE)
