@@ -4,6 +4,8 @@ ifndef SANE_MK_ROOT
 SANE_MK_ROOT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
+# BEGIN # includes
+
 include $(SANE_MK_ROOT)/sane.mk
 
 include $(SANE_MK_ROOT)/exe.which.inc.mk # needed by the other exe.*.inc.mk files
@@ -23,6 +25,8 @@ include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 include $(SANE_MK_ROOT)/misc.lazy.inc.mk
+
+# END # includes
 
 SANE_MK_INCLUDED := 1
 

@@ -1,0 +1,13 @@
+{
+  "name": "sane.mk",
+  "version": "0.0.1",
+  "description": "For the future you to keep on enjoying GNU Make.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andreineculau/sane.mk.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "version": "make dist && git add dist"
+  }
+}
