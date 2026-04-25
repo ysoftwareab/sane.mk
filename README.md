@@ -44,4 +44,4 @@ include sane.mk/target.help.inc.mk
 
 # License
 
-[Unlicense](LICENSE)
+[MIT](LICENSE)
