@@ -133,7 +133,8 @@ MAKE_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_PATH)/$(MAKE_FILENAME)"
 MAKE_SELF_FILENAME = $(notdir $(lastword $(MAKEFILE_LIST)))
 MAKE_SELF_PATH = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-TOP ?= $(MAKE_PATH)
+# NOTE can't use $(GIT) and $(ECHO)
+TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
 # NOTE can't use $(PYTHON)
 TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
