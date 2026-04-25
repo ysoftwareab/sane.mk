@@ -105,10 +105,10 @@ SANE_DEBUG += \
 	$(SANE_DEBUG_CHECK) \
 
 .editorconfig:
-	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 .gitignore:
-	$(TOUCH) $@
+	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
 
 .gitattributes:
 	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
@@ -117,13 +117,13 @@ SANE_DEBUG += \
 	$(TOUCH) $@
 
 .markdownlint.json:
-	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 .shellcheckrc:
-	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 .yamllint:
-	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 SANE_MK_INCLUDED := 1
 
