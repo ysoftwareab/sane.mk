@@ -1,6 +1,6 @@
 {
   "name": "sane.mk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "For the future you to keep on enjoying GNU Make.",
   "repository": {
     "type": "git",
