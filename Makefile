@@ -1,4 +1,4 @@
-include sane.extended.mk
+include sane.std.mk
 
 SANE_CHECK += \
 	check/editorconfig-checker \
@@ -23,11 +23,11 @@ check/markdownlint:
 
 .PHONY: check/shellcheck
 check/shellcheck:
-	$(SHELLCHECK) sane.extended.mk.tpl
+	$(SHELLCHECK) sane.std.mk.tpl
 
 
 .PHONY: dist
 dist: ## Build distribution files
 	$(MKDIR) dist
 	$(CP) sane.mk dist/
-	./sane.extended.mk.tpl > dist/sane.extended.mk
+	./sane.std.mk.tpl > dist/sane.std.mk

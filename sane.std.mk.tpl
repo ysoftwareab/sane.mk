@@ -12,7 +12,7 @@ export -f exe
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Header
-sed -n '1,/^# BEGIN # includes$/p' "${DIR}/sane.extended.mk"
+sed -n '1,/^# BEGIN # includes$/p' "${DIR}/sane.std.mk"
 
 # Inline each *.inc.mk include with BEGIN/END markers
 while IFS= read -r LINE; do
@@ -23,7 +23,7 @@ while IFS= read -r LINE; do
     cat "${DIR}/${FILE}"
     echo "# END # ${FILE}"
   fi
-done <"${DIR}/sane.extended.mk"
+done <"${DIR}/sane.std.mk"
 
 # Footer
-sed -n '/^# END # includes$/,$p' "${DIR}/sane.extended.mk"
+sed -n '/^# END # includes$/,$p' "${DIR}/sane.std.mk"

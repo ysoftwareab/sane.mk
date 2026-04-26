@@ -8,21 +8,21 @@ You can either have this repository as a submodule,
 and reference it at the top of the `Makefile`:
 
 ```make
-ifeq (,$(wildcard sane.mk/sane.extended.mk))
+ifeq (,$(wildcard sane.mk/sane.std.mk))
 SANE_MK_INSTALL := $(shell git submodule update --init --recursive sane.mk)
 ifneq (,$(filter undefine,$(.FEATURES)))
 undefine SANE_MK_INSTALL
 endif
 endif
 
-include sane.mk/sane.extended.mk
+include sane.mk/sane.std.mk
 
 # alternatively, include only specific features
 # include sane.mk/sane.mk
 # include sane.mk/target.help.inc.mk
 ```
 
-or you can copy [`dist/sane.extended.mk`](./dist/sane.extended.mk)
+or you can copy [`dist/sane.std.mk`](./dist/sane.std.mk)
 (or just the core [`dist/sane.mk`](./dist/sane.mk))
 to your project and include it at the top of the `Makefile`.
 
