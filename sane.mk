@@ -142,4 +142,9 @@ TOP_BASENAME = $(shell basename "$(TOP)")
 TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
 
+# ------------------------------------------------------------------------------
+
+export TMPDIR ?= /tmp
+export USER ?= $(shell $(ID) -un)
+
 endif
