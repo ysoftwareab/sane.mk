@@ -128,13 +128,16 @@ MAKE_TIME := $(shell date +'%H%M%S')
 
 MAKE_FILENAME = $(notdir $(firstword $(MAKEFILE_LIST)))
 MAKE_PATH = $(patsubst %/,%,$(dir $(abspath $(firstword $(MAKEFILE_LIST)))))
+MAKE_PATH_BASENAME = $(shell basename "$(MAKE_PATH)")
 MAKE_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_PATH)/$(MAKE_FILENAME)")))
 
 MAKE_SELF_FILENAME = $(notdir $(lastword $(MAKEFILE_LIST)))
 MAKE_SELF_PATH = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
 
 # NOTE can't use $(GIT) and $(ECHO)
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
+TOP_BASENAME = $(shell basename "$(TOP)")
 # NOTE can't use $(PYTHON)
 TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
