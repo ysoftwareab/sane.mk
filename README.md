@@ -26,6 +26,19 @@ or you can copy [`dist/sane.extended.mk`](./dist/sane.extended.mk)
 (or just the core [`dist/sane.mk`](./dist/sane.mk))
 to your project and include it at the top of the `Makefile`.
 
+## target.std.inc.mk
+
+Provides standard make targets (`all`, `deps`, `check`, `build`, `test`, `ci`, `debug`, `system`) with pre/post hooks.
+Each target pulls in dependencies from `SANE_*` variables (e.g., `SANE_DEPS`, `SANE_CHECK`).
+Defaults for `all` (default target i.e. `make` is equivalent to `make all`) are `deps check build`.
+
+`ci` is meant for CI pipelines. It defaults to `all` but can be overridden with `SANE_CI`,
+for instance to treat pull requests differently from main branch pushes.
+
+`deps/files` is meant for generating untracked files.
+
+`deps/gitignore` is meant for updatintg `.gitignore` files.
+
 ## Ref
 
 * http://blog.jgc.org/2013/02/updated-list-of-my-gnu-make-articles.html
