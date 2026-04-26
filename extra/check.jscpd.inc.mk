@@ -5,8 +5,8 @@ endif
 
 JSCPD_FLAGS += \
 	--gitignore \
-	--reporters console \
-	--silent \
+	--blame \
+	--exitCode 1 \
 
 JSCPD_FILES += \
 	$(JSCPD_FILES_EXT) \
@@ -15,7 +15,6 @@ JSCPD_FILES_EXT = $(shell $(GIT_LS_NOSYM))
 
 JSCPD_FILES_FILTER_OUT += \
 	$(DEFAULT_FILES_FILTER_OUT) \
-	node_modules/** \
 
 # ------------------------------------------------------------------------------
 
