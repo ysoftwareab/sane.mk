@@ -9,7 +9,7 @@ MARKDOWNLINT ?= $(call which,MARKDOWNLINT,markdownlint)
 .PHONY: check
 check:
 	$(EDITORCONFIG_CHECKER)
-	$(MARKDOWNLINT) -c markdownlint.json README.md
+	$(MARKDOWNLINT) -c .markdownlint.json README.md
 	$(SHELLCHECK) sane.extended.mk.tpl
 
 
