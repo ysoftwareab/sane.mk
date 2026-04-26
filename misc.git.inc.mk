@@ -51,5 +51,6 @@ GIT_REPO_HAS_UNTRACKED_FILES = $(shell $(GIT) status --porcelain | $(GREP) -q -e
 GIT_REPO_HAS_CONFLICTS = $(shell $(GIT) status --porcelain | $(GREP) -q -e "^\(DD\|AU\|UD\|UA\|DU\|AA\|UU\)" && \
 	$(ECHO) true || $(ECHO) false)
 
+GITHUB_EVENT_NAME ?=
 GITHUB_SERVER_URL ?= https://github.com
 GITHUB_SERVER_URL_DOMAIN ?= $(shell basename "$(GITHUB_SERVER_URL)")
