@@ -53,4 +53,4 @@ GIT_REPO_HAS_CONFLICTS = $(shell $(GIT) status --porcelain | $(GREP) -q -e "^\(D
 
 GITHUB_EVENT_NAME ?=
 GITHUB_SERVER_URL ?= https://github.com
-GITHUB_SERVER_URL_DOMAIN ?= $(shell basename "$(GITHUB_SERVER_URL)")
+export GH_HOST ?= $(shell basename "$(GITHUB_SERVER_URL)")
