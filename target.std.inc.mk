@@ -19,6 +19,24 @@ ifeq ($(MAKE_PATH),$(GIT_ROOT))
 SANE_DEPS_DEFAULT += deps/gitignore
 endif
 
+# NOTE use *.generated.* to mark generated files
+GENERATED_FILES_FILTER_OUT := \
+	$(wildcard *.generated.*) \
+	$(wildcard */*.generated.*) \
+	$(wildcard */*/*.generated.*) \
+	$(wildcard */*/*/*.generated.*) \
+	$(wildcard */*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*/*/*/*/*.generated.*) \
+	$(wildcard */*/*/*/*/*/*/*/*/*/*.generated.*) \
+
+# NOTE variable for filtering out files from checks
+DEFAULT_FILES_FILTER_OUT := \
+	$(GENERATED_FILES_FILTER_OUT) \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: prehook/% posthook/%
