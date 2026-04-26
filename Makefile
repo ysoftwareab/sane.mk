@@ -18,7 +18,7 @@ check/editorconfig-checker:
 
 .PHONY: check/markdownlint
 check/markdownlint:
-	$(MARKDOWNLINT) -c .markdownlint.json README.md
+	$(MARKDOWNLINT) -c .markdownlint.json *.md
 
 
 .PHONY: check/shellcheck
