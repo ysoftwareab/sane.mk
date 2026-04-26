@@ -1,3 +1,4 @@
+CPBAK = $(CP) --backup=numbered
 CP_NOSYM = $(CP) -L
 DIFF_SS = $(DIFF) -y -W $(COLUMNS)
 EDITOR ?= $(call which,VI,vi)
@@ -5,7 +6,8 @@ FIND_Q = 2>/dev/null $(FIND)
 FIND_Q_NOSYM = $(FIND_Q) -L
 GREP_FILENAME = $(GREP) -rl
 LS_ALL = $(LS) -A
-$(foreach VAR,CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL,$(call make-lazy,$(VAR)))
+MVBAK = $(MV) --backup=numbered
+$(foreach VAR,CPBAK CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL MVBAK,$(call make-lazy,$(VAR)))
 $(foreach VAR,DIFF_SS,$(call make-lazy-once,$(VAR)))
 
 COLUMN = $(call which,COLUMN,column)
