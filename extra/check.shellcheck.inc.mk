@@ -7,7 +7,7 @@ SHELLCHECK_FILES += \
 	$(SHELLCHECK_FILES_SHEBANG) \
 
 SHELLCHECK_FILES_EXT = \
-	$(shell $(GIT_LS_NOSYM) . | $(GREP) -e "\.sh$$") \
+	$(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.sh$$") \
 
 SHELLCHECK_FILES_SHEBANG_PATH = .
 

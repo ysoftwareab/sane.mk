@@ -7,7 +7,7 @@ YAMLLINT_FILES += \
 	$(YAMLLINT_FILES_EXT) \
 	$(YAMLLINT_FILES_SHEBANG) \
 
-YAMLLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) . | $(GREP) -e "\.\(yaml\|yml\)$$")
+YAMLLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.\(yaml\|yml\)$$")
 
 YAMLLINT_FILES_SHEBANG_PATH = .
 

@@ -10,7 +10,7 @@ SHFMT_FILES += \
 	$(SHFMT_FILES_SHEBANG) \
 
 SHFMT_FILES_EXT = \
-	$(shell $(GIT_LS_NOSYM) . | $(GREP) -e "\.sh$$") \
+	$(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.sh$$") \
 
 SHFMT_FILES_SHEBANG = $(SHELLCHECK_FILES_SHEBANG)
 

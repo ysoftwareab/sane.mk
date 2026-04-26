@@ -7,7 +7,7 @@ BLACK_FILES += \
 	$(BLACK_FILES_EXT) \
 	$(BLACK_FILES_SHEBANG) \
 
-BLACK_FILES_EXT = $(shell $(GIT_LS_NOSYM) . | $(GREP) -e "\.py$$")
+BLACK_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.py$$")
 
 BLACK_FILES_SHEBANG_PATH = .
 

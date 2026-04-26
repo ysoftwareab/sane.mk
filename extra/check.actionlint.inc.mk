@@ -8,7 +8,7 @@ ACTIONLINT_FLAGS += \
 ACTIONLINT_FILES += \
 	$(ACTIONLINT_FILES_EXT) \
 
-ACTIONLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) . | $(GREP) -e "^\.github/workflows/.*\.yml$$")
+ACTIONLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "^\.github/workflows/.*\.yml$$")
 
 ACTIONLINT_FILES_FILTER_OUT += \
 	$(DEFAULT_FILES_FILTER_OUT) \
