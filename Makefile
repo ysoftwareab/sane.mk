@@ -3,6 +3,10 @@ include sane.extra.mk
 DEFAULT_FILES_FILTER_OUT += \
 	$(wildcard bin/transcrypt@*/transcrypt) \
 
+JSCPD_FILES_FILTER_OUT += \
+	sane.extra.mk.tpl \
+	sane.std.mk.tpl \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: dist

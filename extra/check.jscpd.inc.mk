@@ -4,9 +4,10 @@ JSCPD = $(NPX) --yes jscpd
 endif
 
 JSCPD_FLAGS += \
-	--gitignore \
 	--blame \
 	--exitCode 1 \
+	--gitignore \
+	--reporters silent \
 
 JSCPD_FILES += \
 	$(JSCPD_FILES_EXT) \
