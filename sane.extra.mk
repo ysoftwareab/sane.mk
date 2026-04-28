@@ -43,6 +43,7 @@ include $(SANE_MK_ROOT)/extra/check.actionlint.inc.mk
 include $(SANE_MK_ROOT)/extra/check.editorconfig-checker.inc.mk
 include $(SANE_MK_ROOT)/extra/check.jscpd.inc.mk
 include $(SANE_MK_ROOT)/extra/check.markdownlint.inc.mk
+include $(SANE_MK_ROOT)/extra/check.ruff.inc.mk
 include $(SANE_MK_ROOT)/extra/check.scc.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
@@ -62,6 +63,7 @@ SANE_DEBUG_CHECK += \
 	debug/editorconfig-checker \
 	debug/jscpd \
 	debug/markdownlint \
+	debug/ruff \
 	debug/scc \
 	debug/shellcheck \
 	debug/shfmt \
@@ -95,6 +97,7 @@ SANE_CHECK += \
 	check/editorconfig-checker \
 	check/jscpd \
 	check/markdownlint \
+	check/ruff \
 	check/scc \
 	check/shellcheck \
 	check/shfmt \

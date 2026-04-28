@@ -1,0 +1,22 @@
+line-length = 120
+
+[lint]
+select = ["ALL"]
+ignore = [
+  "E203", # whitespace-before-punctuation
+  "E501", # line-too-long
+  "D203", # incorrect-blank-line-before-class
+  "D213", # multi-line-summary-second-line
+  "ERA001", # commented-out-code
+  "T201", # print
+
+  # don't enforce docstring
+  "D100", # undocumented-public-module
+  "D101", # undocumented-public-class
+  "D102", # undocumented-public-method
+  "D103", # undocumented-public-function
+  "D104", # undocumented-public-package
+  "D105", # undocumented-public-init
+  "D106", # undocumented-public-attribute
+  "D107", # undocumented-public-method
+]
