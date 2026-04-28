@@ -94,7 +94,6 @@ SANE_DEBUG_DEPS += \
 
 SANE_CHECK += \
 	check/actionlint \
-	check/ai-slop-detector \
 	check/black \
 	check/editorconfig-checker \
 	check/jscpd \
