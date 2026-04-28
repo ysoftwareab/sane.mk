@@ -1,4 +1,7 @@
 AI_SLOP_DETECTOR ?= $(call which,AI_SLOP_DETECTOR,ai-slop-detector)
+ifeq (AI_SLOP_DETECTOR_NOT_FOUND,$(AI_SLOP_DETECTOR))
+AI_SLOP_DETECTOR = $(UVX) "ai-slop-detector[full]"
+endif
 
 AI_SLOP_DETECTOR_FLAGS += \
 	--ci-mode hard \
