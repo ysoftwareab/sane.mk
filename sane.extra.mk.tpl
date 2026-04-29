@@ -16,13 +16,13 @@ sed -n '1,/^# BEGIN # includes$/p' "${DIR}/sane.std.mk"
 
 # Inline each *.inc.mk include with BEGIN/END markers
 while IFS= read -r LINE; do
-  if [[ "${LINE}" =~ ^include[[:space:]]+\$\(SANE_MK_ROOT\)/([^[:space:]]+\.inc\.mk) ]]; then
-    FILE="${BASH_REMATCH[1]}"
-    echo
-    echo "# BEGIN # ${FILE}"
-    cat "${DIR}/${FILE}"
-    echo "# END # ${FILE}"
-  fi
+    if [[ "${LINE}" =~ ^include[[:space:]]+\$\(SANE_MK_ROOT\)/([^[:space:]]+\.inc\.mk) ]]; then
+        FILE="${BASH_REMATCH[1]}"
+        echo
+        echo "# BEGIN # ${FILE}"
+        cat "${DIR}/${FILE}"
+        echo "# END # ${FILE}"
+    fi
 done <"${DIR}/sane.std.mk"
 
 # Footer

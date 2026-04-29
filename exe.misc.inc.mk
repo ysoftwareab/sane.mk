@@ -1,16 +1,20 @@
-CPBAK = $(CP) --backup=numbered
+EDITOR ?= $(call which,VI,vi)
+VISUAL ?= $(EDITOR)
+$(foreach VAR,EDITOR VISUAL,$(call make-lazy,$(VAR)))
+
 CP_NOSYM = $(CP) -L
 DIFF_SS = $(DIFF) -y -W $(COLUMNS)
-EDITOR ?= $(call which,VI,vi)
 FIND_Q = 2>/dev/null $(FIND)
 FIND_Q_NOSYM = $(FIND_Q) -L
 GREP_FILENAME = $(GREP) -rl
 LS_ALL = $(LS) -A
-MVBAK = $(MV) --backup=numbered
 PATCH_STDOUT = $(PATCH) -o -
-VISUAL ?= $(EDITOR)
-$(foreach VAR,CPBAK CP_NOSYM EDITOR FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL MVBAK PATCH_STDOUT VISUAL,$(call make-lazy,$(VAR)))
+$(foreach VAR,CP_NOSYM FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL PATCH_STDOUT,$(call make-lazy,$(VAR)))
 $(foreach VAR,DIFF_SS,$(call make-lazy-once,$(VAR)))
+
+CPBAK = $(CP) --backup=numbered
+MVBAK = $(MV) --backup=numbered
+$(foreach VAR,CPBAK MVBAK,$(call make-lazy,$(VAR)))
 
 COLUMN = $(call which,COLUMN,column)
 CURL = $(call which,CURL,curl) -qfsSL

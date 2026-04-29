@@ -8,7 +8,7 @@ GIT_COMMON_DIR_REL = $(shell $(GIT) rev-parse --path-format=relative --git-commo
 
 GIT_BRANCH = $(shell $(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_SHORT = $(notdir $(GIT_BRANCH))
-GIT_BRANCH_DEFAULT = $(shell $(GIT) ls-remote --symref $(GIT_REMOTE_OR_ORIGIN) HEAD | $(HEAD) -n1 | $(CUT) -f1 | $(SED) "s|^ref: refs/heads/||")
+GIT_BRANCH_DEFAULT = $(shell $(GIT) ls-remote --symref $(GIT_REMOTE_OR_ORIGIN) HEAD | $(HEAD) -n1 | $(CUT) -f1 | $(SED) "s|^ref: refs/heads/||") # editorconfig-checker-disable-line
 ifdef SEMAPHORE_GIT_BRANCH
 GIT_BRANCH = $(SEMAPHORE_GIT_BRANCH)
 endif
