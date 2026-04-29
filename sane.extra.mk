@@ -50,14 +50,6 @@ include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 
-# END # extra
-
-include $(SANE_MK_ROOT)/target.std.inc.mk
-
-include $(SANE_MK_ROOT)/misc.lazy.inc.mk
-
-# END # includes
-
 SANE_DEBUG_CHECK += \
 	debug/brew \
 	debug/editorconfig-checker \
@@ -118,7 +110,7 @@ SANE_DEBUG += \
 	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
 
 .gitattributes:
-	$(LN) -s $(SANE_MK_ROOT)/config/$@ $@
+	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
 
 .mailmap:
 	$(TOUCH) $@
@@ -134,6 +126,14 @@ SANE_DEBUG += \
 
 .yamllint:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+
+# END # extra
+
+include $(SANE_MK_ROOT)/target.std.inc.mk
+
+include $(SANE_MK_ROOT)/misc.lazy.inc.mk
+
+# END # includes
 
 SANE_MK_INCLUDED := 1
 
