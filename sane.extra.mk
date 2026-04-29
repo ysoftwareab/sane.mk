@@ -84,6 +84,7 @@ SANE_DEPS_FILES += \
 	.gitattributes \
 	.mailmap \
 	.markdownlint.json \
+	.ruff.toml \
 	.shellcheckrc \
 	.yamllint \
 
@@ -123,6 +124,9 @@ SANE_DEBUG += \
 	$(TOUCH) $@
 
 .markdownlint.json:
+	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+
+.ruff.toml:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 .shellcheckrc:
