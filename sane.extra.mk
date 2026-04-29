@@ -97,6 +97,8 @@ SANE_CHECK += \
 	check/trufflehog \
 	check/yamllint \
 
+SANE_DEBUG_OS ?=
+SANE_DEBUG_ENV ?=
 SANE_DEBUG += \
 	$(SANE_DEBUG_OS) \
 	$(SANE_DEBUG_ENV) \
