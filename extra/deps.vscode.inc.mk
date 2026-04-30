@@ -1,4 +1,5 @@
 CODE = $(call which,CODE,code)
+$(call make-lazy,CODE)
 
 ifeq (CODE_NOT_FOUND,$(CODE))
 # ignore if no vscode installed

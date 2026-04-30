@@ -2,6 +2,8 @@ export NPM_CONFIG_UPDATE_NOTIFIER = false
 COREPACK ?= $(call which,COREPACK,corepack)
 ifeq (COREPACK_NOT_FOUND,$(COREPACK))
 COREPACK = $(NPX) --yes corepack
+else
+$(call make-lazy,COREPACK)
 endif
 
 DEFAULT_FILES_FILTER_OUT += \

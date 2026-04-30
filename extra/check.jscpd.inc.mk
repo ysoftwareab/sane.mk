@@ -1,6 +1,8 @@
 JSCPD ?= $(call which,JSCPD,jscpd)
 ifeq (JSCPD_NOT_FOUND,$(JSCPD))
 JSCPD = $(NPX) --yes jscpd
+else
+$(call make-lazy,JSCPD)
 endif
 
 JSCPD_FLAGS += \

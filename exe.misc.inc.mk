@@ -72,3 +72,4 @@ GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
+$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3 STRIP_JSON_COMMENTS,$(call make-lazy,$(VAR)))

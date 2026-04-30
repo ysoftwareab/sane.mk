@@ -1,6 +1,8 @@
 RUFF = $(call which,RUFF,ruff)
 ifeq (RUFF_NOT_FOUND,$(RUFF))
 RUFF = $(UVX) ruff
+else
+$(call make-lazy,RUFF)
 endif
 
 RUFF_CONFIG = $(GIT_ROOT)/.ruff.toml
