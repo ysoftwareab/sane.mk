@@ -85,17 +85,28 @@ SANE_DEBUG_DEPS += \
 	debug/uv \
 	debug/vscode \
 
-SANE_CHECK += \
+SANE_CHECK_LINTERS += \
 	check/actionlint \
 	check/editorconfig-checker \
-	check/jscpd \
 	check/markdownlint \
 	check/ruff \
-	check/scc \
 	check/shellcheck \
 	check/shfmt \
-	check/trufflehog \
 	check/yamllint \
+
+SANE_CHECK_INFOSEC += \
+	check/trufflehog \
+
+# NOTE jscpd is slow. Disabled
+# NOTE scc is slow and it will also never fail. Disabled
+SANE_CHECK_MISC += \
+	noop/check/jscpd \
+	noop/check/scc \
+
+SANE_CHECK += \
+	$(SANE_CHECK_LINTERS) \
+	$(SANE_CHECK_INFOSEC) \
+	$(SANE_CHECK_MISC) \
 
 SANE_DEBUG_OS ?=
 SANE_DEBUG_ENV ?=

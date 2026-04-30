@@ -10,6 +10,7 @@ noop:
 # my-target: noop/my-optional-target
 .PHONY: noop/%
 noop/%:
+	@$(ECHO_INFO) "Skipping $*..."
 	@:
 
 # skip/% TARGET, alias to noop/%
@@ -17,4 +18,5 @@ noop/%:
 # my-target: skip/my-optional-target
 .PHONY: skip/%
 skip/%:
+	@$(ECHO_INFO) "Skipping $*..."
 	@:
