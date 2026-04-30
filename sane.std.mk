@@ -4,6 +4,8 @@ ifndef SANE_MK_ROOT
 SANE_MK_ROOT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
+-include Makefile.lazy
+
 # BEGIN # includes
 
 include $(SANE_MK_ROOT)/sane.mk
