@@ -1,4 +1,5 @@
 ACTIONLINT ?= $(call which,ACTIONLINT,actionlint)
+$(call make-lazy,ACTIONLINT)
 
 # https://github.com/rhysd/actionlint/blob/main/docs/usage.md#ignore-some-errors
 # Allow constant expressions

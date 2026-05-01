@@ -1,4 +1,4 @@
-CODE = $(call which,CODE,code)
+CODE ?= $(call which,CODE,code)
 $(call make-lazy,CODE)
 
 ifeq (CODE_NOT_FOUND,$(CODE))

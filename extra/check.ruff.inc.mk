@@ -1,4 +1,4 @@
-RUFF = $(call which,RUFF,ruff)
+RUFF ?= $(call which,RUFF,ruff)
 ifeq (RUFF_NOT_FOUND,$(RUFF))
 RUFF = $(UVX) ruff
 else

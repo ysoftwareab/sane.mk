@@ -38,11 +38,14 @@ N = $(call which,N,n)
 NODE = $(call which,NODE,node)
 NPM = $(call which,NPM,npm)
 NPX = $(call which,NPX,npx)
+$(foreach VAR,N NODE NPM NPX,$(call make-lazy,$(VAR)))
 
 # node corepack
-COREPACK = $(call which,COREPACK,corepack)
+COREPACK ?= $(call which,COREPACK,corepack)
 ifeq (COREPACK_NOT_FOUND,$(COREPACK))
 COREPACK = $(NPX) --yes corepack
+else
+$(call make-lazy,COREPACK)
 endif
 ifneq (,$(PKG_PACKAGE_MANAGER))
 ifneq ($(PKG_PACKAGE_MANAGER),$(patsubst npm@%,%,$(PKG_PACKAGE_MANAGER)))
@@ -56,6 +59,7 @@ endif
 # python
 PYTHON = $(call which,PYTHON,python)
 PYTHON3 = $(call which,PYTHON3,python3)
+$(foreach VAR,PYTHON PYTHON3,$(call make-lazy,$(VAR)))
 
 # zip
 UNZIP = $(call which,UNZIP,unzip) -oq

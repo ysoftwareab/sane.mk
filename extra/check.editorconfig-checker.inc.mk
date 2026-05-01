@@ -1,4 +1,5 @@
 EDITORCONFIG_CHECKER ?= $(call which,EDITORCONFIG_CHECKER,editorconfig-checker)
+$(call make-lazy,EDITORCONFIG_CHECKER)
 
 # NOTE add more patterns with |
 EDITORCONFIG_CHECKER_EXCLUDE ?= ^$$

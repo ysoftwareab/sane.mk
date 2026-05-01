@@ -1,4 +1,5 @@
 SHFMT ?= $(call which,SHFMT,shfmt)
+$(call make-lazy,SHFMT)
 
 SHFMT_FLAGS += \
 	--indent 4 \

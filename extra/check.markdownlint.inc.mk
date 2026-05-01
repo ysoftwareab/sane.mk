@@ -1,4 +1,5 @@
 MARKDOWNLINT ?= $(call which,MARKDOWNLINT,markdownlint)
+$(call make-lazy,MARKDOWNLINT)
 
 MARKDOWNLINT_FLAGS_IGNORE = \
 	--ignore node_modules \

@@ -4,8 +4,6 @@ ifndef SANE_MK_ROOT
 SANE_MK_ROOT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 endif
 
--include Makefile.lazy
-
 # BEGIN # includes
 
 include $(SANE_MK_ROOT)/sane.mk
@@ -30,8 +28,9 @@ include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.shell.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
-include $(SANE_MK_ROOT)/target.std.inc.mk
+-include Makefile.lazy
 
+include $(SANE_MK_ROOT)/target.std.inc.mk
 include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 # END # includes

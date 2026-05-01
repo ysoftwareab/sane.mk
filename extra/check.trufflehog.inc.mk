@@ -1,4 +1,5 @@
 TRUFFLEHOG ?= $(call which,TRUFFLEHOG,trufflehog)
+$(call make-lazy,TRUFFLEHOG)
 
 # NOTE add more patterns with ,
 TRUFFLEHOG_EXCLUDE_GLOBS +=

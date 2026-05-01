@@ -1,4 +1,5 @@
 SHELLCHECK ?= $(call which,SHELLCHECK,shellcheck)
+$(call make-lazy,SHELLCHECK)
 
 SHELLCHECK_FLAGS += \
 

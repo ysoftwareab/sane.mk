@@ -1,4 +1,5 @@
 YAMLLINT ?= $(call which,YAMLLINT,yamllint)
+$(call make-lazy,YAMLLINT)
 
 YAMLLINT_FLAGS += \
 	--format parsable \

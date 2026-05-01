@@ -1,4 +1,5 @@
 SCC ?= $(call which,SCC,scc)
+$(call make-lazy,SCC)
 
 SCC_FLAGS += \
 	--ci \
