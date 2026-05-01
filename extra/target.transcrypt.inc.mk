@@ -19,6 +19,9 @@ else ifneq (,$(wildcard $(GIT_ROOT)/transcrypt))
 TRANSCRYPT = $(GIT_ROOT)/transcrypt
 else
 TRANSCRYPT ?= $(call which,TRANSCRYPT,transcrypt)
+ifeq (TRANSCRYPT_NOT_FOUND,$(TRANSCRYPT))
+TRANSCRYPT_FILES =
+endif
 endif
 TRANSCRYPT_SET = $(TRANSCRYPT) --yes --set-openssl-path=$(OPENSSL3) --cipher "$(TRANSCRYPT_CIPHER)"
 
