@@ -69,6 +69,10 @@ else ifeq (true,$(VERBOSE_TF))
 MAKEFLAGS += $(MAKEFLAG_MAYBE_PRINT_DIRECTORY)
 endif
 
+ifeq (--print-directory,$(MAKEFLAG_MAYBE_PRINT_DIRECTORY))
+$(info make: Running goals '$(MAKECMDGOALS)')
+endif
+
 ifneq (,$(filter undefine,$(.FEATURES)))
 undefine CI_TF
 undefine MAKEFLAGS_HAS_NO_PRINT_DIRECTORY_TF
