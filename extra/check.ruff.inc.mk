@@ -14,12 +14,12 @@ RUFF_FILES += \
 	$(RUFF_FILES_EXT) \
 	$(RUFF_FILES_SHEBANG) \
 
-RUFF_FILES_EXT = $(shell $(GIT_LS_NOSYM) . | $(GREP) -e "\.py$$")
+RUFF_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.py$$")
 
 RUFF_FILES_SHEBANG_PATH = .
 
 RUFF_FILES_SHEBANG = \
-	$(shell $(GIT_LS_NOSYM) $(RUFF_FILES_SHEBANG_PATH) | \
+	$(shell $(call git_ls_nosym,$(RUFF_FILES_SHEBANG_PATH)) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

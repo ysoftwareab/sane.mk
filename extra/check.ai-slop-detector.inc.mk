@@ -12,13 +12,13 @@ AI_SLOP_DETECTOR_FILES += \
 	$(AI_SLOP_DETECTOR_FILES_EXT) \
 	$(AI_SLOP_DETECTOR_FILES_SHEBANG) \
 
-AI_SLOP_DETECTOR_FILES_EXT = $(shell $(GIT_LS_NOSYM) . \
+AI_SLOP_DETECTOR_FILES_EXT = $(shell $(GIT_LS_NOSYM) \
 	| $(GREP) -e "\.jsx?$$" -e "\.py$$" -e "\.tsx?$$")
 
 AI_SLOP_DETECTOR_FILES_SHEBANG_PATH = .
 
 AI_SLOP_DETECTOR_FILES_SHEBANG = \
-	$(shell $(GIT_LS_NOSYM) $(AI_SLOP_DETECTOR_FILES_SHEBANG_PATH) | \
+	$(shell $(call git_ls_nosym,$(AI_SLOP_DETECTOR_FILES_SHEBANG_PATH)) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

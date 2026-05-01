@@ -32,6 +32,10 @@ GIT_LS_NOSYM = $(GIT_LS) | $(XARGS) -I{} sh -c 'test -L "{}" || echo "{}"'
 GIT_LS_SUB = $(CAT) .gitmodules | $(GREP) "path =" | $(SED) "s/.\{0,\}path = //"
 $(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_NOSYM GIT_LS_SUB,$(call make-lazy,$(VAR)))
 
+define git_ls_nosym
+$(GIT_LS) $(1) | $(XARGS) -I{} sh -c 'test -L "{}" || echo "{}"'
+endef
+
 # node
 export N_PREFIX = $(TMPDIR)
 N = $(call which,N,n)
