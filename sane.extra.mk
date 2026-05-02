@@ -46,11 +46,12 @@ include $(SANE_MK_ROOT)/extra/check.editorconfig-checker.inc.mk
 include $(SANE_MK_ROOT)/extra/check.jscpd.inc.mk
 include $(SANE_MK_ROOT)/extra/check.markdownlint.inc.mk
 include $(SANE_MK_ROOT)/extra/check.ruff.inc.mk
-include $(SANE_MK_ROOT)/extra/check.scc.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
+
+include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
 
 SANE_DEBUG_CHECK += \
 	debug/brew \
@@ -58,7 +59,6 @@ SANE_DEBUG_CHECK += \
 	debug/jscpd \
 	debug/markdownlint \
 	debug/ruff \
-	debug/scc \
 	debug/shellcheck \
 	debug/shfmt \
 	debug/trufflehog \
@@ -108,10 +108,8 @@ SANE_CHECK_INFOSEC += \
 	check/trufflehog \
 
 # NOTE jscpd is slow. Disabled
-# NOTE scc is slow and it will also never fail. Disabled
 SANE_CHECK_MISC += \
 	noop/check/jscpd \
-	noop/check/scc \
 
 SANE_CHECK += \
 	$(SANE_CHECK_LINTERS) \
