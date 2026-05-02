@@ -5,6 +5,7 @@ SANE_CLEAN ?=
 SANE_DEBUG ?=
 SANE_DEPS ?=
 SANE_DEPS_FILES ?=
+SANE_DEPS_FOLDERS ?=
 SANE_DEPS_GITIGNORE ?=
 SANE_DEPS_SYSTEM ?=
 SANE_DEPS_UPGRADE ?=
@@ -16,7 +17,7 @@ SANE_ALL ?= $(SANE_ALL_DEFAULT)
 SANE_CI_DEFAULT := all
 SANE_CI ?= $(SANE_CI_DEFAULT)
 
-SANE_DEPS_DEFAULT := deps/files
+SANE_DEPS_DEFAULT := deps/folders deps/files
 ifeq ($(MAKE_PATH),$(GIT_ROOT))
 SANE_DEPS_DEFAULT += deps/gitignore
 endif
@@ -71,6 +72,13 @@ deps: ## Install local dependencies.
 deps/files: prehook/deps/files
 deps/files: $(SANE_DEPS_FILES)
 deps/files:
+	$(MAKE) posthook/$@
+
+
+.PHONY: deps/folders
+deps/folders: prehook/deps/folders
+deps/folders: $(SANE_DEPS_FOLDERS)
+deps/folders:
 	$(MAKE) posthook/$@
 
 

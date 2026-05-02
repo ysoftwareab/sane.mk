@@ -82,6 +82,14 @@ SANE_DEPS_FILES += \
 	.shellcheckrc \
 	.yamllint \
 
+SANE_DEPS_FOLDERS += \
+	deps/folders/bin \
+	deps/folders/config \
+	deps/folders/dist \
+	deps/folders/docs \
+	deps/folders/test \
+	deps/folders/tmp \
+
 SANE_DEBUG_DEPS += \
 	debug/corepack \
 	debug/uv \
@@ -118,29 +126,68 @@ SANE_DEBUG += \
 	$(SANE_DEBUG_DEPS) \
 	$(SANE_DEBUG_CHECK) \
 
+
 .editorconfig:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+
 
 .gitignore:
 	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
 
+
 .gitattributes:
 	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
+
 
 .mailmap:
 	$(TOUCH) $@
 
+
 .markdownlint.json:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+
 
 .ruff.toml:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
+
 .shellcheckrc:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
+
 .yamllint:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+
+
+.PHONY: deps/folders/bin
+deps/folders/bin:
+	$(MKDIR) bin/
+
+
+.PHONY: deps/folders/config
+deps/folders/config:
+	$(MKDIR) config/
+
+
+.PHONY: deps/folders/dist
+deps/folders/dist:
+	$(MKDIR) dist/
+
+
+.PHONY: deps/folders/docs
+deps/folders/docs:
+	$(MKDIR) docs/
+
+
+.PHONY: deps/folders/test
+deps/folders/test:
+	$(MKDIR) test/
+
+
+.PHONY: deps/folders/tmp
+deps/folders/tmp: .gitignore
+	$(MKDIR) tmp/
+	$(GREP) -q '^/tmp/$$' .gitignore || $(ECHO) "/tmp/" >> .gitignore
 
 # END # extra
 
