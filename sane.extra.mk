@@ -51,6 +51,8 @@ include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 
+include $(SANE_MK_ROOT)/extra/test.bats.inc.mk
+
 include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
 
 SANE_DEBUG_CHECK += \
@@ -63,6 +65,12 @@ SANE_DEBUG_CHECK += \
 	debug/shfmt \
 	debug/trufflehog \
 	debug/yamllint \
+
+SANE_DEBUG_TEST += \
+	debug/bats \
+
+SANE_DEBUG_TOOL += \
+	debug/scc \
 
 SANE_DEPS_SYSTEM += \
 	deps/system/brewfile \
@@ -123,6 +131,8 @@ SANE_DEBUG += \
 	$(SANE_DEBUG_ENV) \
 	$(SANE_DEBUG_DEPS) \
 	$(SANE_DEBUG_CHECK) \
+	$(SANE_DEBUG_TEST) \
+	$(SANE_DEBUG_TOOL) \
 
 
 .editorconfig:
