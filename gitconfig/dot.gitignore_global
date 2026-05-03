@@ -1,0 +1,200 @@
+# -*- mode: Gitignore -*-
+
+# BEGIN gitconfig/dot.gitignore_global.base
+
+# -*- mode: Gitignore -*-
+
+# Emacs
+# A slimmer version of https://github.com/github/gitignore/blob/87ec1bd/Global/Emacs.gitignore
+# see https://github.com/github/gitignore/pull/1980#issuecomment-668782387
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+# Org-mode
+.org-id-locations
+*_archive
+# flymake-mode
+*_flymake.*
+# Flycheck
+flycheck_*.el
+# projectiles files
+.projectile
+# directory configuration
+.dir-locals.el
+
+# Git
+/archive.*
+/.git-worktree/
+
+# Logs
+*.log*
+
+# NodeJS
+.npm/
+.tern-port
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+
+# ------------------------------------------------------------------------------
+
+# Misc
+
+# END gitconfig/dot.gitignore_global.base
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Backup.gitignore
+
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Backup.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Linux.gitignore
+
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Linux.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Patch.gitignore
+
+*.orig
+*.rej
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Patch.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Vim.gitignore
+
+# Swap
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+Sessionx.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Vim.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/VisualStudioCode.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Windows.gitignore
+
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Windows.gitignore
+
+################################################################################
+
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/macOS.gitignore
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/macOS.gitignore

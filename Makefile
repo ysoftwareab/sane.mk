@@ -7,7 +7,17 @@ JSCPD_FILES_FILTER_OUT += \
 	sane.extra.mk.tpl \
 	sane.std.mk.tpl \
 
+SANE_BUILD += \
+	gitconfig/dot.gitignore_global \
+
 # ------------------------------------------------------------------------------
+
+.PHONY: gitconfig/dot.gitignore_global
+gitconfig/dot.gitignore_global: gitconfig/dot.gitignore_global.tpl
+gitconfig/dot.gitignore_global: gitconfig/dot.gitignore_global.base
+gitconfig/dot.gitignore_global:
+	$< > $@
+
 
 .PHONY: dist
 dist: ## Build distribution files
