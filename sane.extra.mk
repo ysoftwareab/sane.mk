@@ -98,6 +98,11 @@ SANE_DEPS_FOLDERS += \
 	deps/folders/test \
 	deps/folders/tmp \
 
+SANE_DEPS_GITIGNORE += \
+	deps/gitignore/corepack \
+	deps/gitignore/uv \
+	deps/gitignore/vscode \
+
 SANE_DEBUG_DEPS += \
 	debug/corepack \
 	debug/uv \
