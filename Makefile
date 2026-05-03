@@ -8,9 +8,17 @@ JSCPD_FILES_FILTER_OUT += \
 	sane.std.mk.tpl \
 
 SANE_BUILD += \
+	gitconfig/dot.gitattributes_global \
 	gitconfig/dot.gitignore_global \
 
 # ------------------------------------------------------------------------------
+
+.PHONY: gitconfig/dot.gitattributes_global
+gitconfig/dot.gitattributes_global: gitconfig/dot.gitattributes_global.tpl
+gitconfig/dot.gitattributes_global: gitconfig/dot.gitattributes_global.base
+gitconfig/dot.gitattributes_global:
+	$< > $@
+
 
 .PHONY: gitconfig/dot.gitignore_global
 gitconfig/dot.gitignore_global: gitconfig/dot.gitignore_global.tpl
