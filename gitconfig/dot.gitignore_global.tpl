@@ -14,13 +14,13 @@ GITHUB_GLOBAL_GITIGNORE_BASE_URL="https://raw.githubusercontent.com/github/gitig
 # Removing the Emacs gitignore template because it's overly agressive,
 # ignoring things like  all "server" or "dist" folders.
 GITHUB_GLOBAL_GITIGNORES="\
-    Global\Backup \
-    Global\Linux \
-    Global\Patch \
-    Global\Vim \
-    Global\VisualStudioCode \
-    Global\Windows \
-    Global\macOS \
+    Global/Backup \
+    Global/Linux \
+    Global/Patch \
+    Global/Vim \
+    Global/VisualStudioCode \
+    Global/Windows \
+    Global/macOS \
 "
 
 LOCAL_GITIGNORES="\
@@ -28,7 +28,7 @@ LOCAL_GITIGNORES="\
 
 mkdir -p "${GIT_ROOT}/gitconfig/github-global-gitignore"
 for GITHUB_GLOBAL_GITIGNORE in ${GITHUB_GLOBAL_GITIGNORES}; do
-    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE}.gitignore" \
+    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore" \
         "${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE}.gitignore"
 done
 
@@ -45,11 +45,11 @@ for GITHUB_GLOBAL_GITIGNORE in ${GITHUB_GLOBAL_GITIGNORES}; do
     echo
     echo "################################################################################"
     echo
-    echo "# BEGIN ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE}.gitignore"
+    echo "# BEGIN ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
     echo
-    cat "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE}.gitignore"
+    cat "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
     echo
-    echo "# END ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE}.gitignore"
+    echo "# END ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
 done
 
 for LOCAL_GITIGNORE in ${LOCAL_GITIGNORES}; do

@@ -51,7 +51,7 @@ __pycache__/
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Backup.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Backup.gitignore
 
 *.bak
 *.gho
@@ -59,11 +59,11 @@ __pycache__/
 *.orig
 *.tmp
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Backup.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Backup.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Linux.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Linux.gitignore
 
 *~
 
@@ -79,20 +79,20 @@ __pycache__/
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Linux.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Linux.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Patch.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Patch.gitignore
 
 *.orig
 *.rej
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Patch.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Patch.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Vim.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Vim.gitignore
 
 # Swap
 [._]*.s[a-v][a-z]
@@ -114,11 +114,11 @@ tags
 # Persistent undo
 [._]*.un~
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Vim.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Vim.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/VisualStudioCode.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-VisualStudioCode.gitignore
 
 .vscode/*
 !.vscode/settings.json
@@ -133,11 +133,11 @@ tags
 # Built Visual Studio Code Extensions
 *.vsix
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/VisualStudioCode.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-VisualStudioCode.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Windows.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Windows.gitignore
 
 # Windows thumbnail cache files
 Thumbs.db
@@ -164,11 +164,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/Windows.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-Windows.gitignore
 
 ################################################################################
 
-# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/macOS.gitignore
+# BEGIN https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-macOS.gitignore
 
 # General
 .DS_Store
@@ -197,4 +197,4 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global/macOS.gitignore
+# END https://raw.githubusercontent.com/github/gitignore/5b0261b4675e803934284a1c37eb478c38a89030/Global-macOS.gitignore
