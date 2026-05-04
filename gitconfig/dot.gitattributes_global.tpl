@@ -25,7 +25,7 @@ LOCAL_GITIGNORES="\
 
 mkdir -p "${GIT_ROOT}/gitconfig/github-global-gitattributes"
 for GITHUB_GLOBAL_GITATTRIBUTES in ${GITHUB_GLOBAL_GITATTRIBUTESS}; do
-    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes" \
+    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes" \
         "${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes"
 done
 
@@ -42,11 +42,11 @@ for GITHUB_GLOBAL_GITATTRIBUTES in ${GITHUB_GLOBAL_GITATTRIBUTESS}; do
     echo
     echo "################################################################################"
     echo
-    echo "# BEGIN ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes"
+    echo "# BEGIN ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
     echo
-    cat "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes"
+    cat "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
     echo
-    echo "# END ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes"
+    echo "# END ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
 done
 
 for LOCAL_GITIGNORE in ${LOCAL_GITIGNORES}; do
