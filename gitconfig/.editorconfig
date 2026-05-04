@@ -1,0 +1,5 @@
+[dot.gitattributes_global.tpl]
+indent_size = 4
+
+[dot.gitignore_global.tpl]
+indent_size = 4

@@ -2,6 +2,8 @@ include sane.extra.mk
 
 DEFAULT_FILES_FILTER_OUT += \
 	$(wildcard bin/transcrypt@*/transcrypt) \
+	gitconfig/dot.gitattributes_global \
+	gitconfig/dot.gitignore_global \
 
 JSCPD_FILES_FILTER_OUT += \
 	sane.extra.mk.tpl \
