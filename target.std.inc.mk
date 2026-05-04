@@ -56,91 +56,91 @@ posthook/%:
 
 .PHONY: all
 all: prehook/all
-all: $(SANE_ALL)
 all:
+	$(MAKE) $(SANE_ALL)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps
 deps: prehook/deps
-deps: $(SANE_DEPS)
 deps: ## Install local dependencies.
+	$(MAKE) $(SANE_DEPS)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/files
 deps/files: prehook/deps/files
-deps/files: $(SANE_DEPS_FILES)
 deps/files:
+	$(MAKE) $(SANE_DEPS_FILES)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/folders
 deps/folders: prehook/deps/folders
-deps/folders: $(SANE_DEPS_FOLDERS)
 deps/folders:
+	$(MAKE) $(SANE_DEPS_FOLDERS)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/gitignore
 deps/gitignore: prehook/deps/gitignore
-deps/gitignore: $(SANE_DEPS_GITIGNORE)
 deps/gitignore:
+	$(MAKE) $(SANE_DEPS_GITIGNORE)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/system
 deps/system: prehook/deps/system
-deps/system: $(SANE_DEPS_SYSTEM)
 deps/system: ## Install system dependencies.
+	$(MAKE) $(SANE_DEPS_SYSTEM)
 	$(MAKE) posthook/$@
 
 
 .PHONY: deps/upgrade
 deps/upgrade: prehook/deps/upgrade
-deps/upgrade: $(SANE_DEPS_UPGRADE)
 deps/upgrade: ## Upgrade local dependencies.
+	$(MAKE) $(SANE_DEPS_UPGRADE)
 	$(MAKE) posthook/$@
 
 
 .PHONY: check
 check: prehook/check
-check: $(SANE_CHECK)
 check: ## Check.
+	$(MAKE) $(SANE_CHECK)
 	$(MAKE) posthook/$@
 
 
 .PHONY: build
 build: prehook/build
-build: $(SANE_BUILD)
 build: ## Build.
+	$(MAKE) $(SANE_BUILD)
 	$(MAKE) posthook/$@
 
 
 .PHONY: test
 test: prehook/test
-test: $(SANE_TEST)
 test: ## Test.
+	$(MAKE) $(SANE_TEST)
 	$(MAKE) posthook/$@
 
 # ------------------------------------------------------------------------------
 
 .PHONY: ci
 ci: prehook/ci
-ci: $(SANE_CI)
 ci: ## CI.
+	$(MAKE) $(SANE_CI)
 	$(MAKE) posthook/$@
 
 
 .PHONY: clean
 clean: prehook/clean
-clean: $(SANE_CLEAN)
 clean: ## Clean.
+	$(MAKE) $(SANE_CLEAN)
 	$(MAKE) posthook/$@
 
 
 .PHONY: debug
 debug: prehook/debug
-debug: $(SANE_DEBUG)
 debug: ## Debug environment and software versions.
+	$(MAKE) $(SANE_DEBUG)
 	$(MAKE) posthook/$@
