@@ -1,9 +1,3 @@
-# transcrypt ===================================================================
-*.cert filter=crypt diff=crypt merge=crypt -delta export-ignore
-*.crt filter=crypt diff=crypt merge=crypt -delta export-ignore
-*.gpg filter=crypt diff=crypt merge=crypt -delta export-ignore
-*.key filter=crypt diff=crypt merge=crypt -delta export-ignore
-*.secret filter=crypt diff=crypt merge=crypt -delta export-ignore
-*.secret.* filter=crypt diff=crypt merge=crypt -delta export-ignore
-**/*.secret/** filter=crypt diff=crypt merge=crypt -delta export-ignore
-**/.git* !filter !diff
+# linguist (GitHub) ============================================================
+/docs/** linguist-documentation
+/dist/** linguist-generated
