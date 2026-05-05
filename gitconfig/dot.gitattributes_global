@@ -5,10 +5,7 @@
 # -*- mode: Gitattributes -*-
 
 * text=auto eol=lf
-
-# linguist (GitHub) ============================================================
-/docs/** linguist-documentation
-/dist/** export-ignore linguist-generated
+/dist/** export-ignore
 
 # ipynb ========================================================================
 *.ipynb filter=nbstripout diff=ipynb

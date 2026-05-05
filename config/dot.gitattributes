@@ -1,0 +1,3 @@
+# linguist (GitHub) ============================================================
+/docs/** linguist-documentation
+/dist/** linguist-generated
