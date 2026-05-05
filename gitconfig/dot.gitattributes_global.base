@@ -1,5 +1,7 @@
 # -*- mode: Gitattributes -*-
 
+* text=auto eol=lf
+
 # linguist (GitHub) ============================================================
 /docs/** linguist-documentation
 /dist/** export-ignore linguist-generated
