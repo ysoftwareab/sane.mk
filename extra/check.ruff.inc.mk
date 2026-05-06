@@ -1,6 +1,7 @@
 RUFF ?= $(call which,RUFF,ruff)
 ifeq (RUFF_NOT_FOUND,$(RUFF))
-RUFF = $(UVX) ruff
+export RUFF_VSN ?= >=0.15.0,<0.16
+RUFF = $(UVX) ruff$(RUFF_VSN)
 else
 $(call make-lazy,RUFF)
 endif
