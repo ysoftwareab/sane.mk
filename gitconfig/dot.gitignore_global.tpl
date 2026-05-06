@@ -8,12 +8,12 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } &&
 [[ -z "${VERBOSE:-${V:-}}" ]] || set -x
 
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-GITHUB_GLOBAL_GITIGNORE_COMMITISH=5b0261b4675e803934284a1c37eb478c38a89030
-GITHUB_GLOBAL_GITIGNORE_BASE_URL="https://raw.githubusercontent.com/github/gitignore/${GITHUB_GLOBAL_GITIGNORE_COMMITISH}" # editorconfig-checker-disable-line
+GITHUB_GITIGNORE_COMMITISH=5b0261b4675e803934284a1c37eb478c38a89030
+GITHUB_GITIGNORE_BASE_URL="https://raw.githubusercontent.com/github/gitignore/${GITHUB_GITIGNORE_COMMITISH}" # editorconfig-checker-disable-line
 
 # Removing the Emacs gitignore template because it's overly agressive,
 # ignoring things like  all "server" or "dist" folders.
-GITHUB_GLOBAL_GITIGNORES="\
+GITHUB_GITIGNORES="\
     Global/Backup \
     Global/Linux \
     Global/Patch \
@@ -27,9 +27,9 @@ LOCAL_GITIGNORES="\
 "
 
 mkdir -p "${GIT_ROOT}/gitconfig/github-global-gitignore"
-for GITHUB_GLOBAL_GITIGNORE in ${GITHUB_GLOBAL_GITIGNORES}; do
-    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore" \
-        "${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE}.gitignore"
+for GITHUB_GITIGNORE in ${GITHUB_GITIGNORES}; do
+    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GITIGNORE//\//-}.gitignore" \
+        "${GITHUB_GITIGNORE_BASE_URL}/${GITHUB_GITIGNORE}.gitignore"
 done
 
 echo "# -*- mode: Gitignore -*-"
@@ -41,15 +41,15 @@ cat "${GIT_ROOT}/gitconfig/dot.gitignore_global.base"
 echo
 echo "# END gitconfig/dot.gitignore_global.base"
 
-for GITHUB_GLOBAL_GITIGNORE in ${GITHUB_GLOBAL_GITIGNORES}; do
+for GITHUB_GITIGNORE in ${GITHUB_GITIGNORES}; do
     echo
     echo "################################################################################"
     echo
-    echo "# BEGIN ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
+    echo "# BEGIN ${GITHUB_GITIGNORE_BASE_URL}/${GITHUB_GITIGNORE//\//-}.gitignore"
     echo
-    cat "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
+    cat "${GIT_ROOT}/gitconfig/github-global-gitignore/${GITHUB_GITIGNORE//\//-}.gitignore"
     echo
-    echo "# END ${GITHUB_GLOBAL_GITIGNORE_BASE_URL}/${GITHUB_GLOBAL_GITIGNORE//\//-}.gitignore"
+    echo "# END ${GITHUB_GITIGNORE_BASE_URL}/${GITHUB_GITIGNORE//\//-}.gitignore"
 done
 
 for LOCAL_GITIGNORE in ${LOCAL_GITIGNORES}; do

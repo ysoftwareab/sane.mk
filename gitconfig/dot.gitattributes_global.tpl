@@ -8,12 +8,12 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } &&
 [[ -z "${VERBOSE:-${V:-}}" ]] || set -x
 
 GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
-GITHUB_GLOBAL_GITATTRIBUTES_COMMITISH=fddc586cf0f10ec4485028d0d2dd6f73197a4258
-GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL="https://raw.githubusercontent.com/gitattributes/gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES_COMMITISH}" # editorconfig-checker-disable-line
+GITHUB_GITATTRIBUTES_COMMITISH=fddc586cf0f10ec4485028d0d2dd6f73197a4258
+GITHUB_GITATTRIBUTES_BASE_URL="https://raw.githubusercontent.com/gitattributes/gitattributes/${GITHUB_GITATTRIBUTES_COMMITISH}" # editorconfig-checker-disable-line
 
 # Removing the Emacs gitignore template because it's overly agressive,
 # ignoring things like  all "server" or "dist" folders.
-GITHUB_GLOBAL_GITATTRIBUTESS="\
+GITHUB_GITATTRIBUTESS="\
     Global/VisualStudioCode \
     Common \
     Markdown \
@@ -24,9 +24,9 @@ LOCAL_GITIGNORES="\
 "
 
 mkdir -p "${GIT_ROOT}/gitconfig/github-global-gitattributes"
-for GITHUB_GLOBAL_GITATTRIBUTES in ${GITHUB_GLOBAL_GITATTRIBUTESS}; do
-    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes" \
-        "${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES}.gitattributes"
+for GITHUB_GITATTRIBUTES in ${GITHUB_GITATTRIBUTESS}; do
+    curl -qfsSL -o "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GITATTRIBUTES//\//-}.gitattributes" \
+        "${GITHUB_GITATTRIBUTES_BASE_URL}/${GITHUB_GITATTRIBUTES}.gitattributes"
 done
 
 echo "# -*- mode: Gitattributes -*-"
@@ -38,15 +38,15 @@ cat "${GIT_ROOT}/gitconfig/dot.gitattributes_global.base"
 echo
 echo "# END gitconfig/dot.gitattributes_global.base"
 
-for GITHUB_GLOBAL_GITATTRIBUTES in ${GITHUB_GLOBAL_GITATTRIBUTESS}; do
+for GITHUB_GITATTRIBUTES in ${GITHUB_GITATTRIBUTESS}; do
     echo
     echo "################################################################################"
     echo
-    echo "# BEGIN ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
+    echo "# BEGIN ${GITHUB_GITATTRIBUTES_BASE_URL}/${GITHUB_GITATTRIBUTES//\//-}.gitattributes"
     echo
-    cat "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
+    cat "${GIT_ROOT}/gitconfig/github-global-gitattributes/${GITHUB_GITATTRIBUTES//\//-}.gitattributes"
     echo
-    echo "# END ${GITHUB_GLOBAL_GITATTRIBUTES_BASE_URL}/${GITHUB_GLOBAL_GITATTRIBUTES//\//-}.gitattributes"
+    echo "# END ${GITHUB_GITATTRIBUTES_BASE_URL}/${GITHUB_GITATTRIBUTES//\//-}.gitattributes"
 done
 
 for LOCAL_GITIGNORE in ${LOCAL_GITIGNORES}; do
