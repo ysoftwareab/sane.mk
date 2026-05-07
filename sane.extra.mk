@@ -50,6 +50,7 @@ include $(SANE_MK_ROOT)/extra/check.ruff.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
+include $(SANE_MK_ROOT)/extra/check.ty.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 
 include $(SANE_MK_ROOT)/extra/test.bats.inc.mk
@@ -65,6 +66,7 @@ SANE_DEBUG_CHECK += \
 	debug/shellcheck \
 	debug/shfmt \
 	debug/trufflehog \
+	debug/ty \
 	debug/yamllint \
 
 SANE_DEBUG_TEST += \
@@ -117,6 +119,7 @@ SANE_CHECK_LINTERS += \
 	check/ruff \
 	check/shellcheck \
 	check/shfmt \
+	check/ty \
 	check/yamllint \
 
 SANE_CHECK_INFOSEC += \
