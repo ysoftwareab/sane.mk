@@ -11,6 +11,11 @@ RUFF_CONFIG = $(GIT_ROOT)/.ruff.toml
 RUFF_FLAGS += \
 	--config $(RUFF_CONFIG) \
 
+RUFF_FLAGS_WITH_OUTPUT_FORMAT = $(RUFF_FLAGS)
+ifneq (,$(CI))
+RUFF_FLAGS_WITH_OUTPUT_FORMAT += --output-format github
+endif
+
 RUFF_FILES += \
 	$(RUFF_FILES_EXT) \
 	$(RUFF_FILES_SHEBANG) \
@@ -54,8 +59,12 @@ check/ruff:
 	[[ "$${#RUFF_FILES_TMP[@]}" = "0" ]] || { \
 		$(RUFF) check --diff $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} || { \
 			[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
-				$(RUFF) check --output-format github $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} || true; \
+				$(RUFF) check $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $${RUFF_FILES_TMP[@]} || true; \
 			$(RUFF) check --fix-only $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} 2>/dev/null; \
+			exit 1; \
+		}; \
+		$(RUFF) format --diff $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} || { \
+			$(RUFF) format $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $${RUFF_FILES_TMP[@]} 2>/dev/null; \
 			exit 1; \
 		}; \
 	}
