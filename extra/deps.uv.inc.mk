@@ -24,7 +24,7 @@ deps/gitignore/uv:
 .PHONY: deps/uv
 deps/uv:
 ifneq (,$(wildcard uv.lock))
-	$(UV) sync
+	$(UV) sync --all-packages
 else
 	:
 endif
@@ -34,7 +34,7 @@ endif
 deps/upgrade/uv:
 ifneq (,$(wildcard uv.lock))
 	$(UV) lock --upgrade
-	$(UV) sync
+	$(UV) sync --all-packages
 else
 	:
 endif
