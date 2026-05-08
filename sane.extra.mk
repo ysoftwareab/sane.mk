@@ -59,6 +59,7 @@ include $(SANE_MK_ROOT)/extra/test.pytest.inc.mk
 include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
 
 SANE_DEBUG_CHECK += \
+	debug/actionlint \
 	debug/brew \
 	debug/editorconfig-checker \
 	debug/jscpd \
