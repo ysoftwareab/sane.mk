@@ -26,11 +26,11 @@ include $(SANE_MK_ROOT)/target.lazy.inc.mk
 include $(SANE_MK_ROOT)/target.noop.inc.mk
 include $(SANE_MK_ROOT)/target.printvar.inc.mk
 include $(SANE_MK_ROOT)/target.shell.inc.mk
+include $(SANE_MK_ROOT)/target.std.inc.mk
 include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 -include Makefile.lazy
 
-include $(SANE_MK_ROOT)/target.std.inc.mk
 include $(SANE_MK_ROOT)/misc.lazy.inc.mk
 
 # END # includes
