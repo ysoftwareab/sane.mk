@@ -54,6 +54,7 @@ include $(SANE_MK_ROOT)/extra/check.ty.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 
 include $(SANE_MK_ROOT)/extra/test.bats.inc.mk
+include $(SANE_MK_ROOT)/extra/test.pytest.inc.mk
 
 include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
 
@@ -71,6 +72,11 @@ SANE_DEBUG_CHECK += \
 
 SANE_DEBUG_TEST += \
 	debug/bats \
+	debug/pytest \
+
+SANE_TEST += \
+	test/bats \
+	test/pytest \
 
 SANE_DEBUG_TOOL += \
 	debug/scc \
