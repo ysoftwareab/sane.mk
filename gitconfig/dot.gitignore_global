@@ -42,6 +42,9 @@ npm-debug.log*
 
 # Python
 __pycache__/
+.ruff_cache/
+.venv/
+ipynb_checkpoints/
 
 # ------------------------------------------------------------------------------
 
