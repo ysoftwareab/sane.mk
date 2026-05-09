@@ -1,6 +1,6 @@
 # Use Homebrew to install dependencies on macOS/Linux.
 # For extensibility, the Brewfile is processed with
-# envsubst-like variable substitution and support for # include directives.
+# envsubst-like variable substitution and support for # source directives.
 
 BREWFILE = Brewfile
 BREWFILE_SH = Brewfile.sh
@@ -18,9 +18,9 @@ ifneq (,$(wildcard $(BREWFILE)))
 		| $(SED) "s/\${?HOST}?/$(HOST)/g" \
 		| $(SED) "s/\${?OS_SHORT}?/$(OS_SHORT)/g" \
 		| $(SED) "s/\${?OS}?/$(OS)/g" \
-		| $(SED) "s/^# include (.+)$/cat \1/e" \
-		| $(SED) "s/^# include (.+)$/cat \1/e" \
-		| $(SED) "s/^# include (.+)$/cat \1/e" \
+		| $(SED) "s/^# source (.+)$/cat \1/e" \
+		| $(SED) "s/^# source (.+)$/cat \1/e" \
+		| $(SED) "s/^# source (.+)$/cat \1/e" \
 		| brew bundle install --verbose --file=-
 ifneq (,$(wildcard $(BREWFILE_SH)))
 	OS=$(OS) OS_SHORT=$(OS_SHORT) ARCH=$(ARCH) ARCH_SHORT=$(ARCH_SHORT) HOST=$(HOST) ./$(BREWFILE_SH)
