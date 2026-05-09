@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -eEuo pipefail -o errtrace -o functrace
+shopt -s inherit_errexit 2>/dev/null || true
+export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+# shellcheck disable=SC2154
+trap 'e=$?; set +x; s() { local i=0; while caller $i; do ((++i)); done | while read l f p; do echo "bash: *** [$p:$l $f]${e:+ Error }$e"; e=""; done; }; >&2 echo; >&2 s' ERR # editorconfig-checker-disable-line
+function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } && export -f exe
+[[ -z "${VERBOSE:-${V:-}}" ]] || set -x
+
+bash --version | head -n1 | grep -q "^GNU bash, version 5\."
+curl --version | head -n1 | grep -q "^curl 8\."
+datetest --version | head -n1 | grep -q "^datetest 0\.4\."
+detox -V | head -n1 | grep -q "^detox 3\."
+dig -v 2>&1 | head -n1 | grep -q "^DiG 9\."
+gh --version | head -n1 | grep -q "^gh version 2\."
+git --version | head -n1 | grep -q "^git version 2\."
+git-lfs --version | head -n1 | grep -q "^git-lfs/3\."
+jo -v | head -n1 | grep -q "^jo 1\."
+jq --version | head -n1 | grep -q "^jq-1\."
+ssh -V 2>&1 | head -n1 | grep -q "^OpenSSH_10\."
+tmate -V | head -n1 | grep -q "^tmate 2\."
+{ unzip --version 2>&1 | head -n2 | tail -n1 || true; } | grep -q "^UnZip 6\."
+{ zip --version 2>&1 | head -n2 | tail -n1 || true; } | grep -q "^This is Zip 3\."
+yq --version | head -n1 | grep -q "^yq (https://github.com/mikefarah/yq/) version v4\."

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -eEuo pipefail -o errtrace -o functrace
+shopt -s inherit_errexit 2>/dev/null || true
+export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+# shellcheck disable=SC2154
+trap 'e=$?; set +x; s() { local i=0; while caller $i; do ((++i)); done | while read l f p; do echo "bash: *** [$p:$l $f]${e:+ Error }$e"; e=""; done; }; >&2 echo; >&2 s' ERR # editorconfig-checker-disable-line
+function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } && export -f exe
+[[ -z "${VERBOSE:-${V:-}}" ]] || set -x
+
+corepack --version | head -n1 | grep -q "^0\."
+docker --version | head -n1 | grep -q "^Docker version 29\."
+docker buildx version | head -n1 | grep -q "^github.com/docker/buildx v0\."
+docker compose version | head -n1 | grep -q "^Docker Compose version v5\."
+n --version | head -n1 | grep -q "^10\."
+node --version | head -n1 | grep -q "^v25\..*"
+npm --version | head -n1 | grep -q "^11\..*"
+pip3 --version | grep -q "^pip 26\..*"
+python3 --version | grep -q "^Python 3\."
+python3.12 --version | grep -q "^Python 3\.12"
+python3.13 --version | grep -q "^Python 3\.13"
+semver --help | head -n1 | grep -q "^SemVer 7\."
+starship --version | head -n1 | grep -q "^starship 1\."
+uv --version | head -n1 | grep -q "^uv 0\."
+
+# mg has no --version -V --help
+command -v mg &>/dev/null

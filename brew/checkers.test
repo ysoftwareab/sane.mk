@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#!/usr/bin/env bash
+set -eEuo pipefail -o errtrace -o functrace
+shopt -s inherit_errexit 2>/dev/null || true
+export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+# shellcheck disable=SC2154
+trap 'e=$?; set +x; s() { local i=0; while caller $i; do ((++i)); done | while read l f p; do echo "bash: *** [$p:$l $f]${e:+ Error }$e"; e=""; done; }; >&2 echo; >&2 s' ERR # editorconfig-checker-disable-line
+function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } && export -f exe
+[[ -z "${VERBOSE:-${V:-}}" ]] || set -x
+
+actionlint --version | head -n1 | grep -q "^1\."
+editorconfig-checker --version | head -n1 | grep -q "^3\."
+jscpd --version | head -n1 | grep -q "^4\."
+markdownlint --version | head -n1 | grep -q "^0\."
+ruff --version | head -n1 | grep -q "^ruff 0\\..*"
+scc --version | head -n1 | grep -q "^scc version 3\."
+shellcheck --version | head -n2 | tail -n1 | grep -q "^version: 0\.11\."
+shfmt --version | head -n1 | grep -q "^3\\..*"
+{ tflint --version | head -n1 || true; } | grep -q "^TFLint version 0\\..*"
+trufflehog --version | head -n1 | grep -q "^trufflehog 3\\..*"
+ty --version | head -n1 | grep -q "^ty 0\\..*"
+yamllint --version | head -n1 | grep -q "^yamllint 1\."

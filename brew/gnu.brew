@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+
+brew "bash" # Bourne-Again SHell, a UNIX command interpreter
+brew "bash-completion@2" # Programmable completion for Bash 4.2+
+brew "coreutils" # GNU File, Shell, and Text utilities
+brew "diffutils" # File comparison utilities
+# findutils installs find with -min/maxdepth -printf
+# and xargs with --no-run-if-empty
+brew "findutils" # Collection of GNU find, xargs, and locate
+brew "gawk" # GNU awk utility
+# gettext installs envsubst
+brew "gettext" # GNU internationalization (i18n) and localization (l10n) library
+brew "gnu-getopt" # Command-line option parsing utility
+brew "gnu-sed" # GNU implementation of the famous stream editor
+brew "gnu-tar" # GNU version of the tar archiving utility
+brew "gnu-time" # GNU implementation of time utility
+brew "gnu-which" # GNU implementation of which utility
+brew "gpatch" # Apply a diff file to an original
+brew "grep" # GNU grep, egrep and fgrep
+brew "gzip" # Popular GNU data compression program
+brew "make" # Utility for directing compilation
+brew "parallel" # Shell command parallelization utility
+brew "wdiff" # Display word differences between text files

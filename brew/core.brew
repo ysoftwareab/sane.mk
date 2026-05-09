@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+
+brew "bash" # Bourne-Again SHell, a UNIX command interpreter
+brew "bash-completion@2" # Programmable completion for Bash 4.2+
+# bind installs dig
+brew "bind" # Implementation of the DNS protocols
+brew "curl" # Get a file from an HTTP, HTTPS or FTP server
+brew "dateutils" # Tools to manipulate dates with a focus on financial data
+brew "detox" # Utility to replace problematic characters in filenames
+brew "gh" # GitHub command-line tool
+brew "git-lfs" # Git extension for versioning large files
+brew "git" # Distributed revision control system
+brew "jo" # JSON output from a shell
+brew "jq" # Lightweight and flexible command-line JSON processor
+brew "openssh" # OpenBSD freely-licensed SSH connectivity tools
+brew "tmate" # Instant terminal sharing
+brew "unzip" # Extraction utility for .zip compressed archives
+brew "util-linux" if OS.linux? # Collection of Linux utilities
+brew "yq" # Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "zip" # Compression and file packaging/archive utility

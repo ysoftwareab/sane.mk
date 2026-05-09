@@ -1,0 +1,7 @@
+# -*- mode: ruby -*-
+
+brew "awscli" if OS.mac? # Official Amazon AWS command-line interface
+brew "infracost" # Cost estimates for Terraform
+brew "terraform-docs" # Tool to generate documentation from Terraform modules
+brew "tfenv" # Terraform version manager inspired by rbenv
+cask "gcloud-cli" if OS.mac? # Set of tools to manage resources and applications hosted on Google Cloud

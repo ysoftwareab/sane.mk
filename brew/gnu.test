@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -eEuo pipefail -o errtrace -o functrace
+shopt -s inherit_errexit 2>/dev/null || true
+export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+# shellcheck disable=SC2154
+trap 'e=$?; set +x; s() { local i=0; while caller $i; do ((++i)); done | while read l f p; do echo "bash: *** [$p:$l $f]${e:+ Error }$e"; e=""; done; }; >&2 echo; >&2 s' ERR # editorconfig-checker-disable-line
+function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } && export -f exe
+[[ -z "${VERBOSE:-${V:-}}" ]] || set -x
+
+awk --version | head -n1 | grep -q "^GNU Awk 5\."
+bash --version | head -n1 | grep -q "^GNU bash, version 5\."
+cat --version | head -n1 | grep -q "^cat (GNU coreutils) 9\."
+diff --version | head -n1 | grep -q "^diff (GNU diffutils) 3\."
+# shellcheck disable=SC2185
+find --version | head -n1 | grep -q "^find (GNU findutils) 4\."
+envsubst --version | head -n1 | grep -q "^envsubst (GNU gettext-runtime) 1\."
+getopt --version | head -n1 | grep -q "^getopt from util-linux 2\."
+grep --version | head -n1 | grep -q "^grep (GNU grep) 3\."
+gzip --version | head -n1 | grep -q "^gzip 1\."
+make --version | head -n1 | grep -q "^GNU Make 4\.4"
+parallel --version | head -n1 | grep -q "^GNU parallel 2026"
+patch --version | head -n1 | grep -q "^GNU patch 2\."
+sed --version | head -n1 | grep -q "\bsed (GNU sed) 4\."
+tar --version | head -n1 | grep -q "^tar (GNU tar) 1\."
+wdiff --version | head -n1 | grep -q "^wdiff (GNU wdiff) 1\."
+
+# make sure to call the executables, not built-ins
+env time --version | head -n1 | grep -q "^time (GNU Time) 1\."
+env which --version | head -n1 | grep -q "^GNU which v2\."

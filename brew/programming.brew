@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+
+brew "corepack" # Package acting as bridge between Node projects and their package managers
+brew "mg" # Small Emacs-like editor
+brew "n" # Node version management
+brew "node" # Open-source, cross-platform JavaScript runtime environment
+brew "python" # Interpreted, interactive, object-oriented programming language
+brew "python3" # Interpreted, interactive, object-oriented programming language
+brew "python@3.12" # Interpreted, interactive, object-oriented programming language
+brew "python@3.13" # Interpreted, interactive, object-oriented programming language
+brew "semver" # Semantic version parser for node (the one npm uses)
+brew "starship" # Cross-shell prompt for astronauts
+brew "uv" # Extremely fast Python package installer and resolver, written in Rust
+cask "font-ubuntu-mono-nerd-font" if OS.mac? # https://github.com/ryanoasis/nerd-fonts
+
+if OS.mac?
+  cask "docker-desktop" # Docker Desktop for Mac
+else
+  brew "docker" # Pack, ship and run any application as a lightweight container
+  brew "docker-buildx" # Docker CLI plugin for extended build capabilities with BuildKit
+  brew "docker-compose" # Isolated development environments using Docker
+end

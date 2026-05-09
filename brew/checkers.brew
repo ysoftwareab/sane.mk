@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+
+brew "actionlint" # Static checker for GitHub Actions workflow files
+brew "editorconfig-checker" # Tool to verify that your files are in harmony with your .editorconfig
+brew "jscpd" # Copy/paste detector for programming source code
+brew "markdownlint-cli" # CLI for Node.js style checker and lint tool for Markdown files
+brew "ruff" # Extremely fast Python linter, written in Rust
+brew "scc" # Fast and accurate code counter with complexity and COCOMO estimates
+brew "shellcheck" # Static analysis and lint tool, for (ba)sh scripts
+brew "shfmt" # Autoformat shell script source code
+brew "tflint" # Linter for Terraform files
+brew "trufflehog" # Find and verify credentials
+brew "ty" # Extremely fast Python type checker, written in Rust
+brew "yamllint" # Linter for YAML files
