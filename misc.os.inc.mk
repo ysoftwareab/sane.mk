@@ -20,6 +20,9 @@ OS = $(shell $(UNAME) | $(TR) "[:upper:]" "[:lower:]")
 OS_SHORT = $(shell $(ECHO) $(OS) | $(SED) "s/^\([[:alpha:]]\{1,\}\).*\$$/\1/g")
 $(foreach VAR,OS OS_SHORT,$(call make-lazy,$(VAR)))
 
+HOST ?= $(shell hostname)
+HOST_SHORT = $(shell hostname -s)
+
 SANE_DEBUG_OS = \
 	debug/os \
 	debug/os/$(OS_SHORT) \
@@ -34,6 +37,8 @@ debug/os:
 	$(ECHO) "ARCH_BIT=$(ARCH_BIT)"
 	$(ECHO) "ARCH_NORMALIZED=$(ARCH_NORMALIZED)"
 	$(ECHO) "ARCH_SHORT=$(ARCH_SHORT)"
+	$(ECHO) "HOST=$(HOST)"
+	$(ECHO) "HOST_SHORT=$(HOST_SHORT)"
 	$(ECHO) "OS=$(OS)"
 	$(ECHO) "OS_SHORT=$(OS_SHORT)"
 	$(ECHO_DONE)
