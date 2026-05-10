@@ -8,12 +8,12 @@ BREWFILE_TEST = Brewfile.test
 
 CAT_BREWFILE = \
 	$(CAT) $(BREWFILE) \
-		| $(SED) "s/\$${?ARCH}?/$(ARCH)/g" \
-		| $(SED) "s/\$${?ARCH_SHORT}?/$(ARCH_SHORT)/g" \
-		| $(SED) "s/\$${?HOST}?/$(HOST)/g" \
-		| $(SED) "s/\$${?HOST_SHORT}?/$(HOST_SHORT)/g" \
-		| $(SED) "s/\$${?OS_SHORT}?/$(OS_SHORT)/g" \
-		| $(SED) "s/\$${?OS}?/$(OS)/g" \
+		| $(SED) "s/\$${\?ARCH}\?/$(ARCH)/g" \
+		| $(SED) "s/\$${\?ARCH_SHORT}\?/$(ARCH_SHORT)/g" \
+		| $(SED) "s/\$${\?HOST}\?/$(HOST)/g" \
+		| $(SED) "s/\$${\?HOST_SHORT}\?/$(HOST_SHORT)/g" \
+		| $(SED) "s/\$${\?OS}\?/$(OS)/g" \
+		| $(SED) "s/\$${\?OS_SHORT}\?/$(OS_SHORT)/g" \
 		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e" \
 		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e" \
 		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e"
@@ -36,12 +36,20 @@ endif
 
 .PHONY: test/system/brewfile
 test/system/brewfile:
+	$(CAT_BREWFILE); exit 1
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
 	$(CAT_BREWFILE) \
 		| brew bundle check --verbose --file=-
 ifneq (,$(wildcard $(BREWFILE_TEST)))
-	OS=$(OS) OS_SHORT=$(OS_SHORT) ARCH=$(ARCH) ARCH_SHORT=$(ARCH_SHORT) HOST=$(HOST) ./$(BREWFILE_TEST)
+	ARCH=$(ARCH) \
+		ARCH_SHORT=$(ARCH_SHORT) \
+		HOST=$(HOST) \
+		HOST_SHORT=$(HOST_SHORT) \
+		OS=$(OS) \
+		OS_SHORT=$(OS_SHORT) \
+		HOST=$(HOST) \
+		./$(BREWFILE_TEST)
 endif
 else
 	:
