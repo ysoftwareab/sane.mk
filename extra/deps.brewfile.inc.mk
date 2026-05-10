@@ -6,9 +6,27 @@ BREWFILE = Brewfile
 BREWFILE_SH = Brewfile.sh
 BREWFILE_TEST = Brewfile.test
 
+BREW_BUNDLE_FLAGS += \
+
+ifeq (true,$(VERBOSE))
+BREW_BUNDLE_FLAGS += --verbose
+endif
+
+BREWFILE_ENV = \
+	ARCH=$(ARCH) \
+	ARCH_BIT=$(ARCH_BIT) \
+	ARCH_NORMALIZED=$(ARCH_NORMALIZED) \
+	ARCH_SHORT=$(ARCH_SHORT) \
+	HOST=$(HOST) \
+	HOST_SHORT=$(HOST_SHORT) \
+	OS=$(OS) \
+	OS_SHORT=$(OS_SHORT) \
+
 CAT_BREWFILE = \
 	$(CAT) $(BREWFILE) \
 		| $(SED) "s/\$${\?ARCH}\?/$(ARCH)/g" \
+		| $(SED) "s/\$${\?ARCH_BIT}\?/$(ARCH_BIT)/g" \
+		| $(SED) "s/\$${\?ARCH_NORMALIZED}\?/$(ARCH_NORMALIZED)/g" \
 		| $(SED) "s/\$${\?ARCH_SHORT}\?/$(ARCH_SHORT)/g" \
 		| $(SED) "s/\$${\?HOST}\?/$(HOST)/g" \
 		| $(SED) "s/\$${\?HOST_SHORT}\?/$(HOST_SHORT)/g" \
@@ -24,10 +42,9 @@ CAT_BREWFILE = \
 deps/system/brewfile:
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
-	$(CAT_BREWFILE) \
-		| brew bundle install --verbose --file=-
+	$(CAT_BREWFILE) | brew bundle install $(BREW_BUNDLE_FLAGS) --file=-
 ifneq (,$(wildcard $(BREWFILE_SH)))
-	OS=$(OS) OS_SHORT=$(OS_SHORT) ARCH=$(ARCH) ARCH_SHORT=$(ARCH_SHORT) HOST=$(HOST) ./$(BREWFILE_SH)
+	$(BREWFILE_ENV) ./$(BREWFILE_SH)
 endif
 else
 	:
@@ -39,17 +56,9 @@ test/system/brewfile:
 	$(CAT_BREWFILE); exit 1
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
-	$(CAT_BREWFILE) \
-		| brew bundle check --verbose --file=-
+	$(CAT_BREWFILE) | brew bundle check $(BREW_BUNDLE_FLAGS) --file=-
 ifneq (,$(wildcard $(BREWFILE_TEST)))
-	ARCH=$(ARCH) \
-		ARCH_SHORT=$(ARCH_SHORT) \
-		HOST=$(HOST) \
-		HOST_SHORT=$(HOST_SHORT) \
-		OS=$(OS) \
-		OS_SHORT=$(OS_SHORT) \
-		HOST=$(HOST) \
-		./$(BREWFILE_TEST)
+	$(BREWFILE_ENV) ./$(BREWFILE_TEST)
 endif
 else
 	:
