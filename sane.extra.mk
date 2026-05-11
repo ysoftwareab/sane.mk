@@ -37,7 +37,8 @@ include $(SANE_MK_ROOT)/extra/target.password.inc.mk
 include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
 include $(SANE_MK_ROOT)/extra/target.version.inc.mk
 
-include $(SANE_MK_ROOT)/extra/deps.brewfile.inc.mk
+include $(SANE_MK_ROOT)/extra/system.brewfile.inc.mk
+
 include $(SANE_MK_ROOT)/extra/deps.corepack.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.git.inc.mk
 include $(SANE_MK_ROOT)/extra/deps.uv.inc.mk

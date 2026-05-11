@@ -7,8 +7,8 @@ SANE_DEPS ?=
 SANE_DEPS_FILES ?=
 SANE_DEPS_FOLDERS ?=
 SANE_DEPS_GITIGNORE ?=
-SANE_DEPS_SYSTEM ?=
 SANE_DEPS_UPGRADE ?=
+SANE_SYSTEM ?=
 SANE_TEST ?=
 
 SANE_ALL_DEFAULT := deps check build
@@ -54,6 +54,13 @@ posthook/%:
 
 # ------------------------------------------------------------------------------
 
+.PHONY: system
+system: prehook/system
+deps/system: ## Install system dependencies.
+	$(MAKE) $(SANE_SYSTEM)
+	$(MAKE) posthook/$@
+
+
 .PHONY: all
 all: prehook/all
 all:
@@ -86,13 +93,6 @@ deps/folders:
 deps/gitignore: prehook/deps/gitignore
 deps/gitignore:
 	$(MAKE) $(SANE_DEPS_GITIGNORE)
-	$(MAKE) posthook/$@
-
-
-.PHONY: deps/system
-deps/system: prehook/deps/system
-deps/system: ## Install system dependencies.
-	$(MAKE) $(SANE_DEPS_SYSTEM)
 	$(MAKE) posthook/$@
 
 

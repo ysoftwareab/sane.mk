@@ -38,8 +38,8 @@ CAT_BREWFILE = \
 
 # ------------------------------------------------------------------------------
 
-.PHONY: deps/system/brewfile
-deps/system/brewfile:
+.PHONY: system/brewfile
+system/brewfile:
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
 	$(CAT_BREWFILE) | brew bundle install $(BREW_BUNDLE_FLAGS) --file=-
