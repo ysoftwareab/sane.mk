@@ -62,3 +62,10 @@ GIT_TRACKED := false
 ifeq (truefalse,$(GIT_INSIDE_WORK_TREE)$(GIT_CHECK_IGNORE))
 GIT_TRACKED := true
 endif
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/git
+debug/git: debug/env/git
+debug/git:
+	:
