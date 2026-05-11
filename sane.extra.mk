@@ -60,32 +60,8 @@ include $(SANE_MK_ROOT)/extra/test.pytest.inc.mk
 
 include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
 
-SANE_DEBUG_CHECK += \
-	debug/actionlint \
-	debug/brew \
-	debug/editorconfig-checker \
-	debug/jscpd \
-	debug/markdownlint \
-	debug/ruff \
-	debug/shellcheck \
-	debug/shfmt \
-	debug/trufflehog \
-	debug/ty \
-	debug/yamllint \
-
-SANE_DEBUG_TEST += \
-	debug/bats \
-	debug/pytest \
-
-SANE_TEST += \
-	test/bats \
-	test/pytest \
-
-SANE_DEBUG_TOOL += \
-	debug/scc \
-
-SANE_DEPS_SYSTEM += \
-	deps/system/brewfile \
+SANE_SYSTEM += \
+	system/brewfile \
 
 SANE_DEPS += \
 	deps/corepack \
@@ -116,11 +92,6 @@ SANE_DEPS_GITIGNORE += \
 	deps/gitignore/uv \
 	deps/gitignore/vscode \
 
-SANE_DEBUG_DEPS += \
-	debug/corepack \
-	debug/uv \
-	debug/vscode \
-
 SANE_CHECK_LINTERS += \
 	check/actionlint \
 	check/editorconfig-checker \
@@ -143,15 +114,19 @@ SANE_CHECK += \
 	$(SANE_CHECK_INFOSEC) \
 	$(SANE_CHECK_MISC) \
 
+SANE_TEST += \
+	test/bats \
+	test/pytest \
+
 SANE_DEBUG_OS ?=
 SANE_DEBUG_ENV ?=
 SANE_DEBUG += \
 	$(SANE_DEBUG_OS) \
 	$(SANE_DEBUG_ENV) \
-	$(SANE_DEBUG_DEPS) \
-	$(SANE_DEBUG_CHECK) \
-	$(SANE_DEBUG_TEST) \
-	$(SANE_DEBUG_TOOL) \
+	$(patsubst deps/%,debug/%,$(SANE_DEPS)) \
+	$(patsubst check/%,debug/%,$(SANE_CHECK)) \
+	$(patsubst test/%,debug/%,$(SANE_TEST)) \
+	debug/scc \
 
 
 .editorconfig:
