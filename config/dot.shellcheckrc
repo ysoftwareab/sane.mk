@@ -29,3 +29,6 @@ disable=SC2164
 # SC2317: Command appears to be unreachable. Check usage (or ignore if invoked indirectly).
 # false positives https://github.com/koalaman/shellcheck/issues?q=is%3Aissue+sort%3Aupdated-desc+SC2317
 disable=SC2317
+
+# SC2329: This function is never invoked. Check usage (or ignored if invoked indirectly).
+disable=SC2329

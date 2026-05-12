@@ -14,4 +14,5 @@ source brew/checkers.test
 source brew/cloud.test
 source brew/programming.test
 
-[[ ! -e brew/zz.${HOST}.brew ]] || source brew/zz.${HOST}.test
+# shellcheck disable=SC2154
+[[ ! -e "brew/zz.${HOST}.brew" ]] || source "brew/zz.${HOST}.test"

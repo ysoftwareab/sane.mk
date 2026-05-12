@@ -7,4 +7,5 @@ trap 'e=$?; set +x; s() { local i=0; while caller $i; do ((++i)); done | while r
 function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } && export -f exe
 [[ -z "${VERBOSE:-${V:-}}" ]] || set -x
 
-[[ ! -e brew/zz.${HOST}.sh ]] || source brew/zz.${HOST}.sh
+# shellcheck disable=SC2154
+[[ ! -e "brew/zz.${HOST}.sh" ]] || source "brew/zz.${HOST}.sh"
