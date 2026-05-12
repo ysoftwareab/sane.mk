@@ -13,7 +13,7 @@ YAMLLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.\(yaml\|yml\)$$")
 YAMLLINT_FILES_SHEBANG_PATH = .
 
 YAMLLINT_FILES_SHEBANG = \
-	$(shell $(call git_ls_nosym,$(YAMLLINT_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(YAMLLINT_FILES_SHEBANG_PATH)) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

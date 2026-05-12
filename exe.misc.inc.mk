@@ -8,8 +8,9 @@ FIND_Q = 2>/dev/null $(FIND)
 FIND_Q_NOSYM = $(FIND_Q) -L
 GREP_FILENAME = $(GREP) -rl
 LS_ALL = $(LS) -A
+NOSYM = $(XARGS) -I{} sh -c 'test -L "{}" || echo "{}"'
 PATCH_STDOUT = $(PATCH) -o -
-$(foreach VAR,CP_NOSYM FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL PATCH_STDOUT,$(call make-lazy,$(VAR)))
+$(foreach VAR,CP_NOSYM FIND_Q FIND_Q_NOSYM GREP_FILENAME LS_ALL NOSYM PATCH_STDOUT,$(call make-lazy,$(VAR)))
 $(foreach VAR,DIFF_SS,$(call make-lazy-once,$(VAR)))
 
 CPBAK = $(CP) --backup=numbered
@@ -28,13 +29,8 @@ $(foreach VAR,COLUMN CURL HEXDUMP JD JQ YQ,$(call make-lazy,$(VAR)))
 GIT = $(call which,GIT,git)
 GIT_LS = $(GIT) ls-files
 GIT_LS_NEW = $(GIT_LS) --others --directory --no-empty-directory
-GIT_LS_NOSYM = $(GIT_LS) | $(XARGS) -I{} sh -c 'test -L "{}" || echo "{}"'
 GIT_LS_SUB = $(CAT) .gitmodules | $(GREP) "path =" | $(SED) "s/.\{0,\}path = //"
-$(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_NOSYM GIT_LS_SUB,$(call make-lazy,$(VAR)))
-
-define git_ls_nosym
-$(GIT_LS) $(1) | $(XARGS) -I{} sh -c 'test -L "{}" || echo "{}"'
-endef
+$(foreach VAR,GIT GIT_LS GIT_LS_NEW GIT_LS_SUB,$(call make-lazy,$(VAR)))
 
 # node
 export N_PREFIX = $(TMPDIR)

@@ -30,7 +30,7 @@ BATS_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.bats$$")
 BATS_FILES_SHEBANG_PATH = .
 
 BATS_FILES_SHEBANG = \
-	$(shell $(call git_ls_nosym,$(BATS_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(BATS_FILES_SHEBANG_PATH)) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

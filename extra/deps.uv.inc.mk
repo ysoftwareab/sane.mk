@@ -3,7 +3,7 @@ UVX ?= $(call which,UVX,uvx)
 $(foreach VAR,UV UVX,$(call make-lazy,$(VAR)))
 
 DEFAULT_FILES_FILTER_OUT += \
-	$(shell $(GIT_LS_NOSYM) | $(GREP) -e "uv\.lock$$") \
+	$(shell $(GIT_LS) | $(GREP) -e "uv\.lock$$" | $(NOSYM)) \
 
 # ------------------------------------------------------------------------------
 

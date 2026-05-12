@@ -13,7 +13,7 @@ SHELLCHECK_FILES_EXT = \
 SHELLCHECK_FILES_SHEBANG_PATH = .
 
 SHELLCHECK_FILES_SHEBANG = \
-	$(shell $(call git_ls_nosym,$(SHELLCHECK_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(SHELLCHECK_FILES_SHEBANG_PATH)) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \
