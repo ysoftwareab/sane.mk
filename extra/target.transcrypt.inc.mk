@@ -7,6 +7,7 @@ TRANSCRYPT_PASSWORD ?=
 IS_TRANSCRYPTED = $(shell $(GIT) config --local transcrypt.password >/dev/null && $(ECHO) true || $(ECHO) false)
 
 TRANSCRYPT_FILES = $(shell $(TRANSCRYPT) --list 2>/dev/null || true)
+$(call make-lazy-once,TRANSCRYPT_FILES)
 TRANSCRYPT_FILES_FILTER_OUT = $(TRANSCRYPT_FILES)
 DEFAULT_FILES_FILTER_OUT += $(TRANSCRYPT_FILES_FILTER_OUT)
 
