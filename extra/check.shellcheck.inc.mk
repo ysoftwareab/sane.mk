@@ -7,13 +7,12 @@ SHELLCHECK_FILES += \
 	$(SHELLCHECK_FILES_EXT) \
 	$(SHELLCHECK_FILES_SHEBANG) \
 
-SHELLCHECK_FILES_EXT = \
-	$(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.sh$$") \
+SHELLCHECK_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.sh$$" | $(NOSYM))
 
 SHELLCHECK_FILES_SHEBANG_PATH = .
 
 SHELLCHECK_FILES_SHEBANG = \
-	$(shell $(GIT_LS) $(SHELLCHECK_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(SHELLCHECK_FILES_SHEBANG_PATH) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

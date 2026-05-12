@@ -25,12 +25,12 @@ BATS_FILES += \
 	$(BATS_FILES_EXT) \
 	$(BATS_FILES_SHEBANG) \
 
-BATS_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.bats$$")
+BATS_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.bats$$" | $(NOSYM))
 
 BATS_FILES_SHEBANG_PATH = .
 
 BATS_FILES_SHEBANG = \
-	$(shell $(GIT_LS) $(BATS_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(BATS_FILES_SHEBANG_PATH) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

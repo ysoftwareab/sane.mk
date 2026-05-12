@@ -11,7 +11,7 @@ PYTEST_FLAGS += \
 PYTEST_FILES += \
 	$(PYTEST_FILES_EXT) \
 
-PYTEST_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "test_.*\.py$$" -e "_test\.py$$")
+PYTEST_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "test_.*\.py$$" -e "_test\.py$$" | $(NOSYM))
 
 PYTEST_FILES_FILTER_OUT += \
 	$(DEFAULT_FILES_FILTER_OUT) \

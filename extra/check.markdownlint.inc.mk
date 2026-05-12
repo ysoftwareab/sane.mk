@@ -10,12 +10,12 @@ MARKDOWNLINT_FILES += \
 	$(MARKDOWNLINT_FILES_EXT) \
 	$(MARKDOWNLINT_FILES_SHEBANG) \
 
-MARKDOWNLINT_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.md$$")
+MARKDOWNLINT_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.md$$" | $(NOSYM))
 
 MARKDOWNLINT_FILES_SHEBANG_PATH = .
 
 MARKDOWNLINT_FILES_SHEBANG = \
-	$(shell $(GIT_LS_NOSYM) $(MARKDOWNLINT_FILES_SHEBANG_PATH) | \
+	$(shell $(GIT_LS) $(MARKDOWNLINT_FILES_SHEBANG_PATH) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \

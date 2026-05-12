@@ -12,12 +12,12 @@ TY_FILES += \
 	$(TY_FILES_EXT) \
 	$(TY_FILES_SHEBANG) \
 
-TY_FILES_EXT = $(shell $(GIT_LS_NOSYM) | $(GREP) -e "\.py$$")
+TY_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.py$$" | $(NOSYM))
 
 TY_FILES_SHEBANG_PATH = .
 
 TY_FILES_SHEBANG = \
-	$(shell $(GIT_LS) $(TY_FILES_SHEBANG_PATH)) | \
+	$(shell $(GIT_LS) $(TY_FILES_SHEBANG_PATH) | \
 		while read -r FILE; do \
 		[[ ! -L "$${FILE}" ]] || continue; \
 		[[ -f "$${FILE}" ]] || continue; \
