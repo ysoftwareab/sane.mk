@@ -1,7 +1,9 @@
 .PHONY: npm-preversion-publish
 npm-preversion-publish:
-#	allow publishing only from the master branch
-	test $$($(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null) = master
+	[[ "$$($(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null)" = "master" ]] || { \
+		$(ECHO_ERR) "You can only publish from the master branch."; \
+		exit 1; \
+	}
 	$(GIT) diff-files --quiet
 	$(MAKE) test
 
