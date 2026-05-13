@@ -75,5 +75,6 @@ DOT = $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
+STRIP_ANSI = $(SED) "s/$(shell $(PRINTF) '\033')\[[0-9;?]*[a-zA-Z]//g"
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
-$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3 STRIP_JSON_COMMENTS,$(call make-lazy,$(VAR)))
+$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
