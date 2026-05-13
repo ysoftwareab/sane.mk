@@ -10,5 +10,5 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } &&
 aws --version | head -n1 | grep -q "^aws-cli/2\."
 if command -v gcloud &>/dev/null; then gcloud --version | head -n1 | grep -q "^Google Cloud SDK "; fi
 infracost --version | head -n1 | grep -q "^Infracost v0\."
+tenv --version | head -n1 | grep -q "^tenv version 4\."
 terraform-docs --version | head -n1 | grep -q "^terraform-docs version v0\."
-tfenv --version | head -n1 | grep -q "^tfenv 3\."
