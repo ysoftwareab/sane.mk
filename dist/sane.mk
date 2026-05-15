@@ -69,6 +69,10 @@ else ifeq (true,$(VERBOSE_TF))
 MAKEFLAGS += $(MAKEFLAG_MAYBE_PRINT_DIRECTORY)
 endif
 
+ifeq (--print-directory,$(MAKEFLAG_MAYBE_PRINT_DIRECTORY))
+$(info make: Running goals '$(MAKECMDGOALS)')
+endif
+
 ifneq (,$(filter undefine,$(.FEATURES)))
 undefine CI_TF
 undefine MAKEFLAGS_HAS_NO_PRINT_DIRECTORY_TF
@@ -128,15 +132,43 @@ MAKE_TIME := $(shell date +'%H%M%S')
 
 MAKE_FILENAME = $(notdir $(firstword $(MAKEFILE_LIST)))
 MAKE_PATH = $(patsubst %/,%,$(dir $(abspath $(firstword $(MAKEFILE_LIST)))))
+MAKE_PATH_BASENAME = $(shell basename "$(MAKE_PATH)")
 MAKE_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_PATH)/$(MAKE_FILENAME)")))
+MAKE_DASH_F = $(MAKE) -f $(firstword $(MAKEFILE_LIST))
 
 MAKE_SELF_FILENAME = $(notdir $(lastword $(MAKEFILE_LIST)))
 MAKE_SELF_PATH = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
+MAKE_SELF_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_SELF_PATH)/$(MAKE_SELF_FILENAME)")))
 
 # NOTE can't use $(GIT) and $(ECHO)
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
+TOP_BASENAME = $(shell basename "$(TOP)")
 # NOTE can't use $(PYTHON)
-TOP_REL = $(shell python -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
+TOP_REL = $(shell python3 -c "import os.path; print('%s' % os.path.relpath('$(TOP)', '$(MAKE_PATH)'))")
 $(foreach VAR,TOP TOP_REL,$(call make-lazy-once,$(VAR)))
+
+# ------------------------------------------------------------------------------
+
+# NOTE can't use $(CAT), $(JQ) and $(YQ)
+ifneq (,$(wildcard package.json))
+PKG_NAME = $(shell cat package.json | jq -r ".name")
+PKG_VSN = $(shell cat package.json | jq -r ".version")
+PKG_PACKAGE_MANAGER = $(shell cat package.json | jq -r ".packageManager // empty")
+else ifneq (,$(wildcard pyproject.toml))
+PKG_NAME = $(shell cat pyproject.toml | yq -p toml -r ".project.name")
+PKG_VSN = $(shell cat pyproject.toml | yq -p toml -r ".project.version")
+PKG_PACKAGE_MANAGER = uv
+else
+PKG_NAME =
+PKG_VSN =
+PKG_PACKAGE_MANAGER =
+endif
+
+# ------------------------------------------------------------------------------
+
+IS_DECRYPTED ?= false
+export TMPDIR ?= /tmp
+export USER ?= $(shell $(ID) -un)
 
 endif
