@@ -62,6 +62,8 @@ override.tf*
 
 # Misc
 
+Makefile.lazy
+
 # END gitconfig/dot.gitignore_global.base
 
 ################################################################################
