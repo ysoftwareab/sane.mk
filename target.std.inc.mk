@@ -14,7 +14,7 @@ SANE_TEST ?= noop
 SANE_ALL_DEFAULT := deps check build
 SANE_ALL ?= $(SANE_ALL_DEFAULT)
 
-SANE_CI_DEFAULT := all
+SANE_CI_DEFAULT := all test
 SANE_CI ?= $(SANE_CI_DEFAULT)
 
 SANE_DEPS_DEFAULT := deps/folders deps/files
