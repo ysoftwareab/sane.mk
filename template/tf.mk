@@ -5,7 +5,8 @@ include $(MAKE_SELF_PATH)/../sane.extra.mk
 
 TF_WORKSPACE ?= local
 TF_BACKEND_STATE_FILE := .terraform/terraform.tfstate
-TF_BACKEND_TYPE = $(shell { $(CAT) $(TF_BACKEND_STATE_FILE) 2>/dev/null || $(ECHO) "{}"; } | $(JQ) -r '.backend.type // "local"')
+TF_BACKEND_TYPE = $(shell { $(CAT) $(TF_BACKEND_STATE_FILE) 2>/dev/null || $(ECHO) "{}"; } \
+	| $(JQ) -r '.backend.type // "local"')
 
 TF_FILES := \
 	backend.tf \
