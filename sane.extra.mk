@@ -203,7 +203,6 @@ deps/folders/test:
 .PHONY: deps/folders/tmp
 deps/folders/tmp: .gitignore
 	$(MKDIR) tmp/
-	$(GREP) -q '^/tmp/$$' .gitignore || $(ECHO) "/tmp/" >> .gitignore
 
 # END # extra
 

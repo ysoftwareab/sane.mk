@@ -58,4 +58,6 @@ override.tf*
 
 # Misc
 
+*.gitignored*
 Makefile.lazy
+tmp/

@@ -62,7 +62,9 @@ override.tf*
 
 # Misc
 
+*.gitignored*
 Makefile.lazy
+tmp/
 
 # END gitconfig/dot.gitignore_global.base
 
