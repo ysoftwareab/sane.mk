@@ -53,7 +53,6 @@ endif
 
 .PHONY: test/system/brewfile
 test/system/brewfile:
-	$(CAT_BREWFILE); exit 1
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
 	$(CAT_BREWFILE) | brew bundle check $(BREW_BUNDLE_FLAGS) --file=-
