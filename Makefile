@@ -13,6 +13,9 @@ SANE_BUILD += \
 	gitconfig/dot.gitattributes_global \
 	gitconfig/dot.gitignore_global \
 
+SANE_DIST += \
+	dist/mk \
+
 # ------------------------------------------------------------------------------
 
 .PHONY: gitconfig/dot.gitattributes_global
@@ -29,9 +32,10 @@ gitconfig/dot.gitignore_global:
 	$< > $@
 
 
-.PHONY: dist
-dist: ## Build distribution files
+.PHONY: dist/mk
+dist/mk:
 	$(MKDIR) dist
 	$(CP) sane.mk dist/
+	$(CP) template/tf.mk dist/template.tf.mk
 	./sane.std.mk.tpl > dist/sane.std.mk
 	./sane.extra.mk.tpl > dist/sane.extra.mk

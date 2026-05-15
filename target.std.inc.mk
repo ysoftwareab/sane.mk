@@ -8,6 +8,7 @@ SANE_DEPS_FILES ?= noop
 SANE_DEPS_FOLDERS ?= noop
 SANE_DEPS_GITIGNORE ?= noop
 SANE_DEPS_UPGRADE ?= noop
+SANE_DIST ?= noop
 SANE_SYSTEM ?= noop
 SANE_TEST ?= noop
 
@@ -122,6 +123,13 @@ test: prehook/test
 test: ## Test.
 	$(MAKE_DASH_F) $(SANE_TEST)
 	$(MAKE_DASH_F) posthook/$@
+
+.PHONY: dist
+dist: prehook/dist
+dist: ## Build distribution files.
+	$(MAKE_DASH_F) $(SANE_DIST)
+	$(MAKE_DASH_F) posthook/$@
+
 
 # ------------------------------------------------------------------------------
 

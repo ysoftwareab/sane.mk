@@ -36,6 +36,7 @@ to your project and include it at the top of the `Makefile`.
 * `clean`
 * `build`
 * `test`
+* `dist`
 * `ci`
 * `debug`
 * `system`
