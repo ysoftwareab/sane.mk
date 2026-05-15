@@ -89,12 +89,11 @@ endef
 SANE_DEPS_TF += \
 	deps/tf-core \
 	deps/tenv \
-	deps/tfdocs \
 	deps/tflint \
 
 SANE_DEPS_UPGRADE_TF += \
 	deps/upgrade/tf-core \
-	deps/tfdocs \
+	deps/files/tfdocs \
 
 SANE_CHECK_TF += \
 	check/tffmt \
@@ -112,12 +111,16 @@ SANE_DEPS_FILES += \
 	.terraform-version \
 	.tflint.hcl \
 	$(TF_FILES) \
+	deps/files/tfdocs \
 
 SANE_DEPS_UPGRADE += \
 	$(SANE_DEPS_UPGRADE_TF) \
 
 SANE_CHECK += \
 	$(SANE_CHECK_TF) \
+
+SANE_BUILD += \
+	deps/files/tfdocs \
 
 SANE_TEST += \
 	$(SANE_TEST_TF) \
@@ -140,6 +143,17 @@ $(TF_FILES):
 	$(TOUCH) $@
 
 
+.PHONY: deps/files/tfdocs
+deps/files/tfdocs:
+ifneq (,$(wildcard *.tf))
+	if $(CAT) README.md | $(GREP) -q "BEGIN_TF_DOCS"; then \
+		$(TERRAFORM_DOCS) markdown table .; \
+	fi
+else
+	:
+endif
+
+
 .PHONY: deps/tenv
 deps/tenv:
 	$(TENV) tf install
@@ -150,17 +164,6 @@ deps/tf-core: $(TF_BACKEND_STATE_FILE)
 deps/tf-core:
 	$(TERRAFORM) init -backend=false
 	[[ -e .terraform.lock.hcl ]] || $(TERRAFORM) providers lock $(TF_PROVIDERS_LOCK_FLAGS)
-
-
-.PHONY: deps/tfdocs
-deps/tfdocs:
-ifneq (,$(wildcard *.tf))
-	if $(CAT) README.md | $(GREP) -q "BEGIN_TF_DOCS"; then \
-		$(TERRAFORM_DOCS) markdown table .; \
-	fi
-else
-	:
-endif
 
 
 .PHONY: deps/tflint
