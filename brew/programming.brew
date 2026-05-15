@@ -4,6 +4,7 @@ brew "corepack" # Package acting as bridge between Node projects and their packa
 brew "mg" # Small Emacs-like editor
 brew "n" # Node version management
 brew "node" # Open-source, cross-platform JavaScript runtime environment
+brew "pyrefly" # Fast type checker and IDE for Python
 brew "python" # Interpreted, interactive, object-oriented programming language
 brew "python3" # Interpreted, interactive, object-oriented programming language
 brew "python@3.12" # Interpreted, interactive, object-oriented programming language

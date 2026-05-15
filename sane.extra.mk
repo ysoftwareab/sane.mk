@@ -33,6 +33,8 @@ include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 # BEGIN # extra
 
+include $(SANE_MK_ROOT)/extra/target.python.inc.mk
+
 include $(SANE_MK_ROOT)/extra/target.password.inc.mk
 include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
 include $(SANE_MK_ROOT)/extra/target.version.inc.mk
@@ -54,6 +56,7 @@ include $(SANE_MK_ROOT)/extra/check.ruff.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shellcheck.inc.mk
 include $(SANE_MK_ROOT)/extra/check.shfmt.inc.mk
 include $(SANE_MK_ROOT)/extra/check.trufflehog.inc.mk
+include $(SANE_MK_ROOT)/extra/check.pyrefly.inc.mk
 include $(SANE_MK_ROOT)/extra/check.ty.inc.mk
 include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 
@@ -98,6 +101,7 @@ SANE_CHECK_LINTERS += \
 	check/actionlint \
 	check/editorconfig-checker \
 	check/markdownlint \
+	check/pyrefly \
 	check/ruff \
 	check/shellcheck \
 	check/shfmt \

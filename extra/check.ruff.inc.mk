@@ -20,19 +20,11 @@ RUFF_FILES += \
 	$(RUFF_FILES_EXT) \
 	$(RUFF_FILES_SHEBANG) \
 
-RUFF_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.py$$" | $(NOSYM))
+RUFF_FILES_EXT = $(PYTHON_FILES_EXT)
 
 RUFF_FILES_SHEBANG_PATH = .
 
-RUFF_FILES_SHEBANG = \
-	$(shell $(GIT_LS) $(RUFF_FILES_SHEBANG_PATH) | \
-		while read -r FILE; do \
-		[[ ! -L "$${FILE}" ]] || continue; \
-		[[ -f "$${FILE}" ]] || continue; \
-		[[ -x "$${FILE}" ]] || continue; \
-		$(HEAD) -n1 "$${FILE}" | $(GREP) "^$(hash)!/" | $(GREP) -q -e "\b\(python\|python2\|python3\|uv\)\b" || continue; \
-		$(ECHO) "$${FILE}"; \
-	done)
+RUFF_FILES_SHEBANG = $(PYTHON_FILES_SHEBANG)
 
 RUFF_FILES_FILTER_OUT += \
 	$(DEFAULT_FILES_FILTER_OUT) \
