@@ -42,6 +42,18 @@ __pycache__/
 .venv/
 ipynb_checkpoints/
 
+# Terraform
+
+.terraform/
+.terraformrc
+terraform.rc
+override.tf*
+*_override.tf*
+*.tflog*
+*.tfplan*
+*.tfvars*
+
+
 # ------------------------------------------------------------------------------
 
 # Misc
