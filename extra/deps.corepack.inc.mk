@@ -24,7 +24,7 @@ debug/corepack:
 
 .PHONY: deps/gitignore/corepack
 deps/gitignore/corepack:
-	$(GREP) -q '^\(#\s*\)\?node_modules/$$' .gitignore || $(ECHO) "node_modules/" >> .gitignore
+	:
 
 
 .PHONY: deps/corepack/npm
