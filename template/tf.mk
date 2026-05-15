@@ -8,6 +8,7 @@ TF_BACKEND_STATE_FILE := .terraform/terraform.tfstate
 TF_BACKEND_TYPE = $(shell { $(CAT) $(TF_BACKEND_STATE_FILE) 2>/dev/null || $(ECHO) "{}"; } | $(JQ) -r '.backend.type // "local"')
 
 TF_FILES := \
+	backend.tf \
 	data.tf \
 	locals.tf \
 	main.tf \
@@ -217,7 +218,7 @@ test/tf:
 
 
 $(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
-	if [[ -f terraform.tfstate ]] && [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
+	if [[ -s backend.tf ]] && [[ -f terraform.tfstate ]] && [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
 		TF_INPUT=true $(TERRAFORM) init -migrate-state; \
 	else \
 		$(TERRAFORM) init -reconfigure; \
