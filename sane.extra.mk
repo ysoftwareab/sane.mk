@@ -33,11 +33,10 @@ include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 # BEGIN # extra
 
-include $(SANE_MK_ROOT)/extra/target.python.inc.mk
-
-include $(SANE_MK_ROOT)/extra/target.password.inc.mk
-include $(SANE_MK_ROOT)/extra/target.transcrypt.inc.mk
-include $(SANE_MK_ROOT)/extra/target.version.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.password.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.python.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.transcrypt.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.version.inc.mk
 
 include $(SANE_MK_ROOT)/extra/system.brewfile.inc.mk
 
