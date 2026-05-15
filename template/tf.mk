@@ -1,5 +1,14 @@
 MAKE_SELF_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-include $(MAKE_SELF_PATH)/../sane.extra.mk
+SANE_MK_ROOT ?=
+ifneq (,$(MAKE_SELF_PATH)/../sane.extra.mk)
+SANE_MK_ROOT := $(MAKE_SELF_PATH)/..
+else ifneq (,$(MAKE_SELF_PATH)/sane.extra.mk)
+SANE_MK_ROOT := $(MAKE_SELF_PATH)
+else ifeq (,$(SANE_MK_ROOT))
+$(error "Could not find sane.extra.mk in $(MAKE_SELF_PATH) or $(MAKE_SELF_PATH)/.. or $$SANE_MK_ROOT.")
+endif
+
+include $(SANE_MK_ROOT)/sane.extra.mk
 
 # ------------------------------------------------------------------------------
 
