@@ -34,8 +34,8 @@ check/actionlint:
 	ACTIONLINT_FILES_TMP=($(filter-out $(ACTIONLINT_FILES_FILTER_OUT), $(ACTIONLINT_FILES))); \
 	[[ "$${#ACTIONLINT_FILES_TMP[@]}" = "0" ]] || { \
 		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
-			[[ -e .github/actionlint.yaml ]] || $(MAKE) .github/actionlint.yaml; \
-			[[ -e .shellcheckrc ]] || $(MAKE) .shellcheckrc; \
+			[[ -e .github/actionlint.yaml ]] || $(MAKE_DASH_F) .github/actionlint.yaml; \
+			[[ -e .shellcheckrc ]] || $(MAKE_DASH_F) .shellcheckrc; \
 		}; \
 		$(ACTIONLINT) $(ACTIONLINT_FLAGS) $${ACTIONLINT_FILES_TMP[@]}; \
 	}

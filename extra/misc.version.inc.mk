@@ -8,7 +8,7 @@ version/push:
 			refs/tags/$(GIT_TAG):refs/tags/$(GIT_TAG); \
 	} || { \
 		$(ECHO_ERR) "Failed to push. Reverting..."; \
-		V= $(MAKE) version/revert; \
+		V= $(MAKE_DASH_F) version/revert; \
 		exit 1; \
 	}
 	$(GH) release create --verify-tag --generate-notes $(GIT_TAG)
@@ -32,13 +32,13 @@ version/patch:
 version/minor:
 version/major:
 	$(eval VSN_LEVEL := $(@:version/%=%))
-	$(MAKE)
+	$(MAKE_DASH_F)
 	$(NPM) version $(VSN_LEVEL) || { \
 		$(ECHO_ERR) "Failed to bump version. Reverting..."; \
-		V= $(MAKE) version/revert; \
+		V= $(MAKE_DASH_F) version/revert; \
 		exit 1; \
 	}
-	$(MAKE) version/push
+	$(MAKE_DASH_F) version/push
 
 
 .PHONY: version

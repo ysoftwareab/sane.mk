@@ -5,7 +5,7 @@ npm-preversion-publish:
 		exit 1; \
 	}
 	$(GIT) diff-files --quiet
-	$(MAKE) test
+	$(MAKE_DASH_F) test
 
 
 .PHONY: npm-postversion-publish
@@ -13,7 +13,7 @@ npm-postversion-publish: dist
 	$(GIT) checkout -f -B dist
 	$(GIT) reset --hard origin/dist || true
 	$(GIT) merge --no-edit --no-ff -s recursive -X theirs @{-1}
-	$(MAKE) dist
+	$(MAKE_DASH_F) dist
 	$(GIT) add -f dist
 	VSN=$$(node -e "console.log(require('./package.json').version)"); \
 		$(GIT) commit --allow-empty -m $${VSN}-dist; \

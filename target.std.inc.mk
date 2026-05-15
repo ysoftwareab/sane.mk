@@ -57,90 +57,90 @@ posthook/%:
 .PHONY: system
 system: prehook/system
 deps/system: ## Install system dependencies.
-	$(MAKE) $(SANE_SYSTEM)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_SYSTEM)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: all
 all: prehook/all
 all:
-	$(MAKE) $(SANE_ALL)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_ALL)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: deps
 deps: prehook/deps
 deps: ## Install local dependencies.
-	$(MAKE) $(SANE_DEPS)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEPS)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: deps/files
 deps/files: prehook/deps/files
 deps/files:
-	$(MAKE) $(SANE_DEPS_FILES)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEPS_FILES)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: deps/folders
 deps/folders: prehook/deps/folders
 deps/folders:
-	$(MAKE) $(SANE_DEPS_FOLDERS)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEPS_FOLDERS)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: deps/gitignore
 deps/gitignore: prehook/deps/gitignore
 deps/gitignore:
-	$(MAKE) $(SANE_DEPS_GITIGNORE)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEPS_GITIGNORE)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: deps/upgrade
 deps/upgrade: prehook/deps/upgrade
 deps/upgrade: ## Upgrade local dependencies.
-	$(MAKE) $(SANE_DEPS_UPGRADE)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEPS_UPGRADE)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: check
 check: prehook/check
 check: ## Check.
-	$(MAKE) $(SANE_CHECK)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_CHECK)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: build
 build: prehook/build
 build: ## Build.
-	$(MAKE) $(SANE_BUILD)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_BUILD)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: test
 test: prehook/test
 test: ## Test.
-	$(MAKE) $(SANE_TEST)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_TEST)
+	$(MAKE_DASH_F) posthook/$@
 
 # ------------------------------------------------------------------------------
 
 .PHONY: ci
 ci: prehook/ci
 ci: ## CI.
-	$(MAKE) $(SANE_CI)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_CI)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: clean
 clean: prehook/clean
 clean: ## Clean.
-	$(MAKE) $(SANE_CLEAN)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_CLEAN)
+	$(MAKE_DASH_F) posthook/$@
 
 
 .PHONY: debug
 debug: prehook/debug
 debug: ## Debug environment and software versions.
-	$(MAKE) $(SANE_DEBUG)
-	$(MAKE) posthook/$@
+	$(MAKE_DASH_F) $(SANE_DEBUG)
+	$(MAKE_DASH_F) posthook/$@

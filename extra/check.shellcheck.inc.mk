@@ -45,7 +45,7 @@ check/shellcheck:
 	SHELLCHECK_FILES_TMP=($(filter-out $(SHELLCHECK_FILES_FILTER_OUT), $(SHELLCHECK_FILES))); \
 	[[ "$${#SHELLCHECK_FILES_TMP[@]}" = "0" ]] || { \
 		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
-			[[ -e .shellcheckrc ]] || $(MAKE) .shellcheckrc; \
+			[[ -e .shellcheckrc ]] || $(MAKE_DASH_F) .shellcheckrc; \
 		}; \
 		$(SHELLCHECK) $(SHELLCHECK_FLAGS) $${SHELLCHECK_FILES_TMP[@]}; \
 	}

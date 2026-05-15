@@ -134,10 +134,12 @@ MAKE_FILENAME = $(notdir $(firstword $(MAKEFILE_LIST)))
 MAKE_PATH = $(patsubst %/,%,$(dir $(abspath $(firstword $(MAKEFILE_LIST)))))
 MAKE_PATH_BASENAME = $(shell basename "$(MAKE_PATH)")
 MAKE_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_PATH)/$(MAKE_FILENAME)")))
+MAKE_DASH_F = $(MAKE) -f $(firstword $(MAKEFILE_LIST))
 
 MAKE_SELF_FILENAME = $(notdir $(lastword $(MAKEFILE_LIST)))
 MAKE_SELF_PATH = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
+MAKE_SELF_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_SELF_PATH)/$(MAKE_SELF_FILENAME)")))
 
 # NOTE can't use $(GIT) and $(ECHO)
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))

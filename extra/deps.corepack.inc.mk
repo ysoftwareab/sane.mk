@@ -67,13 +67,13 @@ endif
 deps/corepack:
 ifneq (,$(wildcard package.json))
 	if [[ -e package-lock.json ]]; then \
-		$(MAKE) deps/corepack/npm; \
+		$(MAKE_DASH_F) deps/corepack/npm; \
 	elif [[ "$(PKG_PACKAGE_MANAGER)" = npm* ]]; then \
-		$(MAKE) deps/corepack/npm-init; \
+		$(MAKE_DASH_F) deps/corepack/npm-init; \
 	elif [[ -e pnpm-lock.yaml ]]; then \
-		$(MAKE) deps/corepack/pnpm; \
+		$(MAKE_DASH_F) deps/corepack/pnpm; \
 	else \
-		$(MAKE) deps/corepack/pnpm-init; \
+		$(MAKE_DASH_F) deps/corepack/pnpm-init; \
 	fi
 else
 	:
