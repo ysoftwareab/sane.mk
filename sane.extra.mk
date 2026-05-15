@@ -97,16 +97,25 @@ SANE_DEPS_GITIGNORE += \
 	deps/gitignore/uv \
 	deps/gitignore/vscode \
 
-SANE_CHECK_LINTERS += \
-	check/actionlint \
+SANE_CHECK_LINTERS_CORE += \
 	check/editorconfig-checker \
 	check/markdownlint \
-	check/pyrefly \
+	check/actionlint \
+	check/yamllint \
+
+SANE_CHECK_LINTERS_PYTHON += \
 	check/ruff \
+	check/ty \
+	check/pyrefly \
+
+SANE_CHECK_LINTERS_SHELL += \
 	check/shellcheck \
 	check/shfmt \
-	check/ty \
-	check/yamllint \
+
+SANE_CHECK_LINTERS += \
+	$(SANE_CHECK_LINTERS_CORE) \
+	$(SANE_CHECK_LINTERS_SHELL) \
+	$(SANE_CHECK_LINTERS_PYTHON) \
 
 SANE_CHECK_INFOSEC += \
 	check/trufflehog \
