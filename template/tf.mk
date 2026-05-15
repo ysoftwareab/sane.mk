@@ -238,6 +238,13 @@ $(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
 	fi
 
 
+.PHONY: tf/init
+tf/init: deps/tf-core
+tf/init: $(TF_BACKEND_STATE_FILE)
+tf/init:
+	:
+
+
 .PHONY: tf/diff/tldr
 tf/diff/tldr:
 	$(ECHO_INDENT)
