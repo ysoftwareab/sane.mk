@@ -147,12 +147,16 @@ SANE_DEBUG += \
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 
+.gitattributes:
+	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
+
+
 .gitignore:
 	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
 
 
-.gitattributes:
-	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
+.github/actionlint.yaml:
+	$(TOUCH) $@
 
 
 .mailmap:
