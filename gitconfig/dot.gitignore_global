@@ -52,16 +52,17 @@ ipynb_checkpoints/
 .terraformrc
 terraform.rc
 override.tf*
+override.tofu*
 *_override.tf*
+*_override.tofu*
 *.tflog*
 *.tfplan*
+*.tfstate*
 *.tfvars*
-
 
 # ------------------------------------------------------------------------------
 
 # Misc
-
 *.gitignored*
 Makefile.lazy
 tmp/

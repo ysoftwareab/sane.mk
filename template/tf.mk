@@ -12,29 +12,24 @@ include $(SANE_MK_ROOT)/sane.extra.mk
 
 # ------------------------------------------------------------------------------
 
+TF_ENV ?=
+SHELL_ENV += $(TF_ENV)
+
 TF_WORKSPACE ?= local
 TF_BACKEND_STATE_FILE := .terraform/terraform.tfstate
 TF_BACKEND_TYPE = $(shell { $(CAT) $(TF_BACKEND_STATE_FILE) 2>/dev/null || $(ECHO) "{}"; } \
 	| $(JQ) -r '.backend.type // "local"')
 
-TF_FILES := \
-	backend.tf \
-	data.tf \
-	locals.tf \
-	main.tf \
-	outputs.tf \
-	providers.tf \
-	variables.tf \
-	versions.tf \
-
-TF_PLAN_FILE := $(TF_WORKSPACE).tfplan
-TF_PLAN_FILE_ERROR := $(TF_PLAN_FILE).error.txt
-TF_PLAN_FILE_TLDR := $(TF_PLAN_FILE).tldr.txt
-TF_PLAN_FILE_TXT := $(TF_PLAN_FILE).txt
-TF_APPLY_FILE := $(TF_PLAN_FILE).apply.txt
-
-TF_GENERATED_FILE := generated.tf
-TF_STATE_FILE := $(TF_WORKSPACE).tfstate
+ifneq (,$(wildcard .opentofu-version))
+TF_CMD ?= tofu
+TF_EXT = tofu
+else ifneq (,$(wildcard *.tofu))
+TF_CMD ?= tofu
+TF_EXT = tofu
+else
+TF_CMD ?= terraform
+TF_EXT = tf
+endif
 
 export TF_INPUT := false
 export TF_LOG_PATH := $(TF_WORKSPACE).tflog.txt
@@ -45,14 +40,37 @@ TENV ?= $(call which,TENV,tenv)
 TERRAFORM_DOCS ?= $(call which,TERRAFORM_DOCS,terraform-docs)
 TFLINT ?= $(call which,TFLINT,tflint)
 
-TERRAFORM_ENV ?=
-SHELL_ENV += $(TERRAFORM_ENV)
-
 TENV_ROOT ?= $(HOME)/.tenv
-TENV_TF_VERSION = $(shell $(TENV) tf detect --install -q | $(GREP) "^Terraform " | $(AWK) '{print $$2}')
-TERRAFORM_ ?= $(TENV_ROOT)/Terraform/$(TENV_TF_VERSION)/terraform
-TERRAFORM = $(TERRAFORM_ENV) $(TERRAFORM_)
-TERRAFORM_PLAN = 2> $(TF_PLAN_FILE_ERROR) $(TERRAFORM) plan $(TF_PLAN_FLAGS)
+ifeq (tofu,$(TF_CMD))
+OPENTOFU_VSN = $(shell $(TENV) tofu detect --install -q | $(GREP) "^OpenTofu " | $(AWK) '{print $$2}')
+OPENTOFU_ ?= $(TENV_ROOT)/OpenTofu/$(OPENTOFU_VSN)/tofu
+OPENTOFU = $(TF_ENV) $(OPENTOFU_)
+TERRAFORM = $(OPENTOFU)
+else
+TF_VSN = $(shell $(TENV) tf detect --install -q | $(GREP) "^Terraform " | $(AWK) '{print $$2}')
+TF_ ?= $(TENV_ROOT)/Terraform/$(TF_VSN)/terraform
+TERRAFORM = $(TF_ENV) $(TF_)
+endif
+TF_PLAN = 2> $(TF_PLAN_FILE_ERROR) $(TERRAFORM) plan $(TF_PLAN_FLAGS)
+
+TF_FILES := \
+	backend.$(TF_EXT) \
+	data.$(TF_EXT) \
+	locals.$(TF_EXT) \
+	main.$(TF_EXT) \
+	outputs.$(TF_EXT) \
+	providers.$(TF_EXT) \
+	variables.$(TF_EXT) \
+	versions.$(TF_EXT) \
+
+TF_PLAN_FILE := $(TF_WORKSPACE).tfplan
+TF_PLAN_FILE_ERROR := $(TF_PLAN_FILE).error.txt
+TF_PLAN_FILE_TLDR := $(TF_PLAN_FILE).tldr.txt
+TF_PLAN_FILE_TXT := $(TF_PLAN_FILE).txt
+TF_APPLY_FILE := $(TF_PLAN_FILE).apply.txt
+
+TF_GENERATED_FILE := generated.$(TF_EXT)
+TF_STATE_FILE := $(TF_WORKSPACE).tfstate
 
 GREP_TF_PLAN_SKIP_PROGRESS = \
 	$(GREP) -v \
@@ -83,10 +101,9 @@ TF_APPLY_FLAGS = \
 	-compact-warnings \
 
 TFLINT_FLAGS = \
-	--recursive \
 
 define tf-plan
-	$(TERRAFORM_PLAN) $(1) \
+	$(TF_PLAN) $(1) \
 		| $(TEE) $(TF_PLAN_FILE_TXT) \
 		| { $(GREP_TF_PLAN_SKIP_PROGRESS) || true; } || EXIT_STATUS=$$?; \
 		>&2 $(CAT) $(TF_PLAN_FILE_ERROR); \
@@ -117,10 +134,15 @@ SANE_DEPS += \
 
 SANE_DEPS_FILES += \
 	.terraform-docs.yml \
-	.terraform-version \
 	.tflint.hcl \
 	$(TF_FILES) \
-	deps/files/tfdocs \
+	deps/files/tfdocs
+
+ifeq (tofu,$(TF_CMD))
+SANE_DEPS_FILES += .opentofu-version
+else
+SANE_DEPS_FILES += .terraform-version
+endif
 
 SANE_DEPS_UPGRADE += \
 	$(SANE_DEPS_UPGRADE_TF) \
@@ -136,12 +158,16 @@ SANE_TEST += \
 
 # ------------------------------------------------------------------------------
 
+.opentofu-version:
+	$(ECHO) "latest" > $@
+
+
 .terraform-docs.yml:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
 
 
 .terraform-version:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(ECHO) "latest" > $@
 
 
 .tflint.hcl:
@@ -165,7 +191,11 @@ endif
 
 .PHONY: deps/tenv
 deps/tenv:
+ifeq ($(TF_CMD),tofu)
+	$(TENV) tofu install
+else
 	$(TENV) tf install
+endif
 
 
 .PHONY: deps/tf-core
