@@ -28,9 +28,7 @@ version/revert:
 
 
 .PHONY: version/patch version/minor version/major
-version/patch:
-version/minor:
-version/major:
+version/patch version/minor version/major:
 	$(eval VSN_LEVEL := $(@:version/%=%))
 	$(MAKE_DASH_F)
 	$(NPM) version $(VSN_LEVEL) || { \
