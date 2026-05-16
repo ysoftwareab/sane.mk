@@ -29,7 +29,7 @@ deps/gitignore/corepack:
 
 .PHONY: deps/corepack/npm
 deps/corepack/npm:
-ifneq (,$(PKG_PACKAGE_MANAGER))
+ifeq (,$(PKG_PACKAGE_MANAGER))
 	$(ECHO) "$$($(JQ) '. += {"packageManager": "npm@11"}' package.json)" > package.json
 	$(COREPACK) use pnpm@latest-11
 endif
@@ -38,7 +38,7 @@ endif
 
 .PHONY: deps/corepack/npm-init
 deps/corepack/npm-init:
-ifneq (,$(PKG_PACKAGE_MANAGER))
+ifeq (,$(PKG_PACKAGE_MANAGER))
 	$(ECHO) "$$($(JQ) '. += {"packageManager": "npm@11"}' package.json)" > package.json
 	$(COREPACK) use pnpm@latest-11
 endif
@@ -47,7 +47,7 @@ endif
 
 .PHONY: deps/corepack/pnpm
 deps/corepack/pnpm:
-ifneq (,$(PKG_PACKAGE_MANAGER))
+ifeq (,$(PKG_PACKAGE_MANAGER))
 	$(ECHO) "$$($(JQ) '. += {"packageManager": "pnpm@11"}' package.json)" > package.json
 	$(COREPACK) use pnpm@latest-11
 endif
@@ -56,7 +56,7 @@ endif
 
 .PHONY: deps/corepack/pnpm-init
 deps/corepack/pnpm-init:
-ifneq (,$(PKG_PACKAGE_MANAGER))
+ifeq (,$(PKG_PACKAGE_MANAGER))
 	$(ECHO) "$$($(JQ) '. += {"packageManager": "pnpm@11"}' package.json)" > package.json
 	$(COREPACK) use pnpm@latest-11
 endif
