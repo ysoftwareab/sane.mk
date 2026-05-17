@@ -283,7 +283,7 @@ tf/init:
 
 .PHONY: tf/diff/tldr
 tf/diff/tldr:
-	$(ECHO_INDENT)
+	$(ECHO)
 	$(ECHO_INFO) "📖 See TLDR:"
 	$(CAT) $(TF_PLAN_FILE_TXT) \
 		| $(GREP_TF_PLAN_TLDR) \
@@ -292,7 +292,7 @@ tf/diff/tldr:
 		| $(TEE) $(TF_PLAN_FILE_TLDR) \
 		| $(GREP) -v -e "^      [+-~] " \
 		|| true
-	$(ECHO_INDENT)
+	$(ECHO)
 	$(ECHO_INFO) "📖 See TLDR in $(TF_PLAN_FILE_TLDR) ."
 	$(ECHO_INFO) "🔍 See plan in $(TF_PLAN_FILE_TXT) ."
 	[[ ! -e "$(TF_GENERATED_FILE)" ]] || [[ ! -s "$(TF_GENERATED_FILE)" ]] \
