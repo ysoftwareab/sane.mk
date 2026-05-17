@@ -95,14 +95,19 @@ TF_PROVIDERS_LOCK_FLAGS = \
 	-platform=darwin_arm64 \
 	-platform=linux_amd64
 
+TF_TARGET ?=
+TF_TARGET_FLAGS = $(foreach TARGET,$(strip $(subst $(,), ,$(TF_TARGET))),-target=$(TARGET))
+
 TF_PLAN_FLAGS = \
 	-compact-warnings \
 	-var-file=$(TF_VARS) \
 	-out=$(TF_PLAN_FILE) \
+	$(TF_TARGET_FLAGS) \
 
 TF_APPLY_FLAGS = \
 	-auto-approve \
 	-compact-warnings \
+	$(TF_TARGET_FLAGS) \
 
 TFLINT_FLAGS = \
 
