@@ -70,7 +70,7 @@ MAKEFLAGS += $(MAKEFLAG_MAYBE_PRINT_DIRECTORY)
 endif
 
 ifeq (--print-directory,$(MAKEFLAG_MAYBE_PRINT_DIRECTORY))
-$(info make: Running goals '$(MAKECMDGOALS)')
+$(info make: Running goals      '$(MAKECMDGOALS)')
 endif
 
 ifneq (,$(filter undefine,$(.FEATURES)))
