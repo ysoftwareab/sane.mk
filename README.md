@@ -79,6 +79,12 @@ Default behavior uses `tenv` to detect/install the Terraform version,
 standardizes plan/apply artifacts, and integrates Terraform targets into the
 same `deps`, `check`, and `test` aggregations used elsewhere in this repo.
 
+## Miscellaneous
+
+* [extra/misc.backlog.inc.mk](./extra/misc.backlog.inc.mk) provides a `backlog` target
+  to initialize [Backlog.md](https://github.com/MrLesk/Backlog.md).
+* [extra/misc.gcp.inc.mk](./extra/misc.gcp.inc.mk) provides targets to interact with GCP projects via `gcloud`.
+
 ## Ref
 
 * http://blog.jgc.org/2013/02/updated-list-of-my-gnu-make-articles.html
