@@ -290,6 +290,7 @@ tf/diff/tldr:
 		| $(SED) "/destroyed/s/^  /⚠️/g" \
 		| $(SED) "/replaced/s/^  /⚠️/g" \
 		| $(TEE) $(TF_PLAN_FILE_TLDR) \
+		| $(GREP) -v -e "^      [+-~] " \
 		|| true
 	$(ECHO_INDENT)
 	$(ECHO_INFO) "📖 See TLDR in $(TF_PLAN_FILE_TLDR) ."
