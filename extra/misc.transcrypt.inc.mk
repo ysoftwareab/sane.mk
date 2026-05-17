@@ -51,7 +51,7 @@ endif
 
 .PHONY: transcrypt/rekey
 transcrypt/rekey:
-ifeq (,$(CI))
+ifneq (,$(CI))
 	$(ECHO_ERR) "Cannot run 'make transcrypt/rekey' in CI."
 	exit 1
 endif
