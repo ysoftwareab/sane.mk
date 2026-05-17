@@ -16,6 +16,10 @@ plugin "sort" {
   enabled = true
   version = "0.0.7"
   source  = "github.com/thespags/tflint-ruleset-sort"
+
+  resource "random_id" {
+    key_attributes = []
+  }
 }
 
 plugin "terraform" {
@@ -28,5 +32,17 @@ plugin "terraform" {
 # ------------------------------------------------------------------------------
 
 rule "sheldon_spacing" {
-  enabled = false # prefer source and version together
+  enabled = false # prefer source and version together, issues with multilines
+}
+
+rule "sheldon_sorting" {
+  enabled = false # issues with multilines
+}
+
+rule "sort_spacing" {
+  enabled = false # prefer source and version together, issues with multilines
+}
+
+rule "sort_sorting" {
+  enabled = false # issues with multilines
 }
