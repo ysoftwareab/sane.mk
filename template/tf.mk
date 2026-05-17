@@ -298,7 +298,7 @@ tf/diff/tldr:
 	[[ ! -e "$(TF_GENERATED_FILE)" ]] || [[ ! -s "$(TF_GENERATED_FILE)" ]] \
 		|| $(ECHO_INFO) "📦 See imports in $(TF_GENERATED_FILE) ."
 	[[ ! -e "$(TF_PLAN_FILE_ERROR)" ]] || [[ ! -s "$(TF_PLAN_FILE_ERROR)" ]] \
-		|| $(ECHO_INFO) "⚠️ See errors in $(TF_PLAN_FILE_ERROR) ."
+		|| $(ECHO_INFO) "‼️ See errors in $(TF_PLAN_FILE_ERROR) ."
 
 
 .PHONY: tf/diff
