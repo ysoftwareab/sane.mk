@@ -25,10 +25,10 @@ plugin "terraform" {
 
 # ------------------------------------------------------------------------------
 
-rule "sort_spacing" {
-  enabled = false # prefer source and version together, issues with multilines
-}
-
 rule "sort_sorting" {
   enabled = false # issues with multilines
+}
+
+rule "sort_spacing" {
+  enabled = false # prefer source and version together, issues with multilines
 }
