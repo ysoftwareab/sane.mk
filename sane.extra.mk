@@ -69,37 +69,11 @@ SANE_SYSTEM += \
 
 SANE_DEPS += \
 	deps/corepack \
-	deps/git \
 	deps/uv \
-	deps/vscode \
-
-SANE_DEPS_FILES += \
-	.editorconfig \
-	.gitignore \
-	.gitattributes \
-	.mailmap \
-	.markdownlint.json \
-	.ruff.toml \
-	.shellcheckrc \
-	.yamllint \
-
-SANE_DEPS_FOLDERS += \
-	deps/folders/bin \
-	deps/folders/config \
-	deps/folders/dist \
-	deps/folders/docs \
-	deps/folders/test \
-	deps/folders/tmp \
-
-SANE_DEPS_GITIGNORE += \
-	deps/gitignore/corepack \
-	deps/gitignore/uv \
-	deps/gitignore/vscode \
 
 SANE_CHECK_LINTERS_CORE += \
 	check/editorconfig-checker \
 	check/markdownlint \
-	check/actionlint \
 	check/yamllint \
 
 SANE_CHECK_LINTERS_PYTHON += \
@@ -142,6 +116,38 @@ SANE_DEBUG += \
 	$(patsubst test/%,debug/%,$(SANE_TEST)) \
 	debug/scc \
 
+ifeq ($(MAKE_PATH),$(GIT_ROOT))
+SANE_DEPS += \
+	deps/git \
+	deps/vscode \
+
+SANE_DEPS_FILES += \
+	.editorconfig \
+	.gitignore \
+	.gitattributes \
+	.mailmap \
+	.markdownlint.json \
+	.ruff.toml \
+	.shellcheckrc \
+	.yamllint \
+
+SANE_DEPS_FOLDERS += \
+	deps/folders/bin \
+	deps/folders/config \
+	deps/folders/dist \
+	deps/folders/docs \
+	deps/folders/test \
+	deps/folders/tmp \
+
+SANE_DEPS_GITIGNORE += \
+	deps/gitignore/corepack \
+	deps/gitignore/uv \
+	deps/gitignore/vscode \
+
+SANE_CHECK_LINTERS_CORE += \
+	check/actionlint \
+
+endif
 
 .editorconfig:
 	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@

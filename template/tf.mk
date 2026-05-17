@@ -145,16 +145,8 @@ SANE_DEPS += \
 	$(SANE_DEPS_TF) \
 
 SANE_DEPS_FILES += \
-	.terraform-docs.yml \
-	.tflint.hcl \
 	$(TF_FILES) \
 	deps/files/tfdocs
-
-ifeq (tofu,$(TF_CMD))
-SANE_DEPS_FILES += .opentofu-version
-else
-SANE_DEPS_FILES += .terraform-version
-endif
 
 SANE_DEPS_UPGRADE += \
 	$(SANE_DEPS_UPGRADE_TF) \
@@ -168,6 +160,18 @@ SANE_BUILD += \
 SANE_TEST += \
 	$(SANE_TEST_TF) \
 
+ifeq ($(MAKE_PATH),$(GIT_ROOT))
+SANE_DEPS_FILES += \
+	.terraform-docs.yml \
+	.tflint.hcl \
+
+ifeq (tofu,$(TF_CMD))
+SANE_DEPS_FILES += .opentofu-version
+else
+SANE_DEPS_FILES += .terraform-version
+endif
+
+endif
 # ------------------------------------------------------------------------------
 
 .opentofu-version:
