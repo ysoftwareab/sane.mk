@@ -22,12 +22,15 @@ TF_BACKEND_TYPE = $(shell { $(CAT) $(TF_BACKEND_STATE_FILE) 2>/dev/null || $(ECH
 
 ifneq (,$(wildcard .opentofu-version))
 TF_CMD ?= tofu
+TF_CMD_NAME = OpenTofu
 TF_EXT = tofu
 else ifneq (,$(wildcard *.tofu))
 TF_CMD ?= tofu
+TF_CMD_NAME = OpenTofu
 TF_EXT = tofu
 else
 TF_CMD ?= terraform
+TF_CMD_NAME = Terraform
 TF_EXT = tf
 endif
 
@@ -46,13 +49,13 @@ TFLINT ?= $(call which,TFLINT,tflint)
 
 TENV_ROOT ?= $(HOME)/.tenv
 ifeq (tofu,$(TF_CMD))
-OPENTOFU_VSN = $(shell $(TENV) tofu detect --install -q | $(GREP) "^OpenTofu " | $(AWK) '{print $$2}')
-OPENTOFU_ ?= $(TENV_ROOT)/OpenTofu/$(OPENTOFU_VSN)/tofu
+OPENTOFU_VSN = $(shell $(TENV) tofu detect --install -q | $(GREP) "^$(TF_CMD_NAME) " | $(AWK) '{print $$2}')
+OPENTOFU_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(OPENTOFU_VSN)/tofu
 OPENTOFU = $(TF_ENV) $(OPENTOFU_)
 TERRAFORM = $(OPENTOFU)
 else
-TF_VSN = $(shell $(TENV) tf detect --install -q | $(GREP) "^Terraform " | $(AWK) '{print $$2}')
-TF_ ?= $(TENV_ROOT)/Terraform/$(TF_VSN)/terraform
+TF_VSN = $(shell $(TENV) tf detect --install -q | $(GREP) "^$(TF_CMD_NAME) " | $(AWK) '{print $$2}')
+TF_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(TF_VSN)/terraform
 TERRAFORM = $(TF_ENV) $(TF_)
 endif
 TF_PLAN = 2> $(TF_PLAN_FILE_ERROR) $(TERRAFORM) plan $(TF_PLAN_FLAGS)
