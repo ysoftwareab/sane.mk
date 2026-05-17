@@ -39,7 +39,7 @@ GIT_REMOTE_URL = $(shell $(GIT) config remote.$(GIT_REMOTE).url 2>/dev/null)
 GIT_REMOTE_SLUG = $(shell test -n $(GIT_REMOTE_URL); GIT_REMOTE_URL=$(GIT_REMOTE_URL); basename $$(dirname "$${GIT_REMOTE_URL//://}"))/$(shell basename "$(GIT_REMOTE_URL)" .git)
 
 GIT_REMOTE_ORIGIN_URL ?= $(shell $(GIT) config remote.$(GIT_REMOTE_ORIGIN).url 2>/dev/null)
-GIT_REMOTE_ORIGIN_URL_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
+GIT_REMOTE_ORIGIN_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
 
 GIT_REMOTE_OR_ORIGIN_URL = $(shell $(GIT) config remote.$(GIT_REMOTE_OR_ORIGIN).url 2>/dev/null)
 GIT_REMOTE_OR_ORIGIN_SLUG = $(shell test -n $(GIT_REMOTE_OR_ORIGIN_URL); GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_OR_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_OR_ORIGIN_URL)" .git)
