@@ -83,6 +83,8 @@ same `deps`, `check`, and `test` aggregations used elsewhere in this repo.
 
 * [extra/misc.backlog.inc.mk](./extra/misc.backlog.inc.mk) provides a `backlog` target
   to initialize [Backlog.md](https://github.com/MrLesk/Backlog.md).
+* [extra/misc.taskwarrior.inc.mk](./extra/misc.taskwarrior.inc.mk) provides `task/*` targets
+  to manage tasks with [Taskwarrior](https://github.com/GothenburgBitFactory/taskwarrior).
 * [extra/misc.gcp.inc.mk](./extra/misc.gcp.inc.mk) provides targets to interact with GCP projects via `gcloud`.
 
 ## Ref
