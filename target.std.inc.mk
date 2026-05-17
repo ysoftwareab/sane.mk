@@ -3,7 +3,6 @@ SANE_CHECK ?= noop
 SANE_CI ?= noop
 SANE_CLEAN ?= noop
 SANE_DEBUG ?= noop
-SANE_DEPS ?= noop
 SANE_DEPS_FILES ?= noop
 SANE_DEPS_FOLDERS ?= noop
 SANE_DEPS_GITIGNORE ?= noop
@@ -13,15 +12,16 @@ SANE_SYSTEM ?= noop
 SANE_TEST ?= noop
 
 SANE_ALL_DEFAULT := deps check build
-SANE_ALL ?= $(SANE_ALL_DEFAULT)
+SANE_ALL ?= noop $(SANE_ALL_DEFAULT)
 
 SANE_CI_DEFAULT := all test
-SANE_CI ?= $(SANE_CI_DEFAULT)
+SANE_CI ?= noop $(SANE_CI_DEFAULT)
 
 SANE_DEPS_DEFAULT := deps/folders deps/files
 ifeq ($(MAKE_PATH),$(GIT_ROOT))
 SANE_DEPS_DEFAULT += deps/gitignore
 endif
+SANE_DEPS ?= noop $(SANE_DEPS_DEFAULT)
 
 # NOTE use *.generated.* to mark generated files
 GENERATED_FILES_FILTER_OUT = \
