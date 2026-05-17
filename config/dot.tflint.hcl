@@ -6,12 +6,6 @@ plugin "google" {
   source  = "github.com/terraform-linters/tflint-ruleset-google"
 }
 
-plugin "sheldon" {
-  enabled = true
-  version = "0.0.7"
-  source  = "github.com/0x416e746f6e/tflint-ruleset-sheldon"
-}
-
 plugin "sort" {
   enabled = true
   version = "0.0.7"
@@ -30,14 +24,6 @@ plugin "terraform" {
 }
 
 # ------------------------------------------------------------------------------
-
-rule "sheldon_spacing" {
-  enabled = false # prefer source and version together, issues with multilines
-}
-
-rule "sheldon_sorting" {
-  enabled = false # issues with multilines
-}
 
 rule "sort_spacing" {
   enabled = false # prefer source and version together, issues with multilines
