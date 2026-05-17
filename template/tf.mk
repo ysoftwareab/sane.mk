@@ -192,6 +192,18 @@ $(TF_FILES):
 	$(TOUCH) $@
 
 
+$(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
+$(TF_BACKEND_STATE_FILE):
+	if [[ -s backend.tf ]] && [[ -f terraform.tfstate ]]; then \
+		if [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
+			TF_INPUT=true $(TERRAFORM) init -migrate-state; \
+			$(MV) terraform.tfstate terraform.tfstate.bak; \
+		else \
+			$(TERRAFORM) init -reconfigure; \
+		fi; \
+	fi
+
+
 .PHONY: deps/files/tfdocs
 deps/files/tfdocs:
 ifneq (,$(wildcard *.tf))
@@ -213,7 +225,6 @@ endif
 
 
 .PHONY: deps/tf-core
-deps/tf-core: $(TF_BACKEND_STATE_FILE)
 deps/tf-core:
 	$(TERRAFORM) init -backend=false
 	[[ -e .terraform.lock.hcl ]] || $(TERRAFORM) providers lock $(TF_PROVIDERS_LOCK_FLAGS)
@@ -274,17 +285,8 @@ test/tf:
 	$(TERRAFORM) test
 
 
-$(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
-	if [[ -s backend.tf ]] && [[ -f terraform.tfstate ]] && [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
-		TF_INPUT=true $(TERRAFORM) init -migrate-state; \
-	else \
-		$(TERRAFORM) init -reconfigure; \
-	fi
-
-
 .PHONY: tf/init
 tf/init: deps/tf-core
-tf/init: $(TF_BACKEND_STATE_FILE)
 tf/init:
 	:
 
@@ -295,8 +297,8 @@ tf/diff/tldr:
 	$(ECHO_INFO) "📖 See TLDR:"
 	$(CAT) $(TF_PLAN_FILE_TXT) \
 		| $(GREP_TF_PLAN_TLDR) \
-		| $(SED) "/destroyed/s/^  /⚠️/g" \
-		| $(SED) "/replaced/s/^  /⚠️/g" \
+		| $(SED) "/destroyed/s/^ /⚠️/g" \
+		| $(SED) "/replaced/s/^ /⚠️/g" \
 		| $(TEE) $(TF_PLAN_FILE_TLDR) \
 		| $(GREP) -v -e "^      [+-~] " \
 		|| true
