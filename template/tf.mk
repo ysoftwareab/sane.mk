@@ -31,6 +31,10 @@ TF_CMD ?= terraform
 TF_EXT = tf
 endif
 
+ifneq (tofu,$(TF_EXT)$(wildcard *.tf))
+TF_EXT = tf
+endif
+
 export TF_INPUT := false
 export TF_LOG_PATH := $(TF_WORKSPACE).tflog.txt
 export TF_LOG_PROVIDER := DEBUG
@@ -159,7 +163,8 @@ SANE_TEST += \
 # ------------------------------------------------------------------------------
 
 .opentofu-version:
-	$(ECHO) "latest" > $@
+	$(TENV) tofu use --working-dir latest
+	$(ECHO) >> $@ # missing trailing newline
 
 
 .terraform-docs.yml:
@@ -167,7 +172,8 @@ SANE_TEST += \
 
 
 .terraform-version:
-	$(ECHO) "latest" > $@
+	$(TENV) tf use --working-dir latest
+	$(ECHO) >> $@ # missing trailing newline
 
 
 .tflint.hcl:
