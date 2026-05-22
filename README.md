@@ -1,6 +1,6 @@
 # sane.mk
 
-For the future you to keep on enjoying GNU Make.
+For the future "you" 🫵 to keep on enjoying GNU Make.
 
 ## Usage
 
