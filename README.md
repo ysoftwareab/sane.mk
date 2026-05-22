@@ -54,7 +54,7 @@ By default, running `make` or `make all` is equivalent to `make deps check build
 
 ## sane.extra.mk
 
-Most often than not, you'll need `sane.extra.mk` though, which is the batteries-included entrypoint.
+More often than not, you'll need `sane.extra.mk` though, which is the batteries-included entrypoint.
 It includes the core targets from `sane.std.mk`, then layers in common extras for local/CI development:
 
 * executables and helper macros (`exe.*.inc.mk`, `misc.*.inc.mk`)
