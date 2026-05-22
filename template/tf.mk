@@ -9,6 +9,7 @@ $(error "Could not find sane.extra.mk in $(MAKE_SELF_PATH) or $(MAKE_SELF_PATH)/
 endif
 
 include $(SANE_MK_ROOT)/sane.extra.mk
+include $(SANE_MK_ROOT)/extra/check.trivy.inc.mk
 
 # ------------------------------------------------------------------------------
 
@@ -137,6 +138,7 @@ SANE_CHECK_TF += \
 	check/tffmt \
 	check/tfvalidate \
 	check/tflint \
+	check/trivy \
 
 SANE_TEST_TF += \
 	test/tf \

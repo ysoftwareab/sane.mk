@@ -9,6 +9,7 @@ brew "scc" # Fast and accurate code counter with complexity and COCOMO estimates
 brew "shellcheck" # Static analysis and lint tool, for (ba)sh scripts
 brew "shfmt" # Autoformat shell script source code
 brew "tflint" # Linter for Terraform files
+brew "trivy" # Vulnerability scanner for container images, file systems, and Git repos
 brew "trufflehog" # Find and verify credentials
 brew "ty" # Extremely fast Python type checker, written in Rust
 brew "yamllint" # Linter for YAML files
