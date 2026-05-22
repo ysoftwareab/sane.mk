@@ -2,6 +2,19 @@
 
 For the future "you" 🫵 to keep on enjoying GNU Make.
 
+## Why sane.mk
+
+`sane.mk` gives you a consistent build/check/test interface across projects
+without rewriting the same Makefile plumbing each time.
+
+It is designed to standardize common practices, centralize logic components, and align local/CI behavior.
+
+## Compatibility and assumptions
+
+This project targets GNU Make and GNU userland tooling.
+On macOS, it uses [Homebrew](https://brew.sh) to install and prefer GNU variants. Zero risk.
+Formulas and casks go in `Brewfile`, custom installations go in `Brewfile.sh`.
+
 ## Usage
 
 You can either have this repository as a submodule (or even NodeJS/Python dependency),
