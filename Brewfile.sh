@@ -9,3 +9,11 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } &&
 
 # shellcheck disable=SC2154
 [[ ! -e "brew/zz.${HOST}.sh" ]] || source "brew/zz.${HOST}.sh"
+
+# docker cli plugins
+mkdir -p "${HOME}/.docker/cli-plugins"
+[[ ! -d "$(brew --prefix)/lib/docker/cli-plugins" ]] \
+    || find "$(brew --prefix)/lib/docker/cli-plugins" -mindepth 1 -maxdepth 1 | while IFS= read -r f; do
+        [[ -e "${HOME}/.docker/cli-plugins/$(basename "${f}")" ]] \
+        || ln -sfn "${f}" "${HOME}/.docker/cli-plugins/$(basename "${f}")"
+    done
