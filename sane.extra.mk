@@ -62,7 +62,7 @@ include $(SANE_MK_ROOT)/extra/check.yamllint.inc.mk
 include $(SANE_MK_ROOT)/extra/test.bats.inc.mk
 include $(SANE_MK_ROOT)/extra/test.pytest.inc.mk
 
-include $(SANE_MK_ROOT)/extra/tool.scc.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.scc.inc.mk
 
 SANE_SYSTEM += \
 	system/brewfile \

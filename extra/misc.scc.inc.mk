@@ -28,8 +28,8 @@ debug/scc:
 	$(ECHO_DONE)
 
 
-.PHONY: tool/scc
-tool/scc:
+.PHONY: scc
+scc:
 	SCC_FILES_TMP=($(filter-out $(SCC_FILES_FILTER_OUT), $(SCC_FILES))); \
 	[[ "$${#SCC_FILES_TMP[@]}" = "0" ]] || { \
 		$(SCC) $(SCC_FLAGS) $${SCC_FILES_TMP[@]}; \
