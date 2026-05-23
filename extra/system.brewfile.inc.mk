@@ -2,6 +2,11 @@
 # For extensibility, the Brewfile is processed with
 # envsubst-like variable substitution and support for # source directives.
 
+export HOMEBREW_DISPLAY_INSTALL_TIMES ?= 1
+export HOMEBREW_FAIL_LOG_LINES ?= 100
+export HOMEBREW_NO_INSTALL_CLEANUP ?= 1
+export HOMEBREW_VERBOSE_USING_DOTS ?= 1
+
 BREWFILE = Brewfile
 BREWFILE_SH = Brewfile.sh
 BREWFILE_TEST = Brewfile.test

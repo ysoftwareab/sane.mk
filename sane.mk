@@ -171,4 +171,15 @@ IS_DECRYPTED ?= false
 export TMPDIR ?= /tmp
 export USER ?= $(shell $(ID) -un)
 
+# disable telemetry
+export DO_NOT_TRACK ?= 1
+export DISABLE_TELEMETRY ?=1
+export HOMEBREW_NO_ANALYTICS ?= 1
+
+# disable updates
+export CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK ?= 1
+export GH_NO_UPDATE_NOTIFIER ?= 1
+export HOMEBREW_NO_AUTO_UPDATE ?= 1
+export HOMEBREW_NO_INSTALL_UPGRADE ?= 1
+
 endif

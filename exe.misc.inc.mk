@@ -57,6 +57,7 @@ endif
 endif
 
 # python
+export PYTHONUNBUFFERED ?= 1
 PYTHON = $(call which,PYTHON,python)
 PYTHON3 = $(call which,PYTHON3,python3)
 $(foreach VAR,PYTHON PYTHON3,$(call make-lazy,$(VAR)))
