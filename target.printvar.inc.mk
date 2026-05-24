@@ -34,9 +34,11 @@ $(PRINTVARS_MAKEFILE_ORIGINS_TARGETS):
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
 			$(info $V=$($V)$(\n)$(space) origin = $(origin $V)$(\n)$(space) flavor = $(flavor $V)$(\n)$(space) value = $(value  $V)))) # editorconfig-checker-disable-line
+			,:) # editorconfig-checker-disable-line
 	@$(foreach V, $(sort $(filter $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
-			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.)))
+			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.), \
+			:))
 
 
 .PHONY: printvars/lazy
@@ -54,7 +56,8 @@ printvar/%:
 printenv: ## Print all Makefile variables (printenv style). Use printenv/<var> for only one.
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter file, $(origin $V)), \
-			$(info $V=$($V))))
+			$(info $V=$($V)), \
+			:))
 
 
 .PHONY: printenv/%

@@ -66,7 +66,7 @@ endif
 # editorconfig-checker-disable max_line_length
 # NOTE cannot use # editorconfig-checker-disable-line because it might add faux whitespace
 # Convert common git remote forms to git@host:org/repo.git.
-git_url_to_ssh = $(if $(strip $(1)),$(call git_url_to_ssh/_from,$(strip $(1))))
+git_url_to_ssh = $(if $(strip $(1)),$(call git_url_to_ssh/_from,$(strip $(1))),:)
 git_url_to_ssh/_from = $(if $(findstring ://,$(1)),$(call git_url_to_ssh/_scheme,$(1)),$(call git_url_to_ssh/_scp,$(1)))
 git_url_to_ssh/_scheme = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(call git_url_to_ssh/_scheme_rest,$(1))),$(call git_url_to_ssh/_path,$(call git_url_to_ssh/_scheme_rest,$(1))))
 git_url_to_ssh/_scp = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(subst :,/,$(1))),$(call git_url_to_ssh/_path,$(subst :,/,$(1))))
