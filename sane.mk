@@ -173,7 +173,7 @@ endif
 
 IS_DECRYPTED ?= false
 export TMPDIR ?= /tmp
-export USER ?= $(shell $(ID) -un)
+export USER ?= $(shell id -un)
 
 # disable telemetry
 export DO_NOT_TRACK ?= 1
