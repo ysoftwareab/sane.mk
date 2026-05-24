@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 
-brew "awscli" if OS.mac? # Official Amazon AWS command-line interface
+brew "awscli" # Official Amazon AWS command-line interface
 brew "infracost" # Cost estimates for Terraform
 brew "tenv" # OpenTofu / Terraform / Terragrunt / Terramate / Atmos version manager
 brew "terraform-docs" # Tool to generate documentation from Terraform modules
