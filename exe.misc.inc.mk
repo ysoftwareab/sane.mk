@@ -72,10 +72,9 @@ $(foreach VAR,UNZIP UNZIP_Z1 ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
 
 # zz
 BREW = $(call which,BREW,brew)
-DOT = $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
 STRIP_ANSI = $(SED) "s/$(shell $(PRINTF) '\033')\[[0-9;?]*[a-zA-Z]//g"
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
-$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
+$(foreach VAR,BREW GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
