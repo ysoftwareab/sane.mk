@@ -182,7 +182,7 @@ endif
 
 
 .terraform-docs.yml:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .terraform-version:
@@ -191,7 +191,7 @@ endif
 
 
 .tflint.hcl:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 $(TF_FILES):

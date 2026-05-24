@@ -151,15 +151,15 @@ SANE_CHECK_LINTERS_CORE += \
 endif
 
 .editorconfig:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .gitattributes:
-	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
+	$(CP) $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .gitignore:
-	$(CP) $(SANE_MK_ROOT)/config/dot$@ $@
+	$(CP) $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .github/actionlint.yaml:
@@ -171,19 +171,19 @@ endif
 
 
 .markdownlint.json:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .ruff.toml:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .shellcheckrc:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .yamllint:
-	$(LN) -s $(SANE_MK_ROOT)/config/dot$@ $@
+	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
 .PHONY: deps/folders/bin
