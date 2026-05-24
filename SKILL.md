@@ -15,7 +15,7 @@ description: |
 
 ## Quick model
 
-* Choose the smallest entrypoint: `sane.mk`, `sane.std.mk`, `sane.extra.mk`, or `template/tf.mk`.
+* Choose the smallest entrypoint: `sane.mk`, `sane.std.mk`, `sane.extra.mk`, or `template/sane.tf.mk`.
 * Extend behavior by appending leaf targets to `SANE_*` variables such as
   `SANE_DEPS`, `SANE_CHECK`, `SANE_TEST`, and `SANE_SYSTEM`.
 * Keep top-level verbs declarative; put real work in `deps/*`, `check/*`, `test/*`, `system/*`, `debug/*`.

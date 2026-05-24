@@ -83,9 +83,9 @@ It includes the core targets from `sane.std.mk`, then layers in common extras fo
 * lint and quality checks (for shell, YAML, Markdown, Python, secrets)
 * test targets (`bats`, `pytest`)
 
-## template/tf.mk
+## template/sane.tf.mk
 
-`template/tf.mk` is a Terraform-oriented Makefile template built on top of `sane.extra.mk`.
+`template/sane.tf.mk` is a Terraform-oriented Makefile template built on top of `sane.extra.mk`.
 
 It provides:
 

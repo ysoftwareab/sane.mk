@@ -36,6 +36,6 @@ gitconfig/dot.gitignore_global:
 dist/mk:
 	$(MKDIR) dist
 	$(CP) sane.mk dist/
-	$(CP) template/tf.mk dist/template.tf.mk
+	$(CP) template/sane.tf.mk dist/sane.tf.mk
 	./sane.std.mk.tpl > dist/sane.std.mk
 	./sane.extra.mk.tpl > dist/sane.extra.mk
