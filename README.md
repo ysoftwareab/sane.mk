@@ -15,6 +15,13 @@ This project targets GNU Make and GNU userland tooling.
 On macOS, it uses [Homebrew](https://brew.sh) to install and prefer GNU variants. Zero risk.
 Formulas and casks go in `Brewfile`, custom installations go in `Brewfile.sh`.
 
+## AI Agent Skill
+
+Install the [sane.mk skill](./SKILL.md) to have your AI agent understand
+and extend the sane.mk framework for shared deps, check, build, test, dist, debug, and system workflows.
+
+`pnpx skills add andreineculau/sane.mk`
+
 ## Usage
 
 You can either have this repository as a submodule (or even NodeJS/Python dependency),
