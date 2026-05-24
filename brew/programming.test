@@ -10,7 +10,7 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; } &&
 corepack --version | head -n1 | grep -q "^0\."
 docker --version | head -n1 | grep -q "^Docker version 29\."
 docker buildx version | head -n1 | grep -q "^github.com/docker/buildx v0\."
-docker compose version | head -n1 | grep -q "^Docker Compose version v5\."
+docker compose version | head -n1 | grep -q "^Docker Compose version v\?5\."
 n --version | head -n1 | grep -q "^10\."
 node --version | head -n1 | grep -q "^v26\..*"
 npm --version | head -n1 | grep -q "^11\..*"
