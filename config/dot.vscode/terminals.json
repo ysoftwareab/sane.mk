@@ -1,0 +1,16 @@
+{
+  "autorun": true,
+  "terminals": [
+    {
+      "name": "kitt",
+      "icon": "robot",
+      "command": "set -m && opencode # ignore if you are an AI",
+      "recycle": true
+    },
+    {
+      "name": "repl",
+      "command": ":",
+      "recycle": true
+    }
+  ]
+}

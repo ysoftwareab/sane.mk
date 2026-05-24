@@ -1,0 +1,110 @@
+{
+  "autoDocstring.docstringFormat": "google",
+  "bashIde.shfmt.binaryNextLine": true,
+  "bashIde.shfmt.caseIndent": true,
+  "comments.openView": "never",
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.markdownlint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.quickSuggestions": {
+    "comments": false,
+    "other": false,
+    "strings": false
+  },
+  "editor.quickSuggestionsDelay": 300,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [
+    80,
+    120
+  ],
+  "editor.scrollBeyondLastLine": false,
+  "editor.trimAutoWhitespace": true,
+  "files.associations": {
+    "*.brew": "ruby",
+    "*.hcl": "terraform",
+    "*.tofu": "terraform",
+    "Makefile*": "makefile"
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.confirmSync": false,
+  "git.mergeEditor": true,
+  "gitlens.ai.enabled": false,
+  "gitlens.gitCommands.skipConfirmations": [
+    "fetch:command",
+    "pull:command",
+    "push:command",
+    "stash-push:command",
+    "switch:command"
+  ],
+  "gitlens.graph.dimMergeCommits": true,
+  "gitlens.graph.layout": "editor",
+  "gitlens.graph.minimap.additionalTypes": [
+    "localBranches",
+    "stashes",
+    "remoteBranches",
+    "tags"
+  ],
+  "gitlens.graph.scrollMarkers.additionalTypes": [
+    "localBranches",
+    "stashes",
+    "remoteBranches",
+    "tags"
+  ],
+  "gitlens.launchpad.indicator.enabled": false,
+  "gitlens.plusFeatures.enabled": false,
+  "gitlens.rebaseEditor.ordering": "asc",
+  "gitlens.showWhatsNewAfterUpgrades": false,
+  "gitlens.telemetry.enabled": false,
+  "json.format.keepLines": true,
+  "linter.enabled": true,
+  "linter.linters": {
+    "yamllint": {
+      "enabled": true
+    }
+  },
+  "makefile.configureOnEdit": false,
+  "makefile.configureOnOpen": false,
+  "markdown-preview-github-styles.colorTheme": "light",
+  "markdownlint.run": "onSave",
+  "prettier.enable": false,
+  "prettier.requireConfig": true,
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "redhat.telemetry.enabled": false,
+  "ruff.lineLength": 120,
+  "shellcheck.disableVersionCheck": true,
+  "shellcheck.enable": true,
+  "shellcheck.run": "onSave",
+  "terminal.integrated.env.linux": {
+    "VSCODE_WORKSPACE_DIR": "${workspaceFolder}"
+  },
+  "terminal.integrated.env.osx": {
+    "VSCODE_WORKSPACE_DIR": "${workspaceFolder}"
+  },
+  "terminal.integrated.env.windows": {
+    "VSCODE_WORKSPACE_DIR": "${workspaceFolder}"
+  },
+  "terminal.integrated.initialHint": false,
+  // UbuntuMono Nerd Font for glyphs support
+  // https://github.com/microsoft/vscode/blob/42f75324c5ca687c5950d9b2fc661206a31eb0b6/src/vs/editor/common/config/fontInfo.ts#L219-L230 // editorconfig-checker-disable-line
+  // Menlo, Monaco, 'Courier New', monospace on macOS
+  // 'Droid Sans Mono', monospace on linux
+  // Consolas, 'Courier New', monospace on Windows
+  "terminal.integrated.fontFamily": "'UbuntuMono Nerd Font', Menlo, Monaco, 'Droid Sans Mono', Consolas, 'Courier New', monospace", // editorconfig-checker-disable-line
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.tabs.hideCondition": "never",
+  "todo-tree.filtering.includeHiddenFiles": true,
+  "todo-tree.general.showActivityBarBadge": true,
+  "todo-tree.general.statusBar": "tags",
+  "todo-tree.tree.expanded": true,
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.tree.tagsOnly": true,
+  "workbench.iconTheme": null,
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.startupEditor": "none",
+  "yaml.format.enable": false
+}
