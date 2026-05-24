@@ -61,7 +61,7 @@ endif
 test/system/brewfile:
 ifneq (,$(wildcard $(BREWFILE)))
 	unset GITHUB_ACTIONS; \
-	$(CAT_BREWFILE) | brew bundle check $(BREW_BUNDLE_FLAGS) --file=-
+	$(CAT_BREWFILE) | brew bundle check --verbose $(BREW_BUNDLE_FLAGS) --file=-
 ifneq (,$(wildcard $(BREWFILE_TEST)))
 	$(BREWFILE_ENV) ./$(BREWFILE_TEST)
 endif
