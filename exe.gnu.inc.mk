@@ -111,7 +111,6 @@ YES = $(call which,YES,gyes yes)
 CP = $(call which,CP,gcp cp) -v -Rp
 LN = $(call which,LN,gln ln) -v -fn
 MKDIR = $(call which,MKDIR,gmkdir mkdir) -v -p
-MKTEMP = $(call which,MKTEMP,gmktemp mktemp)
 MV = $(call which,MV,gmv mv) -v -f
 PARALLEL = $(call which,PARALLEL,gparallel parallel) --will-cite
 RM = $(call which,RM,grm rm) -v -rf
