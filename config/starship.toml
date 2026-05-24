@@ -1,0 +1,37 @@
+[cmd_duration]
+min_time = 0
+
+[container]
+disabled = false
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+
+[direnv]
+disabled = false
+
+[docker_context]
+disabled = false
+
+[git_commit]
+only_detached = false
+tag_disabled = false
+
+[git_metrics]
+disabled = false
+
+[jobs]
+disabled = false
+
+[package]
+display_private = true
+
+[shell]
+disabled = false
+
+[shlvl]
+disabled = false
+
+[status]
+disabled = false

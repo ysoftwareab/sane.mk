@@ -17,3 +17,9 @@ make -C /sane.mk help
 # clean
 # FIXME can't get /tmp mounted as a docker cache. Permission issues
 sudo rm -rf /tmp/{*,.[^.]*} || true
+
+# devex
+mkdir -p "${HOME}/.config"
+cp --no-clobber /sane.mk/config/starship.toml "${HOME}/.config/starship.toml"
+# shellcheck disable=SC2016
+cat ~/.bash_aliases | grep "startship init bash" || echo 'eval "$(starship init bash)"' >>~/.bash_aliases
