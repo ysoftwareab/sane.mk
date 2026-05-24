@@ -1,0 +1,120 @@
+{
+  "name": "sane.mk",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "options": [
+      "--platform=linux/amd64"
+    ]
+  },
+  "initializeCommand": [
+    "mkdir",
+    "-p",
+    "${localEnv:HOME}/.aws",
+    "${localEnv:HOME}/.config/gcloud",
+    "${localEnv:HOME}/.config/gh"
+  ],
+  "runArgs": [
+    "--platform=linux/amd64",
+    "--privileged",
+    "--network=host",
+    "--ipc=host"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+  "workspaceFolder": "${localWorkspaceFolder}",
+  "postCreateCommand": "/usr/bin/bash -l -i -c \"git config --global --add safe.directory ${containerWorkspaceFolder}; rm -f Makefile.lazy\"",
+  "containerUser": "linuxbrew",
+  "containerEnv": {
+    "USER": "linuxbrew"
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "source=profile,target=/root,type=volume",
+    "target=/root/.vscode-server,type=volume",
+    "source=unique-vol-name-here,target=/root/.vscode-server/extensions,type=volume",
+    "source=unique-vol-name-here-insiders,target=/root/.vscode-server-insiders/extensions,type=volume",
+    "source=${localEnv:HOME}/.aws,target=/home/linuxbrew/.aws,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.config/gcloud,target=/home/linuxbrew/.config/gcloud,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.config/gh,target=/home/linuxbrew/.config/gh,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "4ops.terraform",
+        "ankurmathur.opencode-provider-bridge",
+        "anthropic.claude-code",
+        "arahata.linter-actionlint",
+        "astral-sh.ty",
+        "bierner.github-markdown-preview",
+        "bierner.markdown-checkbox",
+        "bierner.markdown-emoji",
+        "bierner.markdown-footnotes",
+        "bierner.markdown-mermaid",
+        "bierner.markdown-preview-github-styles",
+        "bierner.markdown-yaml-preamble",
+        "bodil.file-browser",
+        "Cardinal90.multi-cursor-case-preserve",
+        "charliermarsh.ruff",
+        "chrislajoie.vscode-modelines",
+        "DavidAnson.vscode-markdownlint",
+        "davidhewitt.shebang-language-associator",
+        "dracula-theme.theme-dracula",
+        "eamodio.gitlens",
+        "EditorConfig.editorconfig",
+        "fabiospampinato.vscode-terminals",
+        "fedaykindev.openchamber",
+        "fnando.linter",
+        "fuadpashayev.bottom-terminal",
+        "garaemon.vscode-emacs-tab",
+        "GitHub.codespaces",
+        "GitHub.github-vscode-theme",
+        "github.vscode-github-actions",
+        "Gruntfuggly.todo-tree",
+        "google.gemini-cli-vscode-ide-companion",
+        "hashhar.gitattributes",
+        "hashicorp.terraform",
+        "ilariaventurini.ohlala",
+        "innoverio.vscode-dbt-power-user",
+        "jebbs.plantuml",
+        "KevinRose.vsc-python-indent",
+        "ldez.ignore-files",
+        "mads-hartmann.bash-ide-vscode",
+        "me-dutour-mathieu.vscode-github-actions",
+        "mechatroner.rainbow-csv",
+        "ms-azuretools.vscode-docker",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-vscode-remote.vscode-remote-extensionpack",
+        "ms-vscode.makefile-tools",
+        "ms-vscode.vscode-chat-customizations-evaluations",
+        "ms-vsliveshare.vsliveshare",
+        "mvllow.rose-pine",
+        "njpwerner.autodocstring",
+        "pnp.polacode",
+        "redhat.vscode-yaml",
+        "renanbs.git-context-menu",
+        "sidneys1.gitconfig",
+        "sirmspencer.vscode-autohide",
+        "sleistner.vscode-fileutils",
+        "snowflake.snowflake-vsc",
+        "sqlfluff.vscode-sqlfluff",
+        "sst-dev.opencode",
+        "teabyii.ayu",
+        "timonwong.shellcheck",
+        "tintinweb.graphviz-interactive-preview",
+        "tomoki1207.pdf",
+        "vincaslt.highlight-matching-tag",
+        "ysamlan.vscode-backlog-md",
+        "yzane.markdown-pdf",
+        "mutantdino.resourcemonitor"
+      ],
+      "settings": {
+        "security.workspace.trust.enabled": false,
+        "terminal.integrated.shell.linux": "/usr/bin/bash"
+      }
+    }
+  },
+  "features": {}
+}

@@ -1,6 +1,7 @@
 include sane.extra.mk
 
 DEFAULT_FILES_FILTER_OUT += \
+	.devcontainer/devcontainer.json \
 	$(wildcard bin/transcrypt@*/transcrypt) \
 	gitconfig/dot.gitattributes_global \
 	gitconfig/dot.gitignore_global \
@@ -10,6 +11,7 @@ JSCPD_FILES_FILTER_OUT += \
 	sane.std.mk.tpl \
 
 SANE_BUILD += \
+	.devcontainer/devcontainer.json \
 	gitconfig/dot.gitattributes_global \
 	gitconfig/dot.gitignore_global \
 
@@ -17,6 +19,13 @@ SANE_DIST += \
 	dist/mk \
 
 # ------------------------------------------------------------------------------
+
+.PHONY: .devcontainer/devcontainer.json
+.devcontainer/devcontainer.json: config/dot.vscode/extensions.json
+.devcontainer/devcontainer.json: package.json
+.devcontainer/devcontainer.json: .devcontainer/devcontainer.json.tpl
+	$< > $@
+
 
 .PHONY: gitconfig/dot.gitattributes_global
 gitconfig/dot.gitattributes_global: gitconfig/dot.gitattributes_global.tpl
