@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-set -euo pipefail
-
-YP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null && pwd)"
-source ${YP_DIR}/sh/common.inc.sh
+set -eEuo pipefail -o errtrace -o functrace
+shopt -s inherit_errexit 2>/dev/null || true
+export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+# shellcheck disable=SC2154
+trap 'e=$?; set +x; s() { cmd="${BASH_COMMAND}"; >&2 echo "bash: *** [command] ${cmd}"; local i=0; while caller $i; do ((++i)); done | while read l f p; do echo "bash: *** [$p:$l $f]${e:+ Error }$e"; e=""; done; }; >&2 echo; >&2 s' ERR # editorconfig-checker-disable-line
+# shellcheck disable=SC2145,SC2294
+function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; }
+export -f exe
+[[ -z "${VERBOSE:-${V:-}}" ]] || set -x
 
 #- run-parts 1.0
 ## Usage: run-parts [OPTIONS] -- DIRECTORY
@@ -36,15 +41,21 @@ source ${YP_DIR}/sh/common.inc.sh
 # - https://github.com/ikysil/run-parts
 # - https://github.com/wolfbox/run-parts/blob/master/run-parts.sh
 
-TMP_RUNPARTS=$(mktemp -t yplatform.XXXXXXXXXX)
+TMP_RUNPARTS=$(mktemp)
 function on_exit() {
-  rm -rf ${TMP_RUNPARTS}
+    rm -rf "${TMP_RUNPARTS}"
 }
 trap on_exit EXIT
 
 if { getopt --test >/dev/null 2>&1 && false; } || [[ "$?" = "4" ]] || false; then
-  ARGS=$(getopt -o vu:a:Vh -l test,list,verbose,report,reverse,exit-on-error,stdin,lsbsysinit,new-session,regex:,umask:,arg:,version,help -n $(basename ${BASH_SOURCE[0]}) -- "$@") || sh_script_usage
-  eval set -- "${ARGS}"
+    ARGS=$(getopt -o vu:a:Vh \
+        -l test,list,verbose,report,reverse,exit-on-error,stdin,lsbsysinit,new-session,regex:,umask:,arg:,version,help \
+        -n "$(basename "${BASH_SOURCE[0]}")" -- "$@") \
+        || {
+            grep "^##" "${0}" | cut -c 4-
+            exit 1
+        }
+    eval set -- "${ARGS}"
 fi
 
 TEST_MODE=false
@@ -66,185 +77,191 @@ TRADRE="^[a-z0-9][a-z0-9-]*$"
 EXIT_STATUS=0
 
 while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --test)
-      TEST_MODE=true
-      shift
-      ;;
-    --list)
-      LIST_MODE=true
-      shift
-      ;;
-    -v | --verbose)
-      VERBOSE_MODE=true
-      shift
-      ;;
-    --report)
-      REPORT_MODE=true
-      shift
-      ;;
-    --reverse)
-      REVERSE_MODE=true
-      shift
-      ;;
-    --exit-on-error)
-      EXIT_ON_ERROR_MODE=true
-      shift
-      ;;
-    --stdin)
-      STDIN_MODE=true
-      shift
-      ;;
-    --lsbsysinit)
-      LSBSYSINIT_MODE=true
-      shift
-      ;;
-    --new-session)
-      NEW_SESSION_MODE=true
-      shift
-      ;;
-    --regex)
-      REGEX=$2
-      shift 2
-      ;;
-    -u | --umask)
-      UMASK=$2
-      shift 2
-      ;;
-    -a | --arg)
-      ARGS+=("$2")
-      shift 2
-      ;;
-    -V | --version)
-      sh_script_version
-      ;;
-    -h | --help)
-      sh_script_usage
-      ;;
-    --)
-      shift
-      break
-      ;;
-    -*)
-      sh_script_usage
-      ;;
-    *)
-      break
-      ;;
-  esac
+    case "$1" in
+        --test)
+            TEST_MODE=true
+            shift
+            ;;
+        --list)
+            LIST_MODE=true
+            shift
+            ;;
+        -v | --verbose)
+            VERBOSE_MODE=true
+            shift
+            ;;
+        --report)
+            REPORT_MODE=true
+            shift
+            ;;
+        --reverse)
+            REVERSE_MODE=true
+            shift
+            ;;
+        --exit-on-error)
+            EXIT_ON_ERROR_MODE=true
+            shift
+            ;;
+        --stdin)
+            STDIN_MODE=true
+            shift
+            ;;
+        --lsbsysinit)
+            LSBSYSINIT_MODE=true
+            shift
+            ;;
+        --new-session)
+            NEW_SESSION_MODE=true
+            shift
+            ;;
+        --regex)
+            REGEX=$2
+            shift 2
+            ;;
+        -u | --umask)
+            UMASK=$2
+            shift 2
+            ;;
+        -a | --arg)
+            ARGS+=("$2")
+            shift 2
+            ;;
+        -h | --help)
+            grep "^##" "${0}" | cut -c 4-
+            exit 0
+            ;;
+        -V | --version)
+            grep "^#-" "${0}" | cut -c 4-
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            grep "^##" "${0}" | cut -c 4-
+            exit 1
+            ;;
+        *)
+            break
+            ;;
+    esac
 done
-[[ $# -eq 1 ]] || sh_script_usage
+[[ $# -eq 1 ]] || {
+    grep "^##" "${0}" | cut -c 4-
+    exit 1
+}
 
 DIR="$1"
 
 [[ -n "${DIR}" ]] || {
-  >&2 echo "failed to open directory ${DIR}: No such file or directory"
-  exit 1
+    >&2 echo "failed to open directory ${DIR}: No such file or directory"
+    exit 1
 }
 
 [[ -d "${DIR}" ]] || {
-  >&2 echo "failed to open directory ${DIR}: No such file or directory"
-  exit 1
+    >&2 echo "failed to open directory ${DIR}: No such file or directory"
+    exit 1
 }
 
 [[ "${TEST_MODE}" != "true" ]] || [[ "${LIST_MODE}" != "true" ]] || {
-  >&2 echo "--list and --test can not be used together"
-  exit 1
+    >&2 echo "--list and --test can not be used together"
+    exit 1
 }
 
 function run_parts_sort() {
-  if [[ "${REVERSE_MODE}" = "true" ]]; then
-    sort -r
-  else
-    sort
-  fi
+    if [[ "${REVERSE_MODE}" = "true" ]]; then
+        sort -r
+    else
+        sort
+    fi
 }
 
 function run_parts_filter() {
-  while IFS= read -r LINE; do
-    if [[ "${LSBSYSINIT_MODE}" = "true" ]]; then
-      if basename "${LINE}" | grep -q "${HIERRE}"; then
-        if basename "${LINE}" | grep -q -v "${EXCSRE}"; then
-          echo "${LINE}"
+    while IFS= read -r LINE; do
+        if [[ "${LSBSYSINIT_MODE}" = "true" ]]; then
+            if basename "${LINE}" | grep -q "${HIERRE}"; then
+                if basename "${LINE}" | grep -q -v "${EXCSRE}"; then
+                    echo "${LINE}"
+                fi
+            else
+                if basename "${LINE}" | grep -q "${TRADRE}"; then
+                    echo "${LINE}"
+                fi
+            fi
+        else
+            if basename "${LINE}" | grep -q "${REGEX}"; then
+                echo "${LINE}"
+            fi
         fi
-      else
-        if basename "${LINE}" | grep -q "${TRADRE}"; then
-          echo "${LINE}"
-        fi
-      fi
-    else
-      if basename "${LINE}" | grep -q "${REGEX}"; then
-        echo "${LINE}"
-      fi
-    fi
-  done
+    done
 }
 
 function maybe_new_session() {
-  [[ "${NEW_SESSION_MODE}" = "true" ]] || {
-    cat "${TMP_RUNPARTS}" | "$@"
-    return
-  }
+    [[ "${NEW_SESSION_MODE}" = "true" ]] || {
+        cat "${TMP_RUNPARTS}" | "$@"
+        return
+    }
 
-  (cat "${TMP_RUNPARTS}" | "$@") &
-  local PID=$!
-  wait "${PID}"
-  return $?
+    (cat "${TMP_RUNPARTS}" | "$@") &
+    local PID=$!
+    wait "${PID}"
+    return $?
 }
 
 function run_part() {
-  [[ "${REPORT_MODE}" = "true" ]] || {
-    maybe_new_session "$@"
-    return
-  }
-  maybe_new_session "$@" 2> >(sed "s|^|${PART}:|g" >&2) | sed "s|^|${PART}:|g"
+    [[ "${REPORT_MODE}" = "true" ]] || {
+        maybe_new_session "$@"
+        return
+    }
+    maybe_new_session "$@" 2> >(sed "s|^|${PART}:|g" >&2) | sed "s|^|${PART}:|g"
 }
 
 umask "${UMASK}"
 
 [[ "${STDIN_MODE}" != "true" ]] || {
-  cat /dev/stdin >${TMP_RUNPARTS}
+    cat /dev/stdin >"${TMP_RUNPARTS}"
 }
-touch ${TMP_RUNPARTS}
+touch "${TMP_RUNPARTS}"
 
 # NOTE need to modify EXIT_STATUS, so no pipe
 # find "${DIR}" -mindepth 1 | run_parts_sort | run_parts_filter | while IFS= read -r PART; do
 while IFS= read -r PART; do
-  [[ -n "${PART}" ]] || continue
-  [[ ! -x "${PART}" ]] || {
-    if [[ "${TEST_MODE}" = "true" ]]; then
-      echo "${PART}"
-    elif [[ "${LIST_MODE}" = "true" ]]; then
-      [[ ! -r "${PART}" ]] || echo "${PART}"
-    elif [[ "${VERBOSE_MODE}" = "true" ]]; then
-      >&2 echo "run-parts: executing ${PART} ${ARGS[*]}"
-    fi
+    [[ -n "${PART}" ]] || continue
+    [[ ! -x "${PART}" ]] || {
+        if [[ "${TEST_MODE}" = "true" ]]; then
+            echo "${PART}"
+        elif [[ "${LIST_MODE}" = "true" ]]; then
+            [[ ! -r "${PART}" ]] || echo "${PART}"
+        elif [[ "${VERBOSE_MODE}" = "true" ]]; then
+            >&2 echo "run-parts: executing ${PART} ${ARGS[*]}"
+        fi
 
-    run_part "${PART}" "${ARGS[@]}" || {
-      EXIT_STATUS=$?
-      [[ "${EXIT_ON_ERROR_MODE}" != "true" ]] || exit ${EXIT_STATUS}
+        run_part "${PART}" "${ARGS[@]}" || {
+            EXIT_STATUS=$?
+            [[ "${EXIT_ON_ERROR_MODE}" != "true" ]] || exit "${EXIT_STATUS}"
+        }
+        continue
     }
-    continue
-  }
 
-  [[ ! -r "${PART}" ]] || {
-    [[ "${LIST_MODE}" != "true" ]] || echo "${PART}"
-    continue
-  }
-
-  [[ ! -L "${PART}" ]] || [[ -e "${PART}" ]] || {
-    [[ "${LIST_MODE}" != "true" ]] || {
-      >&2 echo "run-parts: component ${PART} is a broken symbolic link"
-      EXIT_STATUS=1
+    [[ ! -r "${PART}" ]] || {
+        [[ "${LIST_MODE}" != "true" ]] || echo "${PART}"
+        continue
     }
-    continue
-  }
 
-  [[ -f "${PART}" ]] || [[ -d "${PART}" ]] || {
-    >&2 echo "run-parts: component ${PART} is not an executable plain file"
-    EXIT_STATUS=1
-    continue
-  }
+    [[ ! -L "${PART}" ]] || [[ -e "${PART}" ]] || {
+        [[ "${LIST_MODE}" != "true" ]] || {
+            >&2 echo "run-parts: component ${PART} is a broken symbolic link"
+            EXIT_STATUS=1
+        }
+        continue
+    }
+
+    [[ -f "${PART}" ]] || [[ -d "${PART}" ]] || {
+        >&2 echo "run-parts: component ${PART} is not an executable plain file"
+        EXIT_STATUS=1
+        continue
+    }
 done < <(find "${DIR}" -mindepth 1 | run_parts_sort | run_parts_filter)
 
-exit ${EXIT_STATUS}
+exit "${EXIT_STATUS}"
