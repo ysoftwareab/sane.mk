@@ -12,6 +12,7 @@ brew upgrade
 rm -f /sane.mk/Makefile.lazy
 V=1 make -C /sane.mk system/brewfile
 rm -f /sane.mk/Makefile.lazy
+git -C /sane.mk init
 make -C /sane.mk help
 
 # clean
