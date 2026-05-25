@@ -50,6 +50,7 @@ gcp/config/new: ## Create a new GCP configuration.
 		[[ -n "$${CLOUDSDK_QUOTA_PROJECT:-}" ]] || exit 1; \
 	}; \
 	$(GCLOUD) config configurations create $${CLOUDSDK_CONFIG_NAME} \
+		--no-activate \
 		--account=$${CLOUDSDK_CORE_ACCOUNT} \
 		--project=$${CLOUDSDK_CORE_PROJECT} \
 		--billing-project=$${CLOUDSDK_QUOTA_PROJECT}; \
