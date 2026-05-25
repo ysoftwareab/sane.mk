@@ -15,7 +15,7 @@ SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 USER root
 RUN rm -rf /sane.mk
-COPY --exclude=.git --exclude=Makefile.lazy . /sane.mk
+COPY . /sane.mk
 
 RUN cp -Rp -L /sane.mk/Dockerfile.test.sh /Dockerfile.test.sh
 # see https://www.camptocamp.com/en/news-events/flexible-docker-entrypoints-scripts

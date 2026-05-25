@@ -9,10 +9,14 @@ sudo apt-get -y --fix-missing --allow-releaseinfo-change update
 brew update
 brew upgrade
 
-rm -f /sane.mk/Makefile.lazy
+git config --global user.name "linuxbrew"
+git config --global user.email "linuxbrew@example.com"
+git -C /sane.mk init
+git -C /sane.mk add .
+git -C /sane.mk commit -m "Initial commit"
+
 V=1 make -C /sane.mk system/brewfile
 rm -f /sane.mk/Makefile.lazy
-git -C /sane.mk init
 make -C /sane.mk help
 
 # clean

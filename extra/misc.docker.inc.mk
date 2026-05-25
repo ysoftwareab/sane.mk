@@ -14,7 +14,6 @@ DOCKER_IMAGE ?= $(DOCKER_REGISTRY)/$(DOCKER_IMAGE_SLUG)
 DOCKER_ARCH ?= $(ARCH_NORMALIZED)
 DOCKER_BUILD_PLATFORM ?= linux/amd64
 DOCKER_BUILD_PLATFORM_CSV = $(subst $(space),$(,),$(strip $(DOCKER_BUILD_PLATFORM)))
-DOCKER_BUILDX_NAME ?= $(DOCKER_IMAGE_NAME)-buildx
 DOCKER_BUILD_ARGS += \
 	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_CREATED=$(shell $(DATE) -u +"%Y-%m-%dT%H:%M:%SZ") \
 	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_REVISION=$(GIT_HASH) \
@@ -24,6 +23,7 @@ DOCKER_BUILD_ARGS_TAGS := \
 	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR) \
 	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR_MINOR) \
 	--tag $(DOCKER_IMAGE):latest
+DOCKER_BUILD_CONTEXT ?= $(GIT) archive --format=tar HEAD
 
 DOCKER_BUILD_LOCAL_ARGS += \
 	$(DOCKER_BUILD_ARGS) \
@@ -31,6 +31,7 @@ DOCKER_BUILD_LOCAL_ARGS += \
 	--tag $(DOCKER_IMAGE):local \
 	--progress=plain
 
+DOCKER_BUILDX_NAME ?= $(DOCKER_IMAGE_NAME)-buildx
 DOCKER_BUILDX = $(DOCKER) buildx --builder "$(DOCKER_BUILDX_NAME)"
 DOCKER_BUILDX_ARGS += \
 	$(DOCKER_BUILD_ARGS) \
@@ -102,7 +103,11 @@ docker/push: docker/login
 docker/push: docker/buildx
 docker/push: Dockerfile
 docker/push: ## Build and push local docker image.
-	$(DOCKER_BUILDX) build . $(DOCKER_BUILDX_ARGS) $(DOCKER_BUILD_ARGS_TAGS) --push
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER_BUILDX) build - \
+			$(DOCKER_BUILDX_ARGS) \
+			$(DOCKER_BUILD_ARGS_TAGS) \
+			--push
 
 
 .PHONY: docker/shell
@@ -124,14 +129,18 @@ docker/build: docker/login
 docker/build: docker/buildx
 docker/build: Dockerfile
 docker/build: ## Build docker image.
-	$(DOCKER_BUILDX) build . $(DOCKER_BUILDX_ARGS)
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER_BUILDX) build - \
+			$(DOCKER_BUILDX_ARGS)
 
 
 .PHONY: docker/build/local
 docker/build/local: docker/login
 docker/build/local: Dockerfile
 docker/build/local: ## Build local docker image - fast, single platform.
-	$(DOCKER) build . $(DOCKER_BUILD_LOCAL_ARGS)
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER) build - \
+			$(DOCKER_BUILD_LOCAL_ARGS)
 
 
 .PHONY: docker/build/local/debug
@@ -140,7 +149,9 @@ docker/build/local/debug: docker/buildx
 docker/build/local/debug: Dockerfile
 docker/build/local/debug: ## Build and debug local docker image - fast, single platform.
 	export BUILDX_EXPERIMENTAL=1; \
-	$(DOCKER) buildx debug --on error --invoke /bin/bash build . $(DOCKER_BUILD_LOCAL_ARGS)
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER) buildx debug --on error --invoke /bin/bash build - \
+			$(DOCKER_BUILD_LOCAL_ARGS)
 
 
 # ------------------------------------------------------------------------------
