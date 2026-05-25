@@ -51,9 +51,9 @@ gcp/config/new: ## Create a new GCP configuration.
 	}; \
 	$(GCLOUD) config configurations create $${CLOUDSDK_CONFIG_NAME} \
 		--no-activate \
-		--account=$${CLOUDSDK_CORE_ACCOUNT} \
-		--project=$${CLOUDSDK_CORE_PROJECT} \
-		--billing-project=$${CLOUDSDK_QUOTA_PROJECT}; \
+		--account $${CLOUDSDK_CORE_ACCOUNT} \
+		--project $${CLOUDSDK_CORE_PROJECT} \
+		--billing-project $${CLOUDSDK_QUOTA_PROJECT}; \
 	$(ECHO_INFO) "Authenticate via 'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/auth'."; \
 	$(ECHO_INFO) "Activate via     'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/config/activate'."; \
 
