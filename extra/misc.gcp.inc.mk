@@ -4,16 +4,16 @@ GOOGLE_CLOUD_PROJECT_ID ?= $(shell $(GCLOUD) config get-value project 2>/dev/nul
 
 .PHONY: gcp/auth
 gcp/auth: ## Authenticate with GCP.
-	$(GCLOUD) auth application-default login
+	$(GCLOUD) auth application-default login --no-launch-browser
 
 
 .PHONY: gcp/auth/%
 gcp/auth/%: ## Authenticate with GCP as a service account.
-	$(GCLOUD) auth application-default login --impersonate-service-account=$*
+	$(GCLOUD) auth application-default login --no-launch-browser --impersonate-service-account=$*
 
 
 .PHONY: gcp/auth/quota
-gcp/auth-quota: ## Set quota project for Application Default Credentials.
+gcp/auth/quota: ## Set quota project for Application Default Credentials.
 	$(GCLOUD) auth application-default set-quota-project $(GOOGLE_CLOUD_PROJECT_ID)
 
 
@@ -52,7 +52,9 @@ gcp/config/new: ## Create a new GCP configuration.
 	$(GCLOUD) config configurations create $${CLOUDSDK_CONFIG_NAME} \
 		--account=$${CLOUDSDK_CORE_ACCOUNT} \
 		--project=$${CLOUDSDK_CORE_PROJECT} \
-		--billing-project=$${CLOUDSDK_QUOTA_PROJECT} \
+		--billing-project=$${CLOUDSDK_QUOTA_PROJECT}; \
+	$(ECHO_INFO) "Authenticate via 'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/auth'."; \
+	$(ECHO_INFO) "Activate via     'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/config/activate'."; \
 
 
 .PHONY: gcp/config/activate
