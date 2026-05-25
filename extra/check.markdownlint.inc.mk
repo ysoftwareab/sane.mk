@@ -48,7 +48,11 @@ check/markdownlint:
 	MARKDOWNLINT_FILES_TMP=($(filter-out $(MARKDOWNLINT_FILES_FILTER_OUT), $(MARKDOWNLINT_FILES))); \
 	[[ "$${#MARKDOWNLINT_FILES_TMP[@]}" = "0" ]] || { \
 		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
-			[[ -e .markdownlint.json ]] || $(MAKE_DASH_F) .markdownlint.json; \
+			[[ -e .markdownlint.jsonc ]] \
+				|| [[ -e .markdownlint.json ]] \
+				|| [[ -e .markdownlint.yaml ]] \
+				|| [[ -e .markdownlint.yml ]] \
+				|| $(MAKE_DASH_F) .markdownlint.jsonc; \
 		}; \
 		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $${MARKDOWNLINT_FILES_TMP[@]} || { \
 			$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $${MARKDOWNLINT_FILES_TMP[@]}; \

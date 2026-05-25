@@ -127,10 +127,13 @@ SANE_DEPS_FILES += \
 	.gitignore \
 	.gitattributes \
 	.mailmap \
-	.markdownlint.json \
 	.ruff.toml \
 	.shellcheckrc \
 	.yamllint \
+
+ifeq (,$(wildcard .markdownlint.jsonc .markdownlint.json .markdownlint.yaml .markdownlint.yml))
+SANE_DEPS_FILES += .markdownlint.jsonc
+endif
 
 SANE_DEPS_FOLDERS += \
 	deps/folders/bin \
@@ -170,7 +173,7 @@ endif
 	$(TOUCH) $@
 
 
-.markdownlint.json:
+.markdownlint.jsonc:
 	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 

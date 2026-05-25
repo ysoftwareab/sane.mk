@@ -1,6 +1,6 @@
 # config
 
-## .markdownlint.json
+## .markdownlint.jsonc
 
 Follow [Google style](https://google.github.io/styleguide/docguide/style.html), with some adjustments:
 
