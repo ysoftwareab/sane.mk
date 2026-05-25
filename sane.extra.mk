@@ -128,8 +128,8 @@ SANE_DEPS_FILES += \
 	.gitattributes \
 	.mailmap \
 
-ifeq (,$(wildcard .markdownlint.jsonc .markdownlint.json .markdownlint.yaml .markdownlint.yml))
-SANE_DEPS_FILES += .markdownlint.jsonc
+ifeq (,$(wildcard .markdownlint.json .markdownlint.jsonc .markdownlint.yaml .markdownlint.yml .markdownlintrc))
+SANE_DEPS_FILES += .markdownlintrc
 endif
 
 ifeq (,$(wildcard .ruff.toml ruff.toml))
@@ -182,7 +182,7 @@ endif
 	$(TOUCH) $@
 
 
-.markdownlint.jsonc:
+.markdownlintrc:
 	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
