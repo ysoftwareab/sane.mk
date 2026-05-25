@@ -34,4 +34,4 @@ debug/trivy:
 
 .PHONY: check/trivy
 check/trivy:
-	$(TRIVY) fs $(TRIVY_FLAGS) .
+	$(TRIVY) repo $(TRIVY_FLAGS) --quiet .

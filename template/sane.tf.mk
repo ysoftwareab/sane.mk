@@ -138,7 +138,9 @@ SANE_CHECK_TF += \
 	check/tffmt \
 	check/tfvalidate \
 	check/tflint \
-	check/trivy \
+
+# FIXME trivy has weird output, moving to a separate target for now
+# SANE_CHECK_TF += check/trivy
 
 SANE_TEST_TF += \
 	test/tf \
@@ -174,6 +176,12 @@ SANE_DEPS_FILES += \
 	.tflint.hcl \
 
 endif
+
+# handle: Unsupported block type; Blocks of type \"language\" are not expected here.
+TRIVY_FLAGS += \
+	--skip-dirs "**/.terraform" \
+	--skip-files "**/versions.open.tofu" \
+	--tf-exclude-downloaded-modules \
 
 # ------------------------------------------------------------------------------
 
@@ -381,3 +389,9 @@ tf/state/push: ## Push terraform state.
 tf/state/unlock/%: $(TF_BACKEND_STATE_FILE)
 tf/state/unlock/%: ## Unlock terraform state with LOCK_ID.
 	$(TERRAFORM) force-unlock -force $*
+
+
+.PHONY: trivy
+trivy: check/trivy
+trivy:
+	:
