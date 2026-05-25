@@ -16,6 +16,9 @@ indent_size = 4
 [*.csv]
 max_line_length = unset
 
+[*.json]
+max_line_length = unset
+
 [*.md]
 max_line_length = unset
 
