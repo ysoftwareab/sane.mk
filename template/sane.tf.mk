@@ -148,7 +148,13 @@ SANE_DEPS += \
 
 SANE_DEPS_FILES += \
 	$(TF_FILES) \
-	deps/files/tfdocs
+	deps/files/tfdocs \
+
+ifeq (tofu,$(TF_CMD))
+SANE_DEPS_FILES += .opentofu-version
+else
+SANE_DEPS_FILES += .terraform-version
+endif
 
 SANE_DEPS_UPGRADE += \
 	$(SANE_DEPS_UPGRADE_TF) \
@@ -167,13 +173,8 @@ SANE_DEPS_FILES += \
 	.terraform-docs.yml \
 	.tflint.hcl \
 
-ifeq (tofu,$(TF_CMD))
-SANE_DEPS_FILES += .opentofu-version
-else
-SANE_DEPS_FILES += .terraform-version
 endif
 
-endif
 # ------------------------------------------------------------------------------
 
 .opentofu-version:
