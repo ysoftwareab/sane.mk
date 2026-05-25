@@ -142,8 +142,8 @@ MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
 MAKE_SELF_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_SELF_PATH)/$(MAKE_SELF_FILENAME)")))
 
 # NOTE can't use $(PYTHON)
-SANE_MK_ROOT_REL = $( \
-	shell python3 -c "import os.path; print('%s' % os.path.relpath('$(SANE_MK_ROOT)', '$(MAKE_PATH)'))")
+SANE_MK_ROOT_REL = $(shell \
+	python3 -c "import os.path; print('%s' % os.path.relpath('$(SANE_MK_ROOT)', '$(MAKE_PATH)'))")
 
 # NOTE can't use $(GIT) and $(ECHO)
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
