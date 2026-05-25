@@ -19,7 +19,7 @@ DOCKER_BUILD_ARGS += \
 	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_CREATED=$(shell $(DATE) -u +"%Y-%m-%dT%H:%M:%SZ") \
 	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_REVISION=$(GIT_HASH) \
 	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_SOURCE=$(GIT_REMOTE_ORIGIN_URL)
-DOCKER_BUILD_TAGS := \
+DOCKER_BUILD_ARGS_TAGS := \
 	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE) \
 	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR) \
 	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR_MINOR) \
@@ -102,7 +102,7 @@ docker/push: docker/login
 docker/push: docker/buildx
 docker/push: Dockerfile
 docker/push: ## Build and push local docker image.
-	$(DOCKER_BUILDX) build . $(DOCKER_BUILDX_ARGS) $(DOCKER_BUILD_TAGS) --push
+	$(DOCKER_BUILDX) build . $(DOCKER_BUILDX_ARGS) $(DOCKER_BUILD_ARGS_TAGS) --push
 
 
 .PHONY: docker/shell
