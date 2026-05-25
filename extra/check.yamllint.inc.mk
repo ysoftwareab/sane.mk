@@ -45,7 +45,11 @@ debug/yamllint:
 check/yamllint:
 	YAMLLINT_FILES_TMP=($(filter-out $(YAMLLINT_FILES_FILTER_OUT), $(YAMLLINT_FILES))); \
 	[[ "$${#YAMLLINT_FILES_TMP[@]}" = "0" ]] || { \
-		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || $(MAKE_DASH_F) .yamllint; \
+		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] \
+			|| [[ -e .yamllint ]] \
+			|| [[ -e .yamllint.yaml ]] \
+			|| [[ -e .yamllint.yml ]] \
+			|| $(MAKE_DASH_F) .yamllint; \
 		[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
 		$(YAMLLINT) $(YAMLLINT_FLAGS) $${YAMLLINT_FILES_TMP[@]}; \
 	}

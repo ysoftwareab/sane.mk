@@ -129,10 +129,13 @@ SANE_DEPS_FILES += \
 	.mailmap \
 	.ruff.toml \
 	.shellcheckrc \
-	.yamllint \
 
 ifeq (,$(wildcard .markdownlint.jsonc .markdownlint.json .markdownlint.yaml .markdownlint.yml))
 SANE_DEPS_FILES += .markdownlint.jsonc
+endif
+
+ifeq (,$(wildcard .yamllint .yamllint.yaml .yamllint.yml))
+SANE_DEPS_FILES += .yamllint
 endif
 
 SANE_DEPS_FOLDERS += \
