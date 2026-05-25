@@ -127,10 +127,13 @@ SANE_DEPS_FILES += \
 	.gitignore \
 	.gitattributes \
 	.mailmap \
-	.ruff.toml \
 
 ifeq (,$(wildcard .markdownlint.jsonc .markdownlint.json .markdownlint.yaml .markdownlint.yml))
 SANE_DEPS_FILES += .markdownlint.jsonc
+endif
+
+ifeq (,$(wildcard .ruff.toml ruff.toml))
+SANE_DEPS_FILES += .ruff.toml
 endif
 
 ifeq (,$(wildcard .shellcheckrc shellcheckrc))
