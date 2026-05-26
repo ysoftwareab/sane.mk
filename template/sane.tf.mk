@@ -122,7 +122,7 @@ define tf-plan
 		>&2 $(CAT) $(TF_PLAN_FILE_ERROR); \
 		$(STRIP_ANSI) -i $(TF_PLAN_FILE_TXT) $(TF_PLAN_FILE_ERROR); \
 		exit $${EXIT_STATUS:-0}
-	$(MAKE) tf/diff/tldr
+	$(MAKE_DASH_F) tf/diff/tldr
 endef
 
 SANE_DEPS_TF += \
@@ -360,7 +360,7 @@ tf/apply: ## Apply planned changes.
 		$(TERRAFORM) apply $(TF_APPLY_FLAGS) $(TF_PLAN_FILE) \
 			| $(TEE) $(TF_APPLY_FILE) \
 			|| EXIT_STATUS=$$?; \
-		$(MAKE) $(TF_BACKEND_STATE_FILE); \
+		$(MAKE_DASH_F) $(TF_BACKEND_STATE_FILE); \
 		exit $${EXIT_STATUS:-0}; \
 	}
 
