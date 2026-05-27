@@ -55,11 +55,13 @@ OPENTOFU_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(OPENTOFU_VSN)/tofu
 OPENTOFU ?= $(TF_ENV) $(OPENTOFU_)
 TERRAFORM ?= $(OPENTOFU)
 TF_ENV += TOFU=$(OPENTOFU_) TERRAFORM=$(OPENTOFU_)
+SHELL_NOTICE += $(ECHO_INFO) "Use $$TOFU or $$TERRAFORM to run OpenTofu in this directory.";
 else
 TF_VSN = $(shell $(TENV) tf detect --install -q | $(GREP) "^$(TF_CMD_NAME) " | $(AWK) '{print $$2}')
 TF_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(TF_VSN)/terraform
 TERRAFORM ?= $(TF_ENV) $(TF_)
 TF_ENV += TERRAFORM=$(TF_)
+SHELL_NOTICE += $(ECHO_INFO) "Use $$TERRAFORM to run Terraform in this directory.";
 endif
 TF_PLAN = 2> $(TF_PLAN_FILE_ERROR) $(TERRAFORM) plan $(TF_PLAN_FLAGS)
 
