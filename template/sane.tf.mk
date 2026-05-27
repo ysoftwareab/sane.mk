@@ -52,12 +52,14 @@ TENV_ROOT ?= $(HOME)/.tenv
 ifeq (tofu,$(TF_CMD))
 OPENTOFU_VSN = $(shell $(TENV) tofu detect --install -q | $(GREP) "^$(TF_CMD_NAME) " | $(AWK) '{print $$2}')
 OPENTOFU_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(OPENTOFU_VSN)/tofu
-OPENTOFU = $(TF_ENV) $(OPENTOFU_)
-TERRAFORM = $(OPENTOFU)
+OPENTOFU ?= $(TF_ENV) $(OPENTOFU_)
+TERRAFORM ?= $(OPENTOFU)
+TF_ENV += TOFU=$(OPENTOFU_) TERRAFORM=$(OPENTOFU_)
 else
 TF_VSN = $(shell $(TENV) tf detect --install -q | $(GREP) "^$(TF_CMD_NAME) " | $(AWK) '{print $$2}')
 TF_ ?= $(TENV_ROOT)/$(TF_CMD_NAME)/$(TF_VSN)/terraform
-TERRAFORM = $(TF_ENV) $(TF_)
+TERRAFORM ?= $(TF_ENV) $(TF_)
+TF_ENV += TERRAFORM=$(TF_)
 endif
 TF_PLAN = 2> $(TF_PLAN_FILE_ERROR) $(TERRAFORM) plan $(TF_PLAN_FLAGS)
 
