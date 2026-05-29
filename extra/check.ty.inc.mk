@@ -3,7 +3,7 @@ ifeq (TY_NOT_FOUND,$(TY))
 export TY_VSN ?= >=0.0.35,<0.1.0
 TY = $(UVX) ty$(TY_VSN)
 else
-$(call make-lazy,TY)
+$(call make-lazy-once,TY)
 endif
 
 TY_FLAGS += \

@@ -3,7 +3,7 @@ ifeq (PYTEST_NOT_FOUND,$(PYTEST))
 export PYTEST_VSN ?= >=9.0.0,<10.0.0
 PYTEST = $(UV) run pytest
 else
-$(call make-lazy,PYTEST)
+$(call make-lazy-once,PYTEST)
 endif
 
 PYTEST_FLAGS += \

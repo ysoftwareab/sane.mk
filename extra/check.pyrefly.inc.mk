@@ -3,7 +3,7 @@ ifeq (PYREFLY_NOT_FOUND,$(PYREFLY))
 export PYREFLY_VSN ?= >=1.0.0,<2.0.0
 PYREFLY = $(UVX) pyrefly$(PYREFLY_VSN)
 else
-$(call make-lazy,PYREFLY)
+$(call make-lazy-once,PYREFLY)
 endif
 
 PYREFLY_FLAGS += \

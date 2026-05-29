@@ -3,7 +3,7 @@ ifeq (RUFF_NOT_FOUND,$(RUFF))
 export RUFF_VSN ?= >=0.15.0,<0.16
 RUFF = $(UVX) ruff$(RUFF_VSN)
 else
-$(call make-lazy,RUFF)
+$(call make-lazy-once,RUFF)
 endif
 
 RUFF_FLAGS += \

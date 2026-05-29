@@ -1,3 +1,14 @@
+unexport VIRTUAL_ENV # ignore vscode
+
+ifneq (,$(wildcard $(GIT_ROOT)/.venv))
+export PATH := $(GIT_ROOT)/.venv/bin:$(PATH)
+endif
+
+ifneq (,$(wildcard $(MAKE_PATH)/.venv))
+export VIRTUAL_ENV := $(MAKE_PATH)/.venv
+export PATH := $(VIRTUAL_ENV)/bin:$(PATH)
+endif
+
 PYTHON_FILES_SHEBANG_PATH = .
 PYTHON_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.py$$" | $(NOSYM))
 PYTHON_FILES_SHEBANG = \
