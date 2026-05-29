@@ -1,6 +1,23 @@
+# CLOUDSDK_ACTIVE_CONFIG_NAME
+# CLOUDSDK_CORE_PROJECT
 GOOGLE_CLOUD_PROJECT_ID ?= $(shell $(GCLOUD) config get-value project 2>/dev/null)
+CLOUDSDK_CORE_ACCOUNT ?= $(shell $(GCLOUD) config get-value account 2>/dev/null)
+CLOUDSDK_QUOTA_PROJECT ?= $(CLOUDSDK_CORE_PROJECT)
 
 # ------------------------------------------------------------------------------
+
+.PHONY: deps/gcp/config
+deps/gcp/config:
+	$(GCLOUD) config configurations describe "$(CLOUDSDK_ACTIVE_CONFIG_NAME)" --format="get(name)" >/dev/null 2>&1 \
+		|| $(GCLOUD) config configurations create "$(CLOUDSDK_ACTIVE_CONFIG_NAME)" --no-activate --quiet >/dev/null
+	$(GCLOUD) config set project "$(CLOUDSDK_CORE_PROJECT)" --quiet >/dev/null
+	$(GCLOUD) config set billing/quota_project "$(CLOUDSDK_QUOTA_PROJECT)" --quiet >/dev/null
+	[[ -n "$(CLOUDSDK_CORE_ACCOUNT)" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CORE_ACCOUNT below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CORE_ACCOUNT=" CLOUDSDK_CORE_ACCOUNT; \
+		[[ -n "$${CLOUDSDK_CORE_ACCOUNT:-}" ]] || exit 1; \
+		$(GCLOUD) config set account "$${CLOUDSDK_CORE_ACCOUNT}" --quiet >/dev/null; \
+	}
 
 .PHONY: gcp/auth
 gcp/auth: ## Authenticate with GCP.
