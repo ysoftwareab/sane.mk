@@ -2,7 +2,7 @@ BATS ?= $(call which,BATS,bats)
 $(call make-lazy,BATS)
 
 BATS_VARS = \
-	SANE_ROOT=$(SANE_ROOT) \
+	SANE_MK_ROOT=$(SANE_MK_ROOT) \
 
 BATS_JOBS ?= $(shell $(NPROC))
 BATS_FLAGS += \
