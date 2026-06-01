@@ -4,6 +4,8 @@ $(call make-lazy,TRUFFLEHOG)
 # NOTE add more patterns with ,
 TRUFFLEHOG_EXCLUDE_GLOBS +=
 
+TRUFFLEHOG_EXCLUDE_GLOBS_CSV = $(subst $(space),$(,),$(strip $(TRUFFLEHOG_EXCLUDE_GLOBS)))
+
 TRUFFLEHOG_FLAGS += \
 
 # NOTE --github-actions will not print secrets in plain text
@@ -34,6 +36,6 @@ check/trufflehog:
 		--no-update \
 		--no-verification \
 		--branch HEAD \
-		--exclude-globs "$(TRUFFLEHOG_EXCLUDE_GLOBS)" \
+		--exclude-globs "$(TRUFFLEHOG_EXCLUDE_GLOBS_CSV)" \
 		$(TRUFFLEHOG_FLAGS) \
 		file://$(GIT_ROOT)
