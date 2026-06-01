@@ -16,7 +16,9 @@ $(GIT_COMMON_DIR)/info/exclude: $(SANE_MK_ROOT)/gitconfig/dot.gitignore_global
 deps/git: $(GIT_COMMON_DIR)/info/attributes
 deps/git: $(GIT_COMMON_DIR)/info/exclude
 deps/git:
-	$(GIT) config filter.nbstripout.clean "uvx nbstripout$(NBSTRIPOUT_VSN) -c"
-	$(GIT) config filter.nbstripout.smudge "cat"
-	$(GIT) config filter.nbstripout.required "true"
-	$(GIT) config diff.ipynb.textconv "uvx nbstripout$(NBSTRIPOUT_VSN) -t"
+	:
+# FIXME needs more work
+# 	$(GIT) config filter.nbstripout.clean "uvx 'nbstripout$(NBSTRIPOUT_VSN)'"
+# 	$(GIT) config filter.nbstripout.smudge "cat"
+# 	$(GIT) config filter.nbstripout.required "true"
+# 	$(GIT) config diff.ipynb.textconv "uvx 'nbstripout$(NBSTRIPOUT_VSN)' -t"
