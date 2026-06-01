@@ -213,13 +213,11 @@ $(TF_FILES):
 
 $(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
 $(TF_BACKEND_STATE_FILE):
-	if [[ -s backend.tf ]] && [[ -f terraform.tfstate ]]; then \
-		if [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
-			TF_INPUT=true $(TERRAFORM) init -migrate-state; \
-			$(MV) terraform.tfstate terraform.tfstate.bak; \
-		else \
-			$(TERRAFORM) init -reconfigure; \
-		fi; \
+	if [[ -s backend.tf ]] && [[ -f terraform.tfstate ]] && [[ "$(TF_BACKEND_TYPE)" = "local" ]]; then \
+		TF_INPUT=true $(TERRAFORM) init -migrate-state; \
+		$(MV) terraform.tfstate terraform.tfstate.bak; \
+	else \
+		$(TERRAFORM) init -reconfigure; \
 	fi
 
 
