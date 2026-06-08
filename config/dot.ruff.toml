@@ -8,6 +8,7 @@ ignore = [
   "D203", # incorrect-blank-line-before-class
   "D213", # multi-line-summary-second-line
   "ERA001", # commented-out-code
+  "RET504", # unnecessary-assign
   "T201", # print
 
   # don't enforce docstring
