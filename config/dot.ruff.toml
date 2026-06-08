@@ -36,4 +36,7 @@ ignore = [
   "COM812", # missing-trailing-comma
   "COM819", # prohibited-trailing-comma
   "ISC002", # multi-line-implicit-string-concatenation
+
+  # Cloud Functions v2 are deployed as flat files, not packages
+  "INP001", # implicit-namespace-package
 ]
