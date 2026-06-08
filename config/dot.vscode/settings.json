@@ -8,7 +8,7 @@
   "editor.acceptSuggestionOnEnter": "on",
   "editor.codeActionsOnSave": {
     "source.fixAll.markdownlint": "explicit",
-    "source.organizeImports": "explicit"
+    "source.organizeImports.ruff": "explicit"
   },
   "editor.formatOnSave": true,
   "editor.quickSuggestions": {
