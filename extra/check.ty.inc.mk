@@ -39,6 +39,7 @@ debug/ty:
 
 .PHONY: check/ty
 check/ty:
+ifneq (,$(wildcard pyproject.toml))
 	TY_FILES_TMP=($(filter-out $(TY_FILES_FILTER_OUT), $(TY_FILES))); \
 	[[ "$${#TY_FILES_TMP[@]}" = "0" ]] || { \
 		$(TY) check $(TY_FLAGS) $${TY_FILES_TMP[@]} || { \
@@ -47,3 +48,6 @@ check/ty:
 			exit 1; \
 		}; \
 	}
+else
+	:
+endif

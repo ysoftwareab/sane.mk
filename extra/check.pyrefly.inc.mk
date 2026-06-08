@@ -39,7 +39,11 @@ debug/pyrefly:
 
 .PHONY: check/pyrefly
 check/pyrefly:
+ifneq (,$(wildcard pyproject.toml))
 	PYREFLY_FILES_TMP=($(filter-out $(PYREFLY_FILES_FILTER_OUT), $(PYREFLY_FILES))); \
 	[[ "$${#PYREFLY_FILES_TMP[@]}" = "0" ]] || { \
 		$(PYREFLY) check $(PYREFLY_FLAGS) $${PYREFLY_FILES_TMP[@]} || exit 1; \
 	}
+else
+	:
+endif
