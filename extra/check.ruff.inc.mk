@@ -26,14 +26,6 @@ RUFF_FILES_SHEBANG = $(PYTHON_FILES_SHEBANG)
 RUFF_FILES_FILTER_OUT += \
 	$(DEFAULT_FILES_FILTER_OUT) \
 
-RUFF_CONFIG = $(GIT_ROOT)/.ruff.toml
-ifeq (,$(wildcard $(RUFF_CONFIG)))
-RUFF_CONFIG = $(GIT_ROOT)/ruff.toml
-endif
-ifneq (,$(wildcard $(RUFF_CONFIG)))
-RUFF_FLAGS += --config $(RUFF_CONFIG)
-endif
-
 # ------------------------------------------------------------------------------
 
 .PHONY: debug/ruff
