@@ -8,6 +8,46 @@ export HOMEBREW_NO_ENV_HINTS ?= 1
 export HOMEBREW_NO_INSTALL_CLEANUP ?= 1
 export HOMEBREW_VERBOSE_USING_DOTS ?= 1
 
+ifeq (,$(HOMEBREW_PREFIX))
+HOMEBREW_PREFIX := $(shell brew --prefix 2>/dev/null)
+ifeq (,$(HOMEBREW_PREFIX))
+ifneq (,$(wildcard /opt/homebrew/bin/brew))
+HOMEBREW_PREFIX := /opt/homebrew
+else ifneq (,$(wildcard /usr/local/bin/brew))
+HOMEBREW_PREFIX := /usr/local
+else ifneq (,$(wildcard /home/linuxbrew/.linuxbrew/bin/brew))
+HOMEBREW_PREFIX := /home/linuxbrew/.linuxbrew
+endif
+endif
+export HOMEBREW_PREFIX
+endif
+
+# Helper: prepend a $(HOMEBREW_PREFIX)-relative directory to PATH if not already present
+brew-path-prepend = $(if $(filter $(HOMEBREW_PREFIX)/$(1),$(subst :, ,$(PATH))),$(PATH),$(HOMEBREW_PREFIX)/$(1):$(PATH))
+
+ifneq (,$(HOMEBREW_PREFIX))
+PATH := $(call brew-path-prepend,bin)
+PATH := $(call brew-path-prepend,sbin)
+PATH := $(call brew-path-prepend,opt/coreutils/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/findutils/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gawk/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-sed/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-tar/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-time/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-which/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gpatch/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/grep/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gzip/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/make/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/curl/bin)
+PATH := $(call brew-path-prepend,opt/gnu-getopt/bin)
+PATH := $(call brew-path-prepend,opt/openssl@3/bin)
+PATH := $(call brew-path-prepend,opt/tfenv/bin)
+PATH := $(call brew-path-prepend,opt/unzip/bin)
+PATH := $(call brew-path-prepend,opt/zip/bin)
+endif
+export PATH
+
 BREWFILE = Brewfile
 BREWFILE_SH = Brewfile.sh
 BREWFILE_TEST = Brewfile.test
