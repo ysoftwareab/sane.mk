@@ -49,7 +49,6 @@
         "bierner.markdown-checkbox",
         "bierner.markdown-emoji",
         "bierner.markdown-footnotes",
-        "bierner.markdown-mermaid",
         "bierner.markdown-preview-github-styles",
         "bierner.markdown-yaml-preamble",
         "bodil.file-browser",
@@ -62,6 +61,7 @@
         "eamodio.gitlens",
         "EditorConfig.editorconfig",
         "fabiospampinato.vscode-terminals",
+        "fcrespo82.markdown-table-formatter",
         "fedaykindev.openchamber",
         "fnando.linter",
         "fuadpashayev.bottom-terminal",
@@ -108,6 +108,7 @@
         "vincaslt.highlight-matching-tag",
         "ysamlan.vscode-backlog-md",
         "yzane.markdown-pdf",
+        "yzhang.markdown-all-in-one",
         "mutantdino.resourcemonitor"
       ],
       "settings": {
