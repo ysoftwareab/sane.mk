@@ -1,4 +1,4 @@
-include sane.extra.mk
+include template/sane.extra.mk
 
 DEFAULT_FILES_FILTER_OUT += \
 	.devcontainer/devcontainer.json \
@@ -7,8 +7,8 @@ DEFAULT_FILES_FILTER_OUT += \
 	gitconfig/dot.gitignore_global \
 
 JSCPD_FILES_FILTER_OUT += \
-	sane.extra.mk.tpl \
-	sane.std.mk.tpl \
+	template/sane.extra.mk.tpl \
+	template/sane.std.mk.tpl \
 
 SANE_BUILD += \
 	.devcontainer/devcontainer.json \
@@ -46,5 +46,5 @@ dist/mk:
 	$(MKDIR) dist
 	$(CP) sane.mk dist/
 	$(CP) template/sane.tf.mk dist/sane.tf.mk
-	./sane.std.mk.tpl > dist/sane.std.mk
-	./sane.extra.mk.tpl > dist/sane.extra.mk
+	./template/sane.std.mk.tpl > dist/sane.std.mk
+	./template/sane.extra.mk.tpl > dist/sane.extra.mk

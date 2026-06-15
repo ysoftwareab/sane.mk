@@ -28,14 +28,14 @@ You can either have this repository as a submodule (or even NodeJS/Python depend
 and reference it at the top of the `Makefile`:
 
 ```make
-ifeq (,$(wildcard sane.mk/sane.std.mk))
+ifeq (,$(wildcard sane.mk/dist/sane.std.mk))
 SANE_MK_INSTALL := $(shell git submodule update --init --recursive sane.mk)
 ifneq (,$(filter undefine,$(.FEATURES)))
 undefine SANE_MK_INSTALL
 endif
 endif
 
-include sane.mk/sane.std.mk
+include sane.mk/dist/sane.std.mk
 
 # alternatively, include only specific features
 # include sane.mk/sane.mk
@@ -83,9 +83,9 @@ It includes the core targets from `sane.std.mk`, then layers in common extras fo
 * lint and quality checks (for shell, YAML, Markdown, Python, secrets)
 * test targets (`bats`, `pytest`)
 
-## template/sane.tf.mk
+## dist/sane.tf.mk
 
-`template/sane.tf.mk` is a Terraform-oriented Makefile template built on top of `sane.extra.mk`.
+`dist/sane.tf.mk` is a Terraform-oriented Makefile template built on top of `sane.extra.mk`.
 
 It provides:
 

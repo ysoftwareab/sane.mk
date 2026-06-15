@@ -9,10 +9,10 @@ function exe() { printf '%s\n' "$(pwd)\$ $(printf '%q ' "$@")" >&2 && "$@"; }
 export -f exe
 [[ -z "${VERBOSE:-${V:-}}" ]] || set -x
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SANE_MK_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
 
 # Header
-sed -n '1,/^# BEGIN # includes$/p' "${DIR}/sane.std.mk"
+sed -n '1,/^# BEGIN # includes$/p' "${SANE_MK_ROOT}/template/sane.std.mk"
 
 # Inline each *.inc.mk include with BEGIN/END markers
 while IFS= read -r LINE; do
@@ -20,10 +20,10 @@ while IFS= read -r LINE; do
         FILE="${BASH_REMATCH[1]}"
         echo
         echo "# BEGIN # ${FILE}"
-        cat "${DIR}/${FILE}"
+        cat "${SANE_MK_ROOT}/${FILE}"
         echo "# END # ${FILE}"
     fi
-done <"${DIR}/sane.std.mk"
+done <"${SANE_MK_ROOT}/template/sane.std.mk"
 
 # Footer
-sed -n '/^# END # includes$/,$p' "${DIR}/sane.std.mk"
+sed -n '/^# END # includes$/,$p' "${SANE_MK_ROOT}/template/sane.std.mk"
