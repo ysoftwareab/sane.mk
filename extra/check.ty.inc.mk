@@ -1,3 +1,6 @@
+# TODO switch to uv check
+# uv check --quiet --preview-features=check-command --ty-version=0.0.49
+
 TY ?= $(call which,TY,ty)
 ifeq (TY_NOT_FOUND,$(TY))
 export TY_VSN ?= >=0.0.35,<0.1.0
