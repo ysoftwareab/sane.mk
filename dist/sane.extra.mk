@@ -35,10 +35,10 @@ PRINTVARS_VARIABLES_IGNORE += which
 # ECHO2 can be used for e.g. pointing to
 # an executable that outputs teamcity messages
 
-ECHO2 ?= $(ECHO)
+ECHO2 ?= $(ECHO) $$($(DATE) "+%H:%M:%S")
 ECHO_DO = $(ECHO2) -- "[DO  ]"
 ECHO_DONE = $(ECHO2) -- "[DONE]"
-ECHO_INDENT = $(ECHO2) -- "      "
+ECHO_INDENT = $(ECHO) -n "$$($(DATE) "+%H:%M:%S") -- [XXXX] " | $(SED) "s/./ /g" && $(ECHO)
 ECHO_NEXT = $(ECHO2) -- "[NEXT]"
 ECHO_Q = $(ECHO2) -- "[Q   ]"
 ECHO_SKIP = $(ECHO2) -- "[SKIP]"
@@ -162,7 +162,6 @@ YES = $(call which,YES,gyes yes)
 CP = $(call which,CP,gcp cp) -v -Rp
 LN = $(call which,LN,gln ln) -v -fn
 MKDIR = $(call which,MKDIR,gmkdir mkdir) -v -p
-MKTEMP = $(call which,MKTEMP,gmktemp mktemp)
 MV = $(call which,MV,gmv mv) -v -f
 PARALLEL = $(call which,PARALLEL,gparallel parallel) --will-cite
 RM = $(call which,RM,grm rm) -v -rf
@@ -297,6 +296,7 @@ endif
 endif
 
 # python
+export PYTHONUNBUFFERED ?= 1
 PYTHON = $(call which,PYTHON,python)
 PYTHON3 = $(call which,PYTHON3,python3)
 $(foreach VAR,PYTHON PYTHON3,$(call make-lazy,$(VAR)))
@@ -311,13 +311,12 @@ $(foreach VAR,UNZIP UNZIP_Z1 ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
 
 # zz
 BREW = $(call which,BREW,brew)
-DOT = $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
 STRIP_ANSI = $(SED) "s/$(shell $(PRINTF) '\033')\[[0-9;?]*[a-zA-Z]//g"
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
-$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
+$(foreach VAR,BREW GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
 # END # exe.misc.inc.mk
 
 # BEGIN # misc.chars.inc.mk
@@ -406,7 +405,7 @@ GIT_REMOTE_URL = $(shell $(GIT) config remote.$(GIT_REMOTE).url 2>/dev/null)
 GIT_REMOTE_SLUG = $(shell test -n $(GIT_REMOTE_URL); GIT_REMOTE_URL=$(GIT_REMOTE_URL); basename $$(dirname "$${GIT_REMOTE_URL//://}"))/$(shell basename "$(GIT_REMOTE_URL)" .git)
 
 GIT_REMOTE_ORIGIN_URL ?= $(shell $(GIT) config remote.$(GIT_REMOTE_ORIGIN).url 2>/dev/null)
-GIT_REMOTE_ORIGIN_URL_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
+GIT_REMOTE_ORIGIN_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
 
 GIT_REMOTE_OR_ORIGIN_URL = $(shell $(GIT) config remote.$(GIT_REMOTE_OR_ORIGIN).url 2>/dev/null)
 GIT_REMOTE_OR_ORIGIN_SLUG = $(shell test -n $(GIT_REMOTE_OR_ORIGIN_URL); GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_OR_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_OR_ORIGIN_URL)" .git)
@@ -429,6 +428,19 @@ GIT_TRACKED := false
 ifeq (truefalse,$(GIT_INSIDE_WORK_TREE)$(GIT_CHECK_IGNORE))
 GIT_TRACKED := true
 endif
+
+# editorconfig-checker-disable max_line_length
+# NOTE cannot use # editorconfig-checker-disable-line because it might add faux whitespace
+# Convert common git remote forms to git@host:org/repo.git.
+git_url_to_ssh = $(if $(strip $(1)),$(call git_url_to_ssh/_from,$(strip $(1))),:)
+git_url_to_ssh/_from = $(if $(findstring ://,$(1)),$(call git_url_to_ssh/_scheme,$(1)),$(call git_url_to_ssh/_scp,$(1)))
+git_url_to_ssh/_scheme = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(call git_url_to_ssh/_scheme_rest,$(1))),$(call git_url_to_ssh/_path,$(call git_url_to_ssh/_scheme_rest,$(1))))
+git_url_to_ssh/_scp = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(subst :,/,$(1))),$(call git_url_to_ssh/_path,$(subst :,/,$(1))))
+git_url_to_ssh/_scheme_rest = $(patsubst https://%,%,$(patsubst http://%,%,$(patsubst ssh://%,%,$(patsubst git://%,%,$(1)))))
+git_url_to_ssh/_host = $(lastword $(subst @, ,$(firstword $(subst /, ,$(1)))))
+git_url_to_ssh/_path = $(patsubst %.git,%,$(patsubst %/,%,$(patsubst $(firstword $(subst /, ,$(1)))/%,%,$(1))))
+git_url_to_ssh/_build = git@$(1):$(2).git
+# editorconfig-checker-enable max_line_length
 
 # ------------------------------------------------------------------------------
 
@@ -746,9 +758,11 @@ $(PRINTVARS_MAKEFILE_ORIGINS_TARGETS):
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
 			$(info $V=$($V)$(\n)$(space) origin = $(origin $V)$(\n)$(space) flavor = $(flavor $V)$(\n)$(space) value = $(value  $V)))) # editorconfig-checker-disable-line
+			,:) # editorconfig-checker-disable-line
 	@$(foreach V, $(sort $(filter $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
-			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.)))
+			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.), \
+			:))
 
 
 .PHONY: printvars/lazy
@@ -766,7 +780,8 @@ printvar/%:
 printenv: ## Print all Makefile variables (printenv style). Use printenv/<var> for only one.
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter file, $(origin $V)), \
-			$(info $V=$($V))))
+			$(info $V=$($V)), \
+			:))
 
 
 .PHONY: printenv/%
@@ -775,28 +790,33 @@ printenv/%:
 # END # target.printvar.inc.mk
 
 # BEGIN # target.shell.inc.mk
+SHELL_ENV ?=
+SHELL_NOTICE ?=
+
 # ------------------------------------------------------------------------------
 
 .PHONY: bash
 bash: ## Start a bash shell with make's environment.
 	$(ECHO_INFO) "Starting a bash shell with make's environment..."
-	$(ENV) bash
+	$(SHELL_BASH_NOTICE)
+	$(ENV) $(SHELL_ENV) bash
 
 
 .PHONY: bash/%
 bash/%:
-	$(ENV) bash -c "$*"
+	$(ENV) $(SHELL_ENV) bash -c "$*"
 
 
 .PHONY: shell
 shell: ## Start a shell with make's environment.
 	$(ECHO_INFO) "Starting a shell with make's environment..."
-	$(SHELL_BAK)
+	$(SHELL_NOTICE)
+	$(ENV) $(SHELL_ENV) $(SHELL_BAK)
 
 
 .PHONY: shell/%
 shell/%:
-	$(SHELL_BAK) -c "$*"
+	$(ENV) $(SHELL_ENV) $(SHELL_BAK) -c "$*"
 # END # target.shell.inc.mk
 
 # BEGIN # target.std.inc.mk
@@ -805,7 +825,6 @@ SANE_CHECK ?= noop
 SANE_CI ?= noop
 SANE_CLEAN ?= noop
 SANE_DEBUG ?= noop
-SANE_DEPS ?= noop
 SANE_DEPS_FILES ?= noop
 SANE_DEPS_FOLDERS ?= noop
 SANE_DEPS_GITIGNORE ?= noop
@@ -815,15 +834,16 @@ SANE_SYSTEM ?= noop
 SANE_TEST ?= noop
 
 SANE_ALL_DEFAULT := deps check build
-SANE_ALL ?= $(SANE_ALL_DEFAULT)
+SANE_ALL ?= noop $(SANE_ALL_DEFAULT)
 
 SANE_CI_DEFAULT := all test
-SANE_CI ?= $(SANE_CI_DEFAULT)
+SANE_CI ?= noop $(SANE_CI_DEFAULT)
 
 SANE_DEPS_DEFAULT := deps/folders deps/files
 ifeq ($(MAKE_PATH),$(GIT_ROOT))
 SANE_DEPS_DEFAULT += deps/gitignore
 endif
+SANE_DEPS ?= noop $(SANE_DEPS_DEFAULT)
 
 # NOTE use *.generated.* to mark generated files
 GENERATED_FILES_FILTER_OUT = \
@@ -961,6 +981,1585 @@ debug: ## Debug environment and software versions.
 verbose/%: ## Run a target with verbosity on (VERBOSE=1 or V=1).
 	@$(MAKE_DASH_F) V=1 $*
 # END # target.verbose.inc.mk
+
+# BEGIN # extra/misc.password.inc.mk
+PASSWORD_PREFIX = sane
+PASSWORD_PREFIX_LENGTH = $(shell $(ECHO) -n $(PASSWORD_PREFIX) | $(WC) -c)
+
+# ------------------------------------------------------------------------------
+
+.PHONY: password
+password: password/32
+password: ## Create a random password.
+	:
+
+
+.PHONY: password/%
+password/%:
+	PASSWORD_LENGTH=$$(($* - $(PASSWORD_PREFIX_LENGTH) -1)); \
+		STR="$$(LC_ALL=C $(TR) -dc "a-zA-Z0-9" < /dev/urandom | $(HEAD) -c "$${PASSWORD_LENGTH}" || true)"; \
+		$(ECHO) "$(PASSWORD_PREFIX)_$${STR}"
+# END # extra/misc.password.inc.mk
+
+# BEGIN # extra/misc.python.inc.mk
+unexport VIRTUAL_ENV # ignore vscode
+
+ifneq (,$(wildcard $(GIT_ROOT)/.venv))
+export PATH := $(GIT_ROOT)/.venv/bin:$(PATH)
+endif
+
+ifneq (,$(wildcard $(MAKE_PATH)/.venv))
+export VIRTUAL_ENV := $(MAKE_PATH)/.venv
+export PATH := $(VIRTUAL_ENV)/bin:$(PATH)
+endif
+
+PYTHON_FILES_SHEBANG_PATH = .
+PYTHON_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.py$$" | $(NOSYM))
+PYTHON_FILES_SHEBANG = \
+	$(shell $(GIT_LS) $(PYTHON_FILES_SHEBANG_PATH) | \
+		while read -r FILE; do \
+		[[ ! -L "$${FILE}" ]] || continue; \
+		[[ -f "$${FILE}" ]] || continue; \
+		[[ -x "$${FILE}" ]] || continue; \
+		$(HEAD) -n1 "$${FILE}" | $(GREP) "^$(hash)!/" | $(GREP) -q -e "\b\(python\|python2\|python3\|uv\)\b" || continue; \
+		$(ECHO) "$${FILE}"; \
+	done)
+$(foreach VAR,PYTHON_FILES_EXT PYTHON_FILES_SHEBANG,$(call make-lazy-once,$(VAR)))
+# END # extra/misc.python.inc.mk
+
+# BEGIN # extra/misc.transcrypt.inc.mk
+DEFAULT_FILES_FILTER_OUT += \
+	transcrypt $(GIT_ROOT_REL)/transcrypt \
+
+TRANSCRYPT_CIPHER ?= aes-256-cbc
+TRANSCRYPT_PASSWORD ?=
+
+IS_TRANSCRYPTED = $(shell $(GIT) config --local transcrypt.password >/dev/null 2>&1 && $(ECHO) true || $(ECHO) false)
+
+TRANSCRYPT_FILES = $(shell $(TRANSCRYPT) --list 2>/dev/null || true)
+$(call make-lazy-once,TRANSCRYPT_FILES)
+TRANSCRYPT_FILES_FILTER_OUT = $(TRANSCRYPT_FILES)
+DEFAULT_FILES_FILTER_OUT += $(TRANSCRYPT_FILES_FILTER_OUT)
+
+ifeq (true,$(IS_TRANSCRYPTED))
+IS_DECRYPTED = true
+TRANSCRYPT_FILES_FILTER_OUT =
+# enforce local (locked version) transcrypt for deterministic behaviour
+TRANSCRYPT = $(GIT_ROOT)/transcrypt
+else ifneq (,$(wildcard $(GIT_ROOT)/transcrypt))
+TRANSCRYPT = $(GIT_ROOT)/transcrypt
+else
+TRANSCRYPT ?= $(call which,TRANSCRYPT,transcrypt)
+TRANSCRYPT_FILES =
+endif
+TRANSCRYPT_SET = $(TRANSCRYPT) --yes --set-openssl-path=$(OPENSSL3) --cipher "$(TRANSCRYPT_CIPHER)"
+
+# ------------------------------------------------------------------------------
+
+.PHONY: transcrypt
+transcrypt: ## Generate a transcrypt password.
+ifeq (,$(CI))
+	$(ECHO_ERR) "Cannot run 'make transcrypt' in CI."
+	exit 1
+endif
+ifeq (true,$(IS_TRANSCRYPTED))
+	$(ECHO_ERR) "Already transcrypted."
+	$(ECHO_INFO) "Run 'make transcrypt/rekey' if you would like to change the transcrypt password."
+	exit 1
+else ifeq (,$(TRANSCRYPT_PASSWORD))
+	$(TRANSCRYPT_SET)
+else
+	$(TRANSCRYPT_SET) --password "$(TRANSCRYPT_PASSWORD)"
+endif
+ifneq (,$(wildcard $(GIT_ROOT)/transcrypt))
+	$(CP) $(TRANSCRYPT) $(GIT_ROOT)/transcrypt
+	$(ECHO_INFO) "transcrypt locked to $(GIT_ROOT)/transcrypt. $(shell $(TRANSCRYPT) --version | $(HEAD) -n1)."
+endif
+	$(ECHO_WARN) "Store safely your new transcrypt password below."
+	$(ECHO_INDENT) "$$($(TRANSCRYPT) --display | $(TAIL) -n1)"
+
+
+.PHONY: transcrypt/rekey
+transcrypt/rekey:
+ifneq (,$(CI))
+	$(ECHO_ERR) "Cannot run 'make transcrypt/rekey' in CI."
+	exit 1
+endif
+	$(TRANSCRYPT_SET) --rekey
+ifneq (,$(wildcard $(GIT_ROOT)/transcrypt))
+	$(CP) $(TRANSCRYPT) $(GIT_ROOT)/transcrypt
+	$(ECHO_INFO) "transcrypt locked to $(GIT_ROOT)/transcrypt. $(shell $(TRANSCRYPT) --version | $(HEAD) -n1)."
+endif
+	$(ECHO_WARN) "Store safely your new transcrypt password below."
+	$(ECHO_INDENT) "$$($(TRANSCRYPT) --display | $(TAIL) -n1)"
+
+
+.PHONY: decrypt
+decrypt: ## Decrypt with transcrypt. Encrypt back with 'make decrypt/nuke'.
+ifeq (true,$(IS_TRANSCRYPTED))
+		$(ECHO_INFO) "Already transcrypted."
+else ifeq (true,$(CI)$(TRANSCRYPT_PASSWORD))
+	$(ECHO_ERR) "No TRANSCRYPT_PASSWORD found."
+	exit 1
+else
+	TRANSCRYPT_PASSWORD="$(TRANSCRYPT_PASSWORD)"; \
+	[[ -n "$${TRANSCRYPT_PASSWORD}" ]] || { \
+		$(ECHO_Q) "Please enter TRANSCRYPT_PASSWORD below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "TRANSCRYPT_PASSWORD=" TRANSCRYPT_PASSWORD; \
+		[[ -n "$${TRANSCRYPT_PASSWORD:-}" ]] || exit 1; \
+	}; \
+	$(ECHO); \
+	$(ECHO_INFO) "TRANSCRYPT_PASSWORD=$${TRANSCRYPT_PASSWORD:0:2}***$${TRANSCRYPT_PASSWORD: -2}"; \
+	$(TRANSCRYPT_SET) --force --password "$${TRANSCRYPT_PASSWORD}"
+endif
+
+
+.PHONY: decrypt/nuke
+decrypt/nuke:
+	$(TRANSCRYPT) --yes --force --flush-credentials
+# END # extra/misc.transcrypt.inc.mk
+
+# BEGIN # extra/misc.version.inc.mk
+# ------------------------------------------------------------------------------
+
+.PHONY: version/push
+version/push:
+	{ \
+		$(GIT) push --no-follow-tags $(GIT_REMOTE_OR_ORIGIN) \
+			HEAD:refs/heads/$(GIT_BRANCH) \
+			refs/tags/$(GIT_TAG):refs/tags/$(GIT_TAG); \
+	} || { \
+		$(ECHO_ERR) "Failed to push. Reverting..."; \
+		V= $(MAKE_DASH_F) version/revert; \
+		exit 1; \
+	}
+	$(GH) release create --verify-tag --generate-notes $(GIT_TAG)
+	$(GIT) push --no-follow-tags $(GIT_REMOTE_OR_ORIGIN) \
+		HEAD:refs/heads/latest \
+		HEAD:refs/heads/$$($(ECHO) $(GIT_TAG) | $(CUT) -d. -f1-2) \
+		HEAD:refs/heads/$$($(ECHO) $(GIT_TAG) | $(CUT) -d. -f1)
+
+
+.PHONY: version/revert
+version/revert:
+	$(GIT) status
+	[[ -z "$(GIT_TAG)" ]] || { \
+		$(GIT) tag --delete $(GIT_TAG); \
+		$(GIT) reset --hard HEAD~1; \
+	}
+
+
+.PHONY: version/patch version/minor version/major
+version/patch version/minor version/major:
+	$(eval VSN_LEVEL := $(@:version/%=%))
+	$(MAKE_DASH_F)
+	$(NPM) version $(VSN_LEVEL) || { \
+		$(ECHO_ERR) "Failed to bump version. Reverting..."; \
+		V= $(MAKE_DASH_F) version/revert; \
+		exit 1; \
+	}
+	$(MAKE_DASH_F) version/push
+
+
+.PHONY: version
+version: version/patch
+version: ## Publish bugfixes. Use 'make version/minor' for features, 'make version/major' for breaking changes.
+	:
+# END # extra/misc.version.inc.mk
+
+# BEGIN # extra/system.brewfile.inc.mk
+# Use Homebrew to install dependencies on macOS/Linux.
+# For extensibility, the Brewfile is processed with
+# envsubst-like variable substitution and support for # source directives.
+
+export HOMEBREW_DISPLAY_INSTALL_TIMES ?= 1
+export HOMEBREW_FAIL_LOG_LINES ?= 100
+export HOMEBREW_NO_ENV_HINTS ?= 1
+export HOMEBREW_NO_INSTALL_CLEANUP ?= 1
+export HOMEBREW_VERBOSE_USING_DOTS ?= 1
+
+ifeq (,$(HOMEBREW_PREFIX))
+HOMEBREW_PREFIX := $(shell brew --prefix 2>/dev/null)
+ifeq (,$(HOMEBREW_PREFIX))
+ifneq (,$(wildcard /opt/homebrew/bin/brew))
+HOMEBREW_PREFIX := /opt/homebrew
+else ifneq (,$(wildcard /usr/local/bin/brew))
+HOMEBREW_PREFIX := /usr/local
+else ifneq (,$(wildcard /home/linuxbrew/.linuxbrew/bin/brew))
+HOMEBREW_PREFIX := /home/linuxbrew/.linuxbrew
+endif
+endif
+export HOMEBREW_PREFIX
+endif
+
+# Helper: prepend a $(HOMEBREW_PREFIX)-relative directory to PATH if not already present
+brew-path-prepend = $(if $(filter $(HOMEBREW_PREFIX)/$(1),$(subst :, ,$(PATH))),$(PATH),$(HOMEBREW_PREFIX)/$(1):$(PATH))
+
+ifneq (,$(HOMEBREW_PREFIX))
+PATH := $(call brew-path-prepend,bin)
+PATH := $(call brew-path-prepend,sbin)
+PATH := $(call brew-path-prepend,opt/coreutils/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/findutils/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gawk/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-sed/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-tar/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-time/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gnu-which/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gpatch/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/grep/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/gzip/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/make/libexec/gnubin)
+PATH := $(call brew-path-prepend,opt/curl/bin)
+PATH := $(call brew-path-prepend,opt/gnu-getopt/bin)
+PATH := $(call brew-path-prepend,opt/openssl@3/bin)
+PATH := $(call brew-path-prepend,opt/tfenv/bin)
+PATH := $(call brew-path-prepend,opt/unzip/bin)
+PATH := $(call brew-path-prepend,opt/zip/bin)
+endif
+export PATH
+
+BREWFILE = Brewfile
+BREWFILE_SH = Brewfile.sh
+BREWFILE_TEST = Brewfile.test
+
+BREW_BUNDLE_FLAGS += \
+
+ifeq (true,$(VERBOSE))
+BREW_BUNDLE_FLAGS += --verbose
+endif
+
+BREWFILE_ENV = \
+	ARCH=$(ARCH) \
+	ARCH_BIT=$(ARCH_BIT) \
+	ARCH_NORMALIZED=$(ARCH_NORMALIZED) \
+	ARCH_SHORT=$(ARCH_SHORT) \
+	HOST=$(HOST) \
+	HOST_SHORT=$(HOST_SHORT) \
+	OS=$(OS) \
+	OS_SHORT=$(OS_SHORT) \
+
+CAT_BREWFILE = \
+	$(CAT) $(BREWFILE) \
+		| $(SED) "s/\$${\?ARCH}\?/$(ARCH)/g" \
+		| $(SED) "s/\$${\?ARCH_BIT}\?/$(ARCH_BIT)/g" \
+		| $(SED) "s/\$${\?ARCH_NORMALIZED}\?/$(ARCH_NORMALIZED)/g" \
+		| $(SED) "s/\$${\?ARCH_SHORT}\?/$(ARCH_SHORT)/g" \
+		| $(SED) "s/\$${\?HOST}\?/$(HOST)/g" \
+		| $(SED) "s/\$${\?HOST_SHORT}\?/$(HOST_SHORT)/g" \
+		| $(SED) "s/\$${\?OS}\?/$(OS)/g" \
+		| $(SED) "s/\$${\?OS_SHORT}\?/$(OS_SHORT)/g" \
+		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e" \
+		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e" \
+		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e"
+
+# ------------------------------------------------------------------------------
+
+.PHONY: system/brewfile
+system/brewfile:
+ifneq (,$(wildcard $(BREWFILE)))
+	unset GITHUB_ACTIONS; \
+	$(CAT_BREWFILE) | brew bundle install $(BREW_BUNDLE_FLAGS) --file=-
+ifneq (,$(wildcard $(BREWFILE_SH)))
+	$(BREWFILE_ENV) ./$(BREWFILE_SH)
+endif
+else
+	:
+endif
+
+
+.PHONY: test/system/brewfile
+test/system/brewfile:
+ifneq (,$(wildcard $(BREWFILE)))
+	unset GITHUB_ACTIONS; \
+	$(CAT_BREWFILE) | brew bundle check --verbose $(BREW_BUNDLE_FLAGS) --file=-
+ifneq (,$(wildcard $(BREWFILE_TEST)))
+	$(BREWFILE_ENV) ./$(BREWFILE_TEST)
+endif
+else
+	:
+endif
+# END # extra/system.brewfile.inc.mk
+
+# BEGIN # extra/debug.env.inc.mk
+SANE_DEBUG_ENV = \
+	debug/env \
+	debug/env/docker \
+	debug/env/git \
+	debug/env/gh \
+	debug/env/homebrew \
+	debug/env/node \
+	debug/env/python \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/env
+debug/env:
+	$(ECHO)
+	$(ECHO_DO) "Debug env..."
+	$(ECHO) "BASH=$(BASH)"
+	$(ECHO) "CI=$(CI)"
+	$(ECHO) "DOCKER=$(DOCKER)"
+	$(ECHO) "HOST=$(HOST)"
+	$(ECHO) "LANG=$(LANG)"
+	$(ECHO) "LC_ALL=$(LC_ALL)"
+	$(ECHO) "MAKE=$(MAKE)"
+	$(ECHO) "SHELL=$(SHELL)"
+	$(ECHO) "TZ=$(TZ)"
+	$(ECHO) "USER=$(USER)"
+	$(ECHO) "V=$(V)"
+	$(ECHO) "VERBOSE=$(VERBOSE)"
+	$(ECHO_DONE)
+	$(ECHO)
+	$(ECHO_DO) "Debug env (paths)..."
+	$(ECHO) "GIT_ROOT=$(GIT_ROOT)"
+	$(ECHO) "HOME=$(HOME)"
+	$(ECHO) "MAKE_PATH=$(MAKE_PATH)"
+	$(ECHO) "PATH=$(PATH)"
+	$(ECHO) "PWD=$(PWD)"
+	$(ECHO) "SANE_MK_ROOT=$(SANE_MK_ROOT)"
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/docker
+debug/env/docker:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (Docker)..."
+	$(ECHO) "DOCKER=$(DOCKER)"
+	set -x && $(DOCKER) --version || true
+	set -x && $(DOCKER) version || true
+	set -x && $(DOCKER) info || true
+	set -x && $(DOCKER) buildx version || true
+	set -x && $(DOCKER) buildx ls || true
+	set -x && $(DOCKER) buildx inspect --bootstrap || true
+	set -x && $(DOCKER) compose version || true
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/git
+debug/env/git:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (Git)..."
+	$(ECHO) "GIT=$(GIT)"
+	$(ECHO) "GIT_BRANCH=$(GIT_BRANCH)"
+	$(ECHO) "GIT_DESCRIBE=$(GIT_DESCRIBE)"
+	$(ECHO) "GIT_HASH=$(GIT_HASH)"
+	$(ECHO) "GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL)"
+	set -x && $(GIT) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/gh
+debug/env/gh:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (GitHub)..."
+	$(ECHO) "GH=$(GH)"
+	$(ECHO) "GH_HOST=$(GH_HOST)"
+	set -x && $(GH) --version || true
+	set -x && $(GH) auth status || true
+	set -x && $(GH) api /user || true
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/homebrew
+debug/env/homebrew:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (Homebrew)..."
+	$(ECHO) "BREW=$(BREW)"
+	$(ECHO) "HOMEBREW_PREFIX=$(HOMEBREW_PREFIX)"
+	set -x && $(BREW) --version || true
+	set -x && $(BREW) doctor || true
+	$(ECHO_DONE)
+
+
+.PHONY: debug/env/node
+debug/env/node:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (NodeJS)..."
+	$(ECHO) "N=$(N)"
+	$(ECHO) "NODE=$(NODE)"
+	set -x && $(N) --version || true
+	set -x && $(NODE) --version || true
+	$(ECHO)
+
+
+.PHONY: debug/env/python
+debug/env/python:
+	$(ECHO)
+	$(ECHO_DO) "Debug env (Python)..."
+	$(ECHO) "PYTHON=$(PYTHON)"
+	$(ECHO) "PYTHON3=$(PYTHON3)"
+	set -x && $(PYTHON) --version || true
+	set -x && $(PYTHON3) --version || true
+	$(ECHO_DONE)
+# END # extra/debug.env.inc.mk
+
+# BEGIN # extra/deps.corepack.inc.mk
+export NPM_CONFIG_UPDATE_NOTIFIER = false
+COREPACK ?= $(call which,COREPACK,corepack)
+ifeq (COREPACK_NOT_FOUND,$(COREPACK))
+COREPACK = $(NPX) --yes corepack
+else
+$(call make-lazy,COREPACK)
+endif
+
+DEFAULT_FILES_FILTER_OUT += \
+	$(shell $(GIT_LS) | $(GREP) -e "package-lock\.json$$" | $(NOSYM)) \
+	$(shell $(GIT_LS) | $(GREP) -e "pnpm-lock\.yaml$$" | $(NOSYM)) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/corepack
+debug/corepack:
+	$(ECHO)
+	$(ECHO_DO) "Debug Corepack..."
+	$(ECHO) "COREPACK=$(COREPACK)"
+	set -x && $(COREPACK) --version || true
+	set -x && which -a node && node --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: deps/gitignore/corepack
+deps/gitignore/corepack:
+	:
+
+
+.PHONY: deps/corepack/npm
+deps/corepack/npm:
+ifeq (,$(PKG_PACKAGE_MANAGER))
+	$(ECHO) "$$($(JQ) '. += {"packageManager": "npm@11"}' package.json)" > package.json
+	$(COREPACK) use pnpm@latest-11
+endif
+	$(COREPACK) npm ci
+
+
+.PHONY: deps/corepack/npm-init
+deps/corepack/npm-init:
+ifeq (,$(PKG_PACKAGE_MANAGER))
+	$(ECHO) "$$($(JQ) '. += {"packageManager": "npm@11"}' package.json)" > package.json
+	$(COREPACK) use pnpm@latest-11
+endif
+	$(COREPACK) npm install
+
+
+.PHONY: deps/corepack/pnpm
+deps/corepack/pnpm:
+ifeq (,$(PKG_PACKAGE_MANAGER))
+	$(ECHO) "$$($(JQ) '. += {"packageManager": "pnpm@11"}' package.json)" > package.json
+	$(COREPACK) use pnpm@latest-11
+endif
+	$(COREPACK) pnpm i --frozen-lockfile
+
+
+.PHONY: deps/corepack/pnpm-init
+deps/corepack/pnpm-init:
+ifeq (,$(PKG_PACKAGE_MANAGER))
+	$(ECHO) "$$($(JQ) '. += {"packageManager": "pnpm@11"}' package.json)" > package.json
+	$(COREPACK) use pnpm@latest-11
+endif
+	$(COREPACK) pnpm i
+
+
+.PHONY: deps/corepack
+deps/corepack:
+ifneq (,$(wildcard package.json))
+	if [[ -e package-lock.json ]]; then \
+		$(MAKE_DASH_F) deps/corepack/npm; \
+	elif [[ "$(PKG_PACKAGE_MANAGER)" = npm* ]]; then \
+		$(MAKE_DASH_F) deps/corepack/npm-init; \
+	elif [[ -e pnpm-lock.yaml ]]; then \
+		$(MAKE_DASH_F) deps/corepack/pnpm; \
+	else \
+		$(MAKE_DASH_F) deps/corepack/pnpm-init; \
+	fi
+else
+	:
+endif
+
+
+.PHONY: deps/upgrade/corepack
+deps/upgrade/corepack:
+ifneq (,$(wildcard package.json))
+	$(COREPACK) up
+	if [[ -e package-lock.json ]]; then \
+		$(COREPACK) npm update; \
+	else \
+		$(COREPACK) pnpm upgrade; \
+	fi
+else
+	:
+endif
+# END # extra/deps.corepack.inc.mk
+
+# BEGIN # extra/deps.git.inc.mk
+export NBSTRIPOUT_VSN ?= >=0.9.0,<0.10
+
+# ------------------------------------------------------------------------------
+
+$(GIT_COMMON_DIR)/info/attributes: $(SANE_MK_ROOT)/gitconfig/dot.gitattributes_global
+	$(MKDIR) $(dir $@)
+	$(LN) -s $< $@
+
+
+$(GIT_COMMON_DIR)/info/exclude: $(SANE_MK_ROOT)/gitconfig/dot.gitignore_global
+	$(MKDIR) $(dir $@)
+	$(LN) -s $< $@
+
+
+.PHONY: deps/git
+deps/git: $(GIT_COMMON_DIR)/info/attributes
+deps/git: $(GIT_COMMON_DIR)/info/exclude
+deps/git:
+	:
+# FIXME needs more work
+# 	$(GIT) config filter.nbstripout.clean "uvx 'nbstripout$(NBSTRIPOUT_VSN)'"
+# 	$(GIT) config filter.nbstripout.smudge "cat"
+# 	$(GIT) config filter.nbstripout.required "true"
+# 	$(GIT) config diff.ipynb.textconv "uvx 'nbstripout$(NBSTRIPOUT_VSN)' -t"
+# END # extra/deps.git.inc.mk
+
+# BEGIN # extra/deps.uv.inc.mk
+UV ?= $(call which,UV,uv)
+UVX ?= $(call which,UVX,uvx)
+$(foreach VAR,UV UVX,$(call make-lazy,$(VAR)))
+
+DEFAULT_FILES_FILTER_OUT += \
+	$(shell $(GIT_LS) | $(GREP) -e "uv\.lock$$" | $(NOSYM)) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/uv
+debug/uv:
+	$(ECHO)
+	$(ECHO_DO) "Debug uv..."
+	$(ECHO) "UV=$(UV)"
+	set -x && $(UV) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: deps/gitignore/uv
+deps/gitignore/uv:
+	:
+
+
+.PHONY: deps/uv
+deps/uv:
+ifneq (,$(wildcard uv.lock))
+	$(UV) sync --all-packages
+else
+	:
+endif
+
+
+.PHONY: deps/upgrade/uv
+deps/upgrade/uv:
+ifneq (,$(wildcard uv.lock))
+	$(UV) lock --upgrade
+	$(UV) sync --all-packages
+else
+	:
+endif
+# END # extra/deps.uv.inc.mk
+
+# BEGIN # extra/deps.vscode.inc.mk
+CODE ?= $(call which,CODE,code)
+$(call make-lazy,CODE)
+
+ifeq (CODE_NOT_FOUND,$(CODE))
+# ignore if no vscode installed
+VSCODE_EXTENSIONS_JSON =
+else
+VSCODE_EXTENSIONS_JSON = $(wildcard $(GIT_ROOT)/.vscode/extensions.json)
+endif
+
+VSCODE_EXTENSIONS_INSTALL = $(shell \
+	$(COMM) -23 \
+	<($(CAT) "$(VSCODE_EXTENSIONS_JSON)" \
+		| $(STRIP_JSON_COMMENTS) \
+		| $(JQ) -r -e ".recommendations[]" \
+		| $(TR) "[:upper:]" "[:lower:]" \
+		| $(SORT) -u) \
+	<("$(CODE)" --list-extensions \
+		| $(TR) "[:upper:]" "[:lower:]" \
+		| $(SORT) -u))
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/vscode
+debug/vscode:
+	$(ECHO)
+	$(ECHO_DO) "Debug Visual Studio Code..."
+	$(ECHO) "CODE=$(CODE)"
+	set -x && "$(CODE)" --version || true
+	set -x && "$(CODE)" --list-extensions --show-versions || true
+	$(ECHO_DONE)
+
+
+.PHONY: deps/gitignore/vscode
+deps/gitignore/vscode:
+	:
+
+
+.PHONY: deps/vscode
+deps/vscode:
+ifneq (,$(VSCODE_EXTENSIONS_JSON))
+ifeq (,$(CI))
+	for EXTENSION in $(VSCODE_EXTENSIONS_INSTALL); do \
+		$(ECHO_INFO) "Installing vscode extension $${EXTENSION} ..."; \
+		"$(CODE)" --install-extension $${EXTENSION} >/dev/null; \
+	done
+	"$(CODE)" --update-extensions
+else
+	for EXTENSION in $(VSCODE_EXTENSIONS_INSTALL); do \
+		$(ECHO_SKIP) "Installing vscode extension $${EXTENSION} ..."; \
+	done
+endif
+else
+	:
+endif
+# END # extra/deps.vscode.inc.mk
+
+# BEGIN # extra/check.actionlint.inc.mk
+ACTIONLINT ?= $(call which,ACTIONLINT,actionlint)
+$(call make-lazy,ACTIONLINT)
+
+# https://github.com/rhysd/actionlint/blob/main/docs/usage.md#ignore-some-errors
+# Allow constant expressions
+ACTIONLINT_FLAGS += \
+	-ignore 'constant expression ".*" in condition\. remove the if: section' \
+
+ACTIONLINT_FILES += \
+	$(ACTIONLINT_FILES_EXT) \
+
+ACTIONLINT_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "^\.github/workflows/.*\.yml$$" | $(NOSYM))
+
+ACTIONLINT_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/actionlint
+debug/actionlint:
+	$(ECHO)
+	$(ECHO_DO) "Debug Actionlint..."
+	$(ECHO) "ACTIONLINT=$(ACTIONLINT)"
+	$(ECHO) "ACTIONLINT_FILES=$(ACTIONLINT_FILES)"
+	$(ECHO) "ACTIONLINT_FILES_EXT=$(ACTIONLINT_FILES_EXT)"
+	$(ECHO) "ACTIONLINT_FILES_FILTER_OUT=$(ACTIONLINT_FILES_FILTER_OUT)"
+	$(ECHO) "ACTIONLINT_FLAGS=$(ACTIONLINT_FLAGS)"
+	set -x && $(ACTIONLINT) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/actionlint
+check/actionlint:
+	ACTIONLINT_FILES_TMP=($(filter-out $(ACTIONLINT_FILES_FILTER_OUT), $(ACTIONLINT_FILES))); \
+	[[ "$${#ACTIONLINT_FILES_TMP[@]}" = "0" ]] || { \
+		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+			[[ -e .github/actionlint.yaml ]] || $(MAKE_DASH_F) .github/actionlint.yaml; \
+			[[ -e .shellcheckrc ]] || $(MAKE_DASH_F) .shellcheckrc; \
+		}; \
+		$(ACTIONLINT) $(ACTIONLINT_FLAGS) $${ACTIONLINT_FILES_TMP[@]}; \
+	}
+# END # extra/check.actionlint.inc.mk
+
+# BEGIN # extra/check.editorconfig-checker.inc.mk
+EDITORCONFIG_CHECKER ?= $(call which,EDITORCONFIG_CHECKER,editorconfig-checker)
+$(call make-lazy,EDITORCONFIG_CHECKER)
+
+# NOTE add more patterns with |
+EDITORCONFIG_CHECKER_EXCLUDE ?= ^$$
+
+EDITORCONFIG_CHECKER_FLAGS += \
+	-no-color \
+
+EDITORCONFIG_CHECKER_FILES += \
+	$(EDITORCONFIG_CHECKER_FILES_EXT) \
+
+EDITORCONFIG_CHECKER_FILES_EXT = $(shell $(GIT_LS) | $(NOSYM))
+
+EDITORCONFIG_CHECKER_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/editorconfig-checker
+debug/editorconfig-checker:
+	$(ECHO)
+	$(ECHO_DO) "Debug EditorConfig Checker..."
+	$(ECHO) "EDITORCONFIG_CHECKER=$(EDITORCONFIG_CHECKER)"
+	$(ECHO) "EDITORCONFIG_CHECKER_EXCLUDE=$(EDITORCONFIG_CHECKER_EXCLUDE)"
+	$(ECHO) "EDITORCONFIG_CHECKER_FILES=$(EDITORCONFIG_CHECKER_FILES)"
+	$(ECHO) "EDITORCONFIG_CHECKER_FILES_EXT=$(EDITORCONFIG_CHECKER_FILES_EXT)"
+	$(ECHO) "EDITORCONFIG_CHECKER_FILES_FILTER_OUT=$(EDITORCONFIG_CHECKER_FILES_FILTER_OUT)"
+	$(ECHO) "EDITORCONFIG_CHECKER_FLAGS=$(EDITORCONFIG_CHECKER_FLAGS)"
+	set -x && $(EDITORCONFIG_CHECKER) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/editorconfig-checker
+check/editorconfig-checker:
+	EDITORCONFIG_CHECKER_FILES_TMP=( \
+		$(filter-out $(EDITORCONFIG_CHECKER_FILES_FILTER_OUT), $(EDITORCONFIG_CHECKER_FILES))); \
+	[[ "$${#EDITORCONFIG_CHECKER_FILES_TMP[@]}" = "0" ]] || { \
+		$(EDITORCONFIG_CHECKER) -exclude "$(EDITORCONFIG_CHECKER_EXCLUDE)" $(EDITORCONFIG_CHECKER_FLAGS) \
+			$${EDITORCONFIG_CHECKER_FILES_TMP[@]} 2>&1 \
+				| { $(GREP) -v -e "^0 errors found" || true; }; \
+	}
+# END # extra/check.editorconfig-checker.inc.mk
+
+# BEGIN # extra/check.jscpd.inc.mk
+JSCPD ?= $(call which,JSCPD,jscpd)
+ifeq (JSCPD_NOT_FOUND,$(JSCPD))
+JSCPD = $(NPX) --yes jscpd
+else
+$(call make-lazy,JSCPD)
+endif
+
+JSCPD_FLAGS += \
+	--blame \
+	--exitCode 1 \
+	--gitignore \
+	--reporters silent \
+
+JSCPD_FILES += \
+	$(JSCPD_FILES_EXT) \
+
+JSCPD_FILES_EXT = $(shell $(GIT_LS) | $(NOSYM))
+
+JSCPD_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/jscpd
+debug/jscpd:
+	$(ECHO)
+	$(ECHO_DO) "Debug JSCPD..."
+	$(ECHO) "JSCPD=$(JSCPD)"
+	$(ECHO) "JSCPD_FILES=$(JSCPD_FILES)"
+	$(ECHO) "JSCPD_FILES_EXT=$(JSCPD_FILES_EXT)"
+	$(ECHO) "JSCPD_FILES_FILTER_OUT=$(JSCPD_FILES_FILTER_OUT)"
+	$(ECHO) "JSCPD_FLAGS=$(JSCPD_FLAGS)"
+	set -x && $(JSCPD) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/jscpd
+check/jscpd:
+	JSCPD_FILES_TMP=($(filter-out $(JSCPD_FILES_FILTER_OUT), $(JSCPD_FILES))); \
+	[[ "$${#JSCPD_FILES_TMP[@]}" = "0" ]] || { \
+		$(JSCPD) $(JSCPD_FLAGS) $${JSCPD_FILES_TMP[@]}; \
+	}
+# END # extra/check.jscpd.inc.mk
+
+# BEGIN # extra/check.markdownlint.inc.mk
+MARKDOWNLINT ?= $(call which,MARKDOWNLINT,markdownlint)
+$(call make-lazy,MARKDOWNLINT)
+
+MARKDOWNLINT_FLAGS_IGNORE = \
+	--ignore node_modules \
+
+MARKDOWNLINT_FLAGS += \
+
+MARKDOWNLINT_FILES += \
+	$(MARKDOWNLINT_FILES_EXT) \
+	$(MARKDOWNLINT_FILES_SHEBANG) \
+
+MARKDOWNLINT_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.md$$" | $(NOSYM))
+
+MARKDOWNLINT_FILES_SHEBANG_PATH = .
+
+MARKDOWNLINT_FILES_SHEBANG = \
+	$(shell $(GIT_LS) $(MARKDOWNLINT_FILES_SHEBANG_PATH) | \
+		while read -r FILE; do \
+		[[ ! -L "$${FILE}" ]] || continue; \
+		[[ -f "$${FILE}" ]] || continue; \
+		$(HEAD) -n1 "$${FILE}" | $(GREP) -q -e "^<!-- -\\*- mode: markdown -\\*- -->$$" || continue; \
+		$(ECHO) "$${FILE}"; \
+	done)
+
+MARKDOWNLINT_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/markdownlint
+debug/markdownlint:
+	$(ECHO)
+	$(ECHO_DO) "Debug Markdownlint..."
+	$(ECHO) "MARKDOWNLINT=$(MARKDOWNLINT)"
+	$(ECHO) "MARKDOWNLINT_FILES=$(MARKDOWNLINT_FILES)"
+	$(ECHO) "MARKDOWNLINT_FILES_EXT=$(MARKDOWNLINT_FILES_EXT)"
+	$(ECHO) "MARKDOWNLINT_FILES_FILTER_OUT=$(MARKDOWNLINT_FILES_FILTER_OUT)"
+	$(ECHO) "MARKDOWNLINT_FILES_SHEBANG=$(MARKDOWNLINT_FILES_SHEBANG)"
+	$(ECHO) "MARKDOWNLINT_FLAGS=$(MARKDOWNLINT_FLAGS)"
+	$(ECHO) "MARKDOWNLINT_FLAGS_IGNORE=$(MARKDOWNLINT_FLAGS_IGNORE)"
+	set -x && $(MARKDOWNLINT) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/markdownlint
+check/markdownlint:
+	MARKDOWNLINT_FILES_TMP=($(filter-out $(MARKDOWNLINT_FILES_FILTER_OUT), $(MARKDOWNLINT_FILES))); \
+	[[ "$${#MARKDOWNLINT_FILES_TMP[@]}" = "0" ]] || { \
+		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+			[[ -e .markdownlint.json ]] \
+				|| [[ -e .markdownlint.jsonc ]] \
+				|| [[ -e .markdownlint.yaml ]] \
+				|| [[ -e .markdownlint.yml ]] \
+				|| [[ -e .markdownlintrc ]] \
+				|| $(MAKE_DASH_F) .markdownlintrc; \
+		}; \
+		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $${MARKDOWNLINT_FILES_TMP[@]} || { \
+			$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $${MARKDOWNLINT_FILES_TMP[@]}; \
+			exit 1; \
+		}; \
+	}
+# END # extra/check.markdownlint.inc.mk
+
+# BEGIN # extra/check.ruff.inc.mk
+RUFF ?= $(call which,RUFF,ruff)
+ifeq (RUFF_NOT_FOUND,$(RUFF))
+export RUFF_VSN ?= >=0.15.0,<0.16
+RUFF = $(UVX) ruff$(RUFF_VSN)
+else
+$(call make-lazy-once,RUFF)
+endif
+
+RUFF_FLAGS += \
+
+RUFF_FLAGS_WITH_OUTPUT_FORMAT = $(RUFF_FLAGS)
+ifneq (,$(CI))
+RUFF_FLAGS_WITH_OUTPUT_FORMAT += --output-format github
+endif
+
+RUFF_FILES += \
+	$(RUFF_FILES_EXT) \
+	$(RUFF_FILES_SHEBANG) \
+
+RUFF_FILES_EXT = $(PYTHON_FILES_EXT)
+
+RUFF_FILES_SHEBANG_PATH = .
+
+RUFF_FILES_SHEBANG = $(PYTHON_FILES_SHEBANG)
+
+RUFF_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/ruff
+debug/ruff:
+	$(ECHO)
+	$(ECHO_DO) "Debug Ruff..."
+	$(ECHO) "RUFF=$(RUFF)"
+	$(ECHO) "RUFF_FILES=$(RUFF_FILES)"
+	$(ECHO) "RUFF_FILES_EXT=$(RUFF_FILES_EXT)"
+	$(ECHO) "RUFF_FILES_FILTER_OUT=$(RUFF_FILES_FILTER_OUT)"
+	$(ECHO) "RUFF_FILES_SHEBANG=$(RUFF_FILES_SHEBANG)"
+	$(ECHO) "RUFF_FLAGS=$(RUFF_FLAGS)"
+	set -x && $(RUFF) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/ruff
+check/ruff:
+	RUFF_FILES_TMP=($(filter-out $(RUFF_FILES_FILTER_OUT), $(RUFF_FILES))); \
+	[[ "$${#RUFF_FILES_TMP[@]}" = "0" ]] || { \
+		$(RUFF) check --diff $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} || { \
+			[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+				$(RUFF) check $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $${RUFF_FILES_TMP[@]} || true; \
+			$(RUFF) check --fix-only $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} 2>/dev/null; \
+			exit 1; \
+		}; \
+		$(RUFF) format --diff $(RUFF_FLAGS) $${RUFF_FILES_TMP[@]} || { \
+			$(RUFF) format $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $${RUFF_FILES_TMP[@]} 2>/dev/null; \
+			exit 1; \
+		}; \
+	}
+# END # extra/check.ruff.inc.mk
+
+# BEGIN # extra/check.shellcheck.inc.mk
+SHELLCHECK ?= $(call which,SHELLCHECK,shellcheck)
+$(call make-lazy,SHELLCHECK)
+
+SHELLCHECK_FLAGS += \
+
+SHELLCHECK_FILES += \
+	$(SHELLCHECK_FILES_EXT) \
+	$(SHELLCHECK_FILES_SHEBANG) \
+
+SHELLCHECK_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.sh$$" | $(NOSYM))
+
+SHELLCHECK_FILES_SHEBANG_PATH = .
+
+SHELLCHECK_FILES_SHEBANG = \
+	$(shell $(GIT_LS) $(SHELLCHECK_FILES_SHEBANG_PATH) | \
+		while read -r FILE; do \
+		[[ ! -L "$${FILE}" ]] || continue; \
+		[[ -f "$${FILE}" ]] || continue; \
+		[[ -x "$${FILE}" ]] || continue; \
+		$(HEAD) -n1 "$${FILE}" | $(GREP) "^$(hash)!/" | $(GREP) -q -e "\b\(bash\|sh\)\b" || continue; \
+		$(ECHO) "$${FILE}"; \
+	done)
+
+SHELLCHECK_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/shellcheck
+debug/shellcheck:
+	$(ECHO)
+	$(ECHO_DO) "Debug ShellCheck..."
+	$(ECHO) "SHELLCHECK=$(SHELLCHECK)"
+	$(ECHO) "SHELLCHECK_FILES=$(SHELLCHECK_FILES)"
+	$(ECHO) "SHELLCHECK_FILES_EXT=$(SHELLCHECK_FILES_EXT)"
+	$(ECHO) "SHELLCHECK_FILES_FILTER_OUT=$(SHELLCHECK_FILES_FILTER_OUT)"
+	$(ECHO) "SHELLCHECK_FILES_SHEBANG=$(SHELLCHECK_FILES_SHEBANG)"
+	$(ECHO) "SHELLCHECK_FLAGS=$(SHELLCHECK_FLAGS)"
+	set -x && $(SHELLCHECK) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/shellcheck
+check/shellcheck:
+	SHELLCHECK_FILES_TMP=($(filter-out $(SHELLCHECK_FILES_FILTER_OUT), $(SHELLCHECK_FILES))); \
+	[[ "$${#SHELLCHECK_FILES_TMP[@]}" = "0" ]] || { \
+		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+			[[ -e .shellcheckrc ]] \
+				|| [[ -e shellcheckrc ]] \
+				|| $(MAKE_DASH_F) .shellcheckrc; \
+		}; \
+		$(SHELLCHECK) $(SHELLCHECK_FLAGS) $${SHELLCHECK_FILES_TMP[@]}; \
+	}
+# END # extra/check.shellcheck.inc.mk
+
+# BEGIN # extra/check.shfmt.inc.mk
+SHFMT ?= $(call which,SHFMT,shfmt)
+$(call make-lazy,SHFMT)
+
+SHFMT_FLAGS += \
+	--indent 4 \
+	--binary-next-line \
+	--case-indent \
+
+SHFMT_FILES += \
+	$(SHFMT_FILES_EXT) \
+	$(SHFMT_FILES_SHEBANG) \
+
+SHFMT_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.sh$$" | $(NOSYM))
+
+SHFMT_FILES_SHEBANG = $(SHELLCHECK_FILES_SHEBANG)
+
+SHFMT_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/shfmt
+debug/shfmt:
+	$(ECHO)
+	$(ECHO_DO) "Debug SHFMT..."
+	$(ECHO) "SHFMT=$(SHFMT)"
+	$(ECHO) "SHFMT_FILES=$(SHFMT_FILES)"
+	$(ECHO) "SHFMT_FILES_EXT=$(SHFMT_FILES_EXT)"
+	$(ECHO) "SHFMT_FILES_FILTER_OUT=$(SHFMT_FILES_FILTER_OUT)"
+	$(ECHO) "SHFMT_FILES_SHEBANG=$(SHFMT_FILES_SHEBANG)"
+	$(ECHO) "SHFMT_FLAGS=$(SHFMT_FLAGS)"
+	set -x && $(SHFMT) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/shfmt
+check/shfmt:
+	SHFMT_FILES_TMP=($(filter-out $(SHFMT_FILES_FILTER_OUT), $(SHFMT_FILES))); \
+	[[ "$${#SHFMT_FILES_TMP[@]}" = "0" ]] || { \
+		$(SHFMT) --diff $(SHFMT_FLAGS) $${SHFMT_FILES_TMP[@]} || { \
+			$(SHFMT) --write $(SHFMT_FLAGS) $${SHFMT_FILES_TMP[@]}; \
+			exit 1; \
+		}; \
+	}
+# END # extra/check.shfmt.inc.mk
+
+# BEGIN # extra/check.trufflehog.inc.mk
+TRUFFLEHOG ?= $(call which,TRUFFLEHOG,trufflehog)
+$(call make-lazy,TRUFFLEHOG)
+
+# NOTE add more patterns with ,
+TRUFFLEHOG_EXCLUDE_GLOBS +=
+
+TRUFFLEHOG_EXCLUDE_GLOBS_CSV = $(subst $(space),$(,),$(strip $(TRUFFLEHOG_EXCLUDE_GLOBS)))
+
+TRUFFLEHOG_FLAGS += \
+
+# NOTE --github-actions will not print secrets in plain text
+ifneq (,$(CI))
+TRUFFLEHOG_FLAGS += --github-actions
+endif
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/trufflehog
+debug/trufflehog:
+	$(ECHO)
+	$(ECHO_DO) "Debug TruffleHog..."
+	$(ECHO) "TRUFFLEHOG=$(TRUFFLEHOG)"
+	$(ECHO) "TRUFFLEHOG_EXCLUDE_GLOBS=$(TRUFFLEHOG_EXCLUDE_GLOBS)"
+	$(ECHO) "TRUFFLEHOG_FLAGS=$(TRUFFLEHOG_FLAGS)"
+	set -x && $(TRUFFLEHOG) --version || true
+	$(ECHO_DONE)
+
+
+# NOTE we are using the JSON output and removing the Raw and RawV2 fields
+# because there is no other way to get an output without the raw fields,
+# an output that signals
+.PHONY: check/trufflehog
+check/trufflehog:
+	$(TRUFFLEHOG) git \
+		--fail \
+		--no-update \
+		--no-verification \
+		--branch HEAD \
+		--exclude-globs "$(TRUFFLEHOG_EXCLUDE_GLOBS_CSV)" \
+		$(TRUFFLEHOG_FLAGS) \
+		file://$(GIT_ROOT)
+# END # extra/check.trufflehog.inc.mk
+
+# BEGIN # extra/check.pyrefly.inc.mk
+PYREFLY ?= $(call which,PYREFLY,pyrefly)
+ifeq (PYREFLY_NOT_FOUND,$(PYREFLY))
+export PYREFLY_VSN ?= >=1.0.0,<2.0.0
+PYREFLY = $(UVX) pyrefly$(PYREFLY_VSN)
+else
+$(call make-lazy-once,PYREFLY)
+endif
+
+PYREFLY_FLAGS += \
+
+PYREFLY_FILES += \
+	$(PYREFLY_FILES_EXT) \
+	$(PYREFLY_FILES_SHEBANG) \
+
+PYREFLY_FILES_EXT = $(PYTHON_FILES_EXT)
+
+PYREFLY_FILES_SHEBANG_PATH = .
+
+PYREFLY_FILES_SHEBANG = $(PYTHON_FILES_SHEBANG)
+
+PYREFLY_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/pyrefly
+debug/pyrefly:
+	$(ECHO)
+	$(ECHO_DO) "Debug pyrefly..."
+	$(ECHO) "PYREFLY=$(PYREFLY)"
+	$(ECHO) "PYREFLY_FILES=$(PYREFLY_FILES)"
+	$(ECHO) "PYREFLY_FILES_EXT=$(PYREFLY_FILES_EXT)"
+	$(ECHO) "PYREFLY_FILES_FILTER_OUT=$(PYREFLY_FILES_FILTER_OUT)"
+	$(ECHO) "PYREFLY_FILES_SHEBANG=$(PYREFLY_FILES_SHEBANG)"
+	$(ECHO) "PYREFLY_FLAGS=$(PYREFLY_FLAGS)"
+	set -x && $(PYREFLY) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/pyrefly
+check/pyrefly:
+ifneq (,$(wildcard pyproject.toml))
+	PYREFLY_FILES_TMP=($(filter-out $(PYREFLY_FILES_FILTER_OUT), $(PYREFLY_FILES))); \
+	[[ "$${#PYREFLY_FILES_TMP[@]}" = "0" ]] || { \
+		$(PYREFLY) check $(PYREFLY_FLAGS) $${PYREFLY_FILES_TMP[@]} || exit 1; \
+	}
+else
+	:
+endif
+# END # extra/check.pyrefly.inc.mk
+
+# BEGIN # extra/check.ty.inc.mk
+# TODO switch to uv check
+# uv check --quiet --preview-features=check-command --ty-version=0.0.49
+
+TY ?= $(call which,TY,ty)
+ifeq (TY_NOT_FOUND,$(TY))
+export TY_VSN ?= >=0.0.35,<0.1.0
+TY = $(UVX) ty$(TY_VSN)
+else
+$(call make-lazy-once,TY)
+endif
+
+TY_FLAGS += \
+
+TY_FILES += \
+	$(TY_FILES_EXT) \
+	$(TY_FILES_SHEBANG) \
+
+TY_FILES_EXT = $(PYTHON_FILES_EXT)
+
+TY_FILES_SHEBANG_PATH = .
+
+TY_FILES_SHEBANG = $(PYTHON_FILES_SHEBANG)
+
+TY_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/ty
+debug/ty:
+	$(ECHO)
+	$(ECHO_DO) "Debug ty..."
+	$(ECHO) "TY=$(TY)"
+	$(ECHO) "TY_FILES=$(TY_FILES)"
+	$(ECHO) "TY_FILES_EXT=$(TY_FILES_EXT)"
+	$(ECHO) "TY_FILES_FILTER_OUT=$(TY_FILES_FILTER_OUT)"
+	$(ECHO) "TY_FILES_SHEBANG=$(TY_FILES_SHEBANG)"
+	$(ECHO) "TY_FLAGS=$(TY_FLAGS)"
+	set -x && $(TY) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: check/ty
+check/ty:
+ifneq (,$(wildcard pyproject.toml))
+	TY_FILES_TMP=($(filter-out $(TY_FILES_FILTER_OUT), $(TY_FILES))); \
+	[[ "$${#TY_FILES_TMP[@]}" = "0" ]] || { \
+		$(TY) check $(TY_FLAGS) $${TY_FILES_TMP[@]} || { \
+			[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+				$(TY) check --output-format github $(TY_FLAGS) $${TY_FILES_TMP[@]} || true; \
+			exit 1; \
+		}; \
+	}
+else
+	:
+endif
+# END # extra/check.ty.inc.mk
+
+# BEGIN # extra/check.yamllint.inc.mk
+YAMLLINT ?= $(call which,YAMLLINT,yamllint)
+$(call make-lazy,YAMLLINT)
+
+YAMLLINT_FLAGS += \
+	--format parsable \
+
+YAMLLINT_FILES += \
+	$(YAMLLINT_FILES_EXT) \
+	$(YAMLLINT_FILES_SHEBANG) \
+
+YAMLLINT_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.\(yaml\|yml\)$$" | $(NOSYM))
+
+YAMLLINT_FILES_SHEBANG_PATH = .
+
+YAMLLINT_FILES_SHEBANG = \
+	$(shell $(GIT_LS) $(YAMLLINT_FILES_SHEBANG_PATH) | \
+		while read -r FILE; do \
+		[[ ! -L "$${FILE}" ]] || continue; \
+		[[ -f "$${FILE}" ]] || continue; \
+		$(HEAD) -n1 "$${FILE}" | $(GREP) -q -e "^$(hash) -\\*- mode: yaml -\\*-$$" || continue; \
+		$(ECHO) "$${FILE}"; \
+	done)
+
+YAMLLINT_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/yamllint
+debug/yamllint:
+	$(ECHO)
+	$(ECHO_DO) "Debug Yamllint..."
+	$(ECHO) "YAMLLINT=$(YAMLLINT)"
+	$(ECHO) "YAMLLINT_FILES=$(YAMLLINT_FILES)"
+	$(ECHO) "YAMLLINT_FILES_EXT=$(YAMLLINT_FILES_EXT)"
+	$(ECHO) "YAMLLINT_FILES_FILTER_OUT=$(YAMLLINT_FILES_FILTER_OUT)"
+	$(ECHO) "YAMLLINT_FILES_SHEBANG=$(YAMLLINT_FILES_SHEBANG)"
+	$(ECHO) "YAMLLINT_FLAGS=$(YAMLLINT_FLAGS)"
+	set -x && $(YAMLLINT) --version || true
+	$(ECHO_DONE)
+
+
+#	NOTE FileNotFoundError: [Errno 2] No such file or directory: '.gitignore'
+.PHONY: check/yamllint
+check/yamllint:
+	YAMLLINT_FILES_TMP=($(filter-out $(YAMLLINT_FILES_FILTER_OUT), $(YAMLLINT_FILES))); \
+	[[ "$${#YAMLLINT_FILES_TMP[@]}" = "0" ]] || { \
+		[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] \
+			|| [[ -e .yamllint ]] \
+			|| [[ -e .yamllint.yaml ]] \
+			|| [[ -e .yamllint.yml ]] \
+			|| $(MAKE_DASH_F) .yamllint; \
+		[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
+		$(YAMLLINT) $(YAMLLINT_FLAGS) $${YAMLLINT_FILES_TMP[@]}; \
+	}
+# END # extra/check.yamllint.inc.mk
+
+# BEGIN # extra/test.bats.inc.mk
+BATS ?= $(call which,BATS,bats)
+$(call make-lazy,BATS)
+
+BATS_VARS = \
+	SANE_MK_ROOT=$(SANE_MK_ROOT) \
+
+BATS_JOBS ?= $(shell $(NPROC))
+BATS_FLAGS += \
+	--jobs $(BATS_JOBS) \
+	--line-reference-format colon \
+
+# prefer cat over the default tap in CI (default pretty in non-CI; requires $TERM)
+ifneq (,$(CI))
+BATS_FLAGS += \
+	--formatter cat
+endif
+
+ifeq (true,$(VERBOSE))
+BATS_FLAGS += \
+	--verbose-run \
+	--trace
+endif
+
+BATS_FILES += \
+	$(BATS_FILES_EXT) \
+	$(BATS_FILES_SHEBANG) \
+
+BATS_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "\.bats$$" | $(NOSYM))
+
+BATS_FILES_SHEBANG_PATH = .
+
+BATS_FILES_SHEBANG = \
+	$(shell $(GIT_LS) $(BATS_FILES_SHEBANG_PATH) | \
+		while read -r FILE; do \
+		[[ ! -L "$${FILE}" ]] || continue; \
+		[[ -f "$${FILE}" ]] || continue; \
+		[[ -x "$${FILE}" ]] || continue; \
+		$(HEAD) -n1 "$${FILE}" | $(GREP) "^$(hash)!/" | $(GREP) -q -e "\b\(bats\)\b" || continue; \
+		$(ECHO) "$${FILE}"; \
+	done)
+
+BATS_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/bats
+debug/bats:
+	$(ECHO)
+	$(ECHO_DO) "Debug BATS..."
+	$(ECHO) "BATS=$(BATS)"
+	$(ECHO) "BATS_FILES=$(BATS_FILES)"
+	$(ECHO) "BATS_FILES_EXT=$(BATS_FILES_EXT)"
+	$(ECHO) "BATS_FILES_FILTER_OUT=$(BATS_FILES_FILTER_OUT)"
+	$(ECHO) "BATS_FILES_SHEBANG=$(BATS_FILES_SHEBANG)"
+	$(ECHO) "BATS_FLAGS=$(BATS_FLAGS)"
+	set -x && $(BATS) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: test/bats
+test/bats:
+	BATS_FILES_TMP=($(filter-out $(BATS_FILES_FILTER_OUT), $(BATS_FILES))); \
+	[[ "$${#BATS_FILES_TMP[@]}" = "0" ]] || { \
+		$(BATS_VARS) $(BATS) $(BATS_FLAGS) $${BATS_FILES_TMP[@]}; \
+	}
+# END # extra/test.bats.inc.mk
+
+# BEGIN # extra/test.pytest.inc.mk
+PYTEST ?= $(call which,PYTEST,pytest)
+ifeq (PYTEST_NOT_FOUND,$(PYTEST))
+export PYTEST_VSN ?= >=9.0.0,<10.0.0
+PYTEST = $(UV) run pytest
+else
+$(call make-lazy-once,PYTEST)
+endif
+
+PYTEST_FLAGS += \
+
+PYTEST_FILES += \
+	$(PYTEST_FILES_EXT) \
+
+PYTEST_FILES_EXT = $(shell $(GIT_LS) | $(GREP) -e "test_.*\.py$$" -e "_test\.py$$" | $(NOSYM))
+
+PYTEST_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/pytest
+debug/pytest:
+	$(ECHO)
+	$(ECHO_DO) "Debug pytest..."
+	$(ECHO) "PYTEST=$(PYTEST)"
+	$(ECHO) "PYTEST_FILES=$(PYTEST_FILES)"
+	$(ECHO) "PYTEST_FILES_EXT=$(PYTEST_FILES_EXT)"
+	$(ECHO) "PYTEST_FILES_FILTER_OUT=$(PYTEST_FILES_FILTER_OUT)"
+	$(ECHO) "PYTEST_FLAGS=$(PYTEST_FLAGS)"
+	set -x && $(PYTEST) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: test/pytest
+test/pytest:
+	PYTEST_FILES_TMP=($(filter-out $(PYTEST_FILES_FILTER_OUT), $(PYTEST_FILES))); \
+	[[ "$${#PYTEST_FILES_TMP[@]}" = "0" ]] || { \
+		$(PYTEST) $(PYTEST_FLAGS) $${PYTEST_FILES_TMP[@]}; \
+	}
+# END # extra/test.pytest.inc.mk
+
+# BEGIN # extra/misc.docker.inc.mk
+DOCKER = $(call which,DOCKER,docker)
+# NOTE The legacy builder is deprecated and will be removed in a future release.
+export DOCKER_BUILDKIT=1
+ifneq (,$(CI))
+export BUILDKIT_PROGRESS=plain
+endif
+
+DOCKER_REGISTRY ?= docker.io
+
+DOCKER_IMAGE_NAME ?= $(shell basename $(GIT_REMOTE_ORIGIN_SLUG))
+DOCKER_IMAGE_SLUG ?= $(GIT_REMOTE_ORIGIN_SLUG)/$(DOCKER_IMAGE_NAME)
+DOCKER_IMAGE ?= $(DOCKER_REGISTRY)/$(DOCKER_IMAGE_SLUG)
+
+DOCKER_ARCH ?= $(ARCH_NORMALIZED)
+DOCKER_BUILD_PLATFORM ?= linux/amd64
+DOCKER_BUILD_PLATFORM_CSV = $(subst $(space),$(,),$(strip $(DOCKER_BUILD_PLATFORM)))
+DOCKER_BUILD_ARGS += \
+	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_CREATED=$(shell $(DATE) -u +"%Y-%m-%dT%H:%M:%SZ") \
+	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_REVISION=$(GIT_HASH) \
+	--build-arg LABEL_ORG_OPENCONTAINERS_IMAGE_SOURCE=$(GIT_REMOTE_ORIGIN_URL)
+DOCKER_BUILD_ARGS_TAGS := \
+	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE) \
+	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR) \
+	--tag $(DOCKER_IMAGE):$(GIT_DESCRIBE_MAJOR_MINOR) \
+	--tag $(DOCKER_IMAGE):latest
+DOCKER_BUILD_CONTEXT ?= $(GIT) archive --format=tar HEAD
+
+DOCKER_BUILD_LOCAL_ARGS += \
+	$(DOCKER_BUILD_ARGS) \
+	--platform linux/$(DOCKER_ARCH) \
+	--tag $(DOCKER_IMAGE):local \
+	--progress=plain
+
+DOCKER_BUILDX_NAME ?= $(DOCKER_IMAGE_NAME)-buildx
+DOCKER_BUILDX = $(DOCKER) buildx --builder "$(DOCKER_BUILDX_NAME)"
+DOCKER_BUILDX_ARGS += \
+	$(DOCKER_BUILD_ARGS) \
+	--platform $(DOCKER_BUILD_PLATFORM_CSV)
+
+# ------------------------------------------------------------------------------
+
+$(HOME)/.docker/config.json:
+	$(MKDIR) -p $(HOME)/.docker
+	$(TOUCH) $(HOME)/.docker/config.json
+
+
+Dockerfile:
+	$(CP) --no-clobber $(SANE_MK_ROOT)/Dockerfile* $(MAKE_PATH)/
+
+
+.PHONY: docker/running
+docker/running:
+	$(DOCKER) info --format '{{.ID}}' &> /dev/null || { \
+		$(ECHO_ERR) "Docker is not running."; \
+		exit 1; \
+	}
+
+
+.PHONY: docker/buildx
+docker/buildx:
+	$(DOCKER) buildx version >/dev/null 2>&1 || { \
+		$(ECHO_ERR) "Docker buildx is not installed."; \
+		exit 1; \
+	}
+	$(DOCKER) buildx inspect "$(DOCKER_BUILDX_NAME)" >/dev/null 2>&1 || \
+		$(DOCKER) buildx create \
+			--driver docker-container \
+			--name "$(DOCKER_BUILDX_NAME)" \
+			--platform $(DOCKER_BUILD_PLATFORM_CSV)
+	$(DOCKER) run --privileged --rm tonistiigi/binfmt --install all >/dev/null
+	for PLATFORM in $(DOCKER_BUILD_PLATFORM); do \
+		$(DOCKER_BUILDX) inspect --bootstrap \
+			| $(GREP) "Platforms:" \
+			| $(SED) "s/$$/,/" \
+			| $(GREP) -q '[ ,]'$${PLATFORM}'\*\?,' || { \
+				$(ECHO_ERR) "Docker buildx builder $(DOCKER_BUILDX_NAME) does not support $${PLATFORM}."; \
+			exit 1; \
+		}; \
+	done
+
+
+.PHONY: docker/login
+docker/login: docker/running
+docker/login: $(HOME)/.docker/config.json
+docker/login: ## Login to the docker registry.
+ifneq (,$(CI))
+	$(ECHO) "$(DOCKER_PASSWORD)" | $(DOCKER) login -u "$(DOCKER_USERNAME)" --password-stdin "$(DOCKER_REGISTRY)"
+else
+	$(DOCKER) login $(DOCKER_REGISTRY)
+endif
+
+
+.PHONY: docker/pull
+docker/pull: docker/login
+docker/pull: Dockerfile
+docker/pull: ## Pull associated docker image as local.
+	$(DOCKER) pull $(DOCKER_IMAGE):v$(PKG_VSN)
+	$(DOCKER) tag $(DOCKER_IMAGE):v$(PKG_VSN)	$(DOCKER_IMAGE):local
+
+
+.PHONY: docker/push
+docker/push: docker/login
+docker/push: docker/buildx
+docker/push: Dockerfile
+docker/push: ## Build and push local docker image.
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER_BUILDX) build - \
+			$(DOCKER_BUILDX_ARGS) \
+			$(DOCKER_BUILD_ARGS_TAGS) \
+			--push
+
+
+.PHONY: docker/shell
+docker/shell: docker/login
+docker/shell: Dockerfile
+docker/shell: ## Run a shell in the local docker image.
+	$(DOCKER) run --pull=never --rm -it \
+		--platform linux/$(DOCKER_ARCH) \
+		--privileged \
+		--network=host \
+		--ipc=host \
+		--volume "$(PWD):$(PWD):rw" \
+		--workdir "$(PWD)" \
+		$(DOCKER_IMAGE):local
+
+
+.PHONY: docker/build
+docker/build: docker/login
+docker/build: docker/buildx
+docker/build: Dockerfile
+docker/build: ## Build docker image.
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER_BUILDX) build - \
+			$(DOCKER_BUILDX_ARGS)
+
+
+.PHONY: docker/build/local
+docker/build/local: docker/login
+docker/build/local: Dockerfile
+docker/build/local: ## Build local docker image - fast, single platform.
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER) build - \
+			$(DOCKER_BUILD_LOCAL_ARGS)
+
+
+.PHONY: docker/build/local/debug
+docker/build/local/debug: docker/login
+docker/build/local/debug: docker/buildx
+docker/build/local/debug: Dockerfile
+docker/build/local/debug: ## Build and debug local docker image - fast, single platform.
+	export BUILDX_EXPERIMENTAL=1; \
+	$(DOCKER_BUILD_CONTEXT) \
+		| $(DOCKER) buildx debug --on error --invoke /bin/bash build - \
+			$(DOCKER_BUILD_LOCAL_ARGS)
+
+
+# ------------------------------------------------------------------------------
+
+.PHONY: docker/images
+docker/images: docker/running
+docker/images: ## List images related to $DOCKER_IMAGE.
+	$(DOCKER) image ls --filter "reference=$(DOCKER_IMAGE_SLUG):*"
+
+
+.PHONY: docker/images/inspect
+docker/images/inspect: docker/running
+docker/images/inspect: ## Inspect the most recent image related to $DOCKER_IMAGE:local.
+	$(DOCKER) image inspect $(DOCKER_IMAGE):local
+
+
+.PHONY: docker/images/prune
+docker/images/prune: docker/running
+docker/images/prune: ## Remove images related to $DOCKER_IMAGE.
+	IMAGES=$$($(DOCKER) image ls -q --filter "reference=$(DOCKER_IMAGE_SLUG):*"); \
+	[[ -z "$${IMAGES}" ]] || for IMAGE in $${IMAGES}; do \
+		$(DOCKER) image rm "$${IMAGE}" 2>/dev/null || $(ECHO) "Could not remove image $${IMAGE}"; \
+	done
+
+
+.PHONY: docker/containers
+docker/containers: docker/running
+docker/containers: ## List containers related to $DOCKER_IMAGE.
+	$(DOCKER) container ls --all | $(HEAD) -n 1
+	$(DOCKER) container ls --all \
+		--format '{{.ID}}\t{{.Image}}' \
+		| $(AWK) -F '\t' 'index($$2, "$(DOCKER_IMAGE_SLUG):") == 1 { print $$1 }' \
+		| while IFS= read -r CONTAINER; do \
+			$(DOCKER) container ls --all --filter "id=$${CONTAINER}" | $(TAIL) -n +2; \
+		done
+
+
+.PHONY: docker/containers/logs
+docker/containers/logs: docker/running
+docker/containers/logs: ## Show logs for the most recent container related to $DOCKER_IMAGE:local.
+	CONTAINER=$$($(DOCKER) container ls --all \
+		--format '{{.ID}}\t{{.Image}}' \
+		| $(AWK) -F '\t' 'index($$2, "$(DOCKER_IMAGE_SLUG):local") == 1 { print $$1; exit }'); \
+	if [ -z "$${CONTAINER}" ]; then \
+		$(ECHO_ERR) "No containers related to $(DOCKER_IMAGE_SLUG):local found."; \
+		exit 1; \
+	fi; \
+	$(DOCKER) container logs $${CONTAINER}
+
+
+.PHONY: docker/containers/prune
+docker/containers/prune: docker/running
+docker/containers/prune: ## Remove containers related to $DOCKER_IMAGE.
+	CONTAINERS=$$($(DOCKER) container ls --all \
+		--format '{{.ID}}\t{{.Image}}' \
+		| $(AWK) -F '\t' 'index($$2, "$(DOCKER_IMAGE_SLUG):") == 1 { print $$1 }'); \
+	[ -z "$${CONTAINERS}" ] || for C in $${CONTAINERS}; do \
+		$(DOCKER) container rm "$${C}" 2>/dev/null || $(ECHO) "Could not remove container $${C}"; \
+	done
+# END # extra/misc.docker.inc.mk
+
+# BEGIN # extra/misc.scc.inc.mk
+SCC ?= $(call which,SCC,scc)
+$(call make-lazy,SCC)
+
+SCC_FLAGS += \
+	--ci \
+	--wide \
+
+SCC_FILES += \
+	$(SCC_FILES_EXT) \
+
+SCC_FILES_EXT = $(shell $(GIT_LS) | $(NOSYM))
+
+SCC_FILES_FILTER_OUT += \
+	$(DEFAULT_FILES_FILTER_OUT) \
+
+# ------------------------------------------------------------------------------
+
+.PHONY: debug/scc
+debug/scc:
+	$(ECHO)
+	$(ECHO_DO) "Debug SCC..."
+	$(ECHO) "SCC=$(SCC)"
+	$(ECHO) "SCC_FILES=$(SCC_FILES)"
+	$(ECHO) "SCC_FILES_EXT=$(SCC_FILES_EXT)"
+	$(ECHO) "SCC_FILES_FILTER_OUT=$(SCC_FILES_FILTER_OUT)"
+	$(ECHO) "SCC_FLAGS=$(SCC_FLAGS)"
+	set -x && $(SCC) --version || true
+	$(ECHO_DONE)
+
+
+.PHONY: scc
+scc:
+	SCC_FILES_TMP=($(filter-out $(SCC_FILES_FILTER_OUT), $(SCC_FILES))); \
+	[[ "$${#SCC_FILES_TMP[@]}" = "0" ]] || { \
+		$(SCC) $(SCC_FLAGS) $${SCC_FILES_TMP[@]}; \
+	}
+# END # extra/misc.scc.inc.mk
 
 # BEGIN # misc.lazy.inc.mk
 MAKEFILE_LAZY ?= true

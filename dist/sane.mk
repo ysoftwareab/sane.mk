@@ -70,7 +70,7 @@ MAKEFLAGS += $(MAKEFLAG_MAYBE_PRINT_DIRECTORY)
 endif
 
 ifeq (--print-directory,$(MAKEFLAG_MAYBE_PRINT_DIRECTORY))
-$(info make: Running goals '$(MAKECMDGOALS)')
+$(info make: Running goals      '$(MAKECMDGOALS)')
 endif
 
 ifneq (,$(filter undefine,$(.FEATURES)))
@@ -141,6 +141,10 @@ MAKE_SELF_PATH = $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 MAKE_SELF_PATH_BASENAME = $(shell basename "$(MAKE_SELF_PATH)")
 MAKE_SELF_REALPATH = $(patsubst %/,%,$(dir $(realpath "$(MAKE_SELF_PATH)/$(MAKE_SELF_FILENAME)")))
 
+# NOTE can't use $(PYTHON)
+SANE_MK_ROOT_REL = $(shell \
+	python3 -c "import os.path; print('%s' % os.path.relpath('$(SANE_MK_ROOT)', '$(MAKE_PATH)'))")
+
 # NOTE can't use $(GIT) and $(ECHO)
 TOP ?= $(shell git rev-parse --show-toplevel 2>/dev/null || echo $(MAKE_PATH))
 TOP_BASENAME = $(shell basename "$(TOP)")
@@ -169,6 +173,17 @@ endif
 
 IS_DECRYPTED ?= false
 export TMPDIR ?= /tmp
-export USER ?= $(shell $(ID) -un)
+export USER ?= $(shell id -un)
+
+# disable telemetry
+export DO_NOT_TRACK ?= 1
+export DISABLE_TELEMETRY ?=1
+export HOMEBREW_NO_ANALYTICS ?= 1
+
+# disable updates
+export CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK ?= 1
+export GH_NO_UPDATE_NOTIFIER ?= 1
+export HOMEBREW_NO_AUTO_UPDATE ?= 1
+export HOMEBREW_NO_INSTALL_UPGRADE ?= 1
 
 endif

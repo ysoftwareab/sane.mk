@@ -35,10 +35,10 @@ PRINTVARS_VARIABLES_IGNORE += which
 # ECHO2 can be used for e.g. pointing to
 # an executable that outputs teamcity messages
 
-ECHO2 ?= $(ECHO)
+ECHO2 ?= $(ECHO) $$($(DATE) "+%H:%M:%S")
 ECHO_DO = $(ECHO2) -- "[DO  ]"
 ECHO_DONE = $(ECHO2) -- "[DONE]"
-ECHO_INDENT = $(ECHO2) -- "      "
+ECHO_INDENT = $(ECHO) -n "$$($(DATE) "+%H:%M:%S") -- [XXXX] " | $(SED) "s/./ /g" && $(ECHO)
 ECHO_NEXT = $(ECHO2) -- "[NEXT]"
 ECHO_Q = $(ECHO2) -- "[Q   ]"
 ECHO_SKIP = $(ECHO2) -- "[SKIP]"
@@ -162,7 +162,6 @@ YES = $(call which,YES,gyes yes)
 CP = $(call which,CP,gcp cp) -v -Rp
 LN = $(call which,LN,gln ln) -v -fn
 MKDIR = $(call which,MKDIR,gmkdir mkdir) -v -p
-MKTEMP = $(call which,MKTEMP,gmktemp mktemp)
 MV = $(call which,MV,gmv mv) -v -f
 PARALLEL = $(call which,PARALLEL,gparallel parallel) --will-cite
 RM = $(call which,RM,grm rm) -v -rf
@@ -297,6 +296,7 @@ endif
 endif
 
 # python
+export PYTHONUNBUFFERED ?= 1
 PYTHON = $(call which,PYTHON,python)
 PYTHON3 = $(call which,PYTHON3,python3)
 $(foreach VAR,PYTHON PYTHON3,$(call make-lazy,$(VAR)))
@@ -311,13 +311,12 @@ $(foreach VAR,UNZIP UNZIP_Z1 ZIP_NOSYM ZIP ZIPINFO,$(call make-lazy,$(VAR)))
 
 # zz
 BREW = $(call which,BREW,brew)
-DOT = $(call which,DOT,dot)
 GCLOUD = $(call which,GCLOUD,gcloud)
 GH = $(call which,GH,gh)
 OPENSSL3 = $(shell $(BREW) --prefix openssl@3)/bin/openssl
 STRIP_ANSI = $(SED) "s/$(shell $(PRINTF) '\033')\[[0-9;?]*[a-zA-Z]//g"
 STRIP_JSON_COMMENTS = $(NPX) --yes strip-json-comments-cli@v3.0.0
-$(foreach VAR,BREW DOT GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
+$(foreach VAR,BREW GCLOUD GH OPENSSL3,$(call make-lazy,$(VAR)))
 # END # exe.misc.inc.mk
 
 # BEGIN # misc.chars.inc.mk
@@ -406,7 +405,7 @@ GIT_REMOTE_URL = $(shell $(GIT) config remote.$(GIT_REMOTE).url 2>/dev/null)
 GIT_REMOTE_SLUG = $(shell test -n $(GIT_REMOTE_URL); GIT_REMOTE_URL=$(GIT_REMOTE_URL); basename $$(dirname "$${GIT_REMOTE_URL//://}"))/$(shell basename "$(GIT_REMOTE_URL)" .git)
 
 GIT_REMOTE_ORIGIN_URL ?= $(shell $(GIT) config remote.$(GIT_REMOTE_ORIGIN).url 2>/dev/null)
-GIT_REMOTE_ORIGIN_URL_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
+GIT_REMOTE_ORIGIN_SLUG ?= $(shell test -n $(GIT_REMOTE_ORIGIN_URL); GIT_REMOTE_ORIGIN_URL=$(GIT_REMOTE_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_ORIGIN_URL)" .git)
 
 GIT_REMOTE_OR_ORIGIN_URL = $(shell $(GIT) config remote.$(GIT_REMOTE_OR_ORIGIN).url 2>/dev/null)
 GIT_REMOTE_OR_ORIGIN_SLUG = $(shell test -n $(GIT_REMOTE_OR_ORIGIN_URL); GIT_REMOTE_OR_ORIGIN_URL=$(GIT_REMOTE_OR_ORIGIN_URL); basename $$(dirname "$${GIT_REMOTE_OR_ORIGIN_URL//://}"))/$(shell basename "$(GIT_REMOTE_OR_ORIGIN_URL)" .git)
@@ -429,6 +428,19 @@ GIT_TRACKED := false
 ifeq (truefalse,$(GIT_INSIDE_WORK_TREE)$(GIT_CHECK_IGNORE))
 GIT_TRACKED := true
 endif
+
+# editorconfig-checker-disable max_line_length
+# NOTE cannot use # editorconfig-checker-disable-line because it might add faux whitespace
+# Convert common git remote forms to git@host:org/repo.git.
+git_url_to_ssh = $(if $(strip $(1)),$(call git_url_to_ssh/_from,$(strip $(1))),:)
+git_url_to_ssh/_from = $(if $(findstring ://,$(1)),$(call git_url_to_ssh/_scheme,$(1)),$(call git_url_to_ssh/_scp,$(1)))
+git_url_to_ssh/_scheme = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(call git_url_to_ssh/_scheme_rest,$(1))),$(call git_url_to_ssh/_path,$(call git_url_to_ssh/_scheme_rest,$(1))))
+git_url_to_ssh/_scp = $(call git_url_to_ssh/_build,$(call git_url_to_ssh/_host,$(subst :,/,$(1))),$(call git_url_to_ssh/_path,$(subst :,/,$(1))))
+git_url_to_ssh/_scheme_rest = $(patsubst https://%,%,$(patsubst http://%,%,$(patsubst ssh://%,%,$(patsubst git://%,%,$(1)))))
+git_url_to_ssh/_host = $(lastword $(subst @, ,$(firstword $(subst /, ,$(1)))))
+git_url_to_ssh/_path = $(patsubst %.git,%,$(patsubst %/,%,$(patsubst $(firstword $(subst /, ,$(1)))/%,%,$(1))))
+git_url_to_ssh/_build = git@$(1):$(2).git
+# editorconfig-checker-enable max_line_length
 
 # ------------------------------------------------------------------------------
 
@@ -746,9 +758,11 @@ $(PRINTVARS_MAKEFILE_ORIGINS_TARGETS):
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
 			$(info $V=$($V)$(\n)$(space) origin = $(origin $V)$(\n)$(space) flavor = $(flavor $V)$(\n)$(space) value = $(value  $V)))) # editorconfig-checker-disable-line
+			,:) # editorconfig-checker-disable-line
 	@$(foreach V, $(sort $(filter $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter $(@:printvars/%=%), $(origin $V)), \
-			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.)))
+			$(info $V was skipped based on PRINTVARS_VARIABLES_IGNORE.), \
+			:))
 
 
 .PHONY: printvars/lazy
@@ -766,7 +780,8 @@ printvar/%:
 printenv: ## Print all Makefile variables (printenv style). Use printenv/<var> for only one.
 	@$(foreach V, $(sort $(filter-out $(PRINTVARS_VARIABLES_IGNORE),$(.VARIABLES))), \
 		$(if $(filter file, $(origin $V)), \
-			$(info $V=$($V))))
+			$(info $V=$($V)), \
+			:))
 
 
 .PHONY: printenv/%
@@ -775,28 +790,33 @@ printenv/%:
 # END # target.printvar.inc.mk
 
 # BEGIN # target.shell.inc.mk
+SHELL_ENV ?=
+SHELL_NOTICE ?=
+
 # ------------------------------------------------------------------------------
 
 .PHONY: bash
 bash: ## Start a bash shell with make's environment.
 	$(ECHO_INFO) "Starting a bash shell with make's environment..."
-	$(ENV) bash
+	$(SHELL_BASH_NOTICE)
+	$(ENV) $(SHELL_ENV) bash
 
 
 .PHONY: bash/%
 bash/%:
-	$(ENV) bash -c "$*"
+	$(ENV) $(SHELL_ENV) bash -c "$*"
 
 
 .PHONY: shell
 shell: ## Start a shell with make's environment.
 	$(ECHO_INFO) "Starting a shell with make's environment..."
-	$(SHELL_BAK)
+	$(SHELL_NOTICE)
+	$(ENV) $(SHELL_ENV) $(SHELL_BAK)
 
 
 .PHONY: shell/%
 shell/%:
-	$(SHELL_BAK) -c "$*"
+	$(ENV) $(SHELL_ENV) $(SHELL_BAK) -c "$*"
 # END # target.shell.inc.mk
 
 # BEGIN # target.std.inc.mk
@@ -805,7 +825,6 @@ SANE_CHECK ?= noop
 SANE_CI ?= noop
 SANE_CLEAN ?= noop
 SANE_DEBUG ?= noop
-SANE_DEPS ?= noop
 SANE_DEPS_FILES ?= noop
 SANE_DEPS_FOLDERS ?= noop
 SANE_DEPS_GITIGNORE ?= noop
@@ -815,15 +834,16 @@ SANE_SYSTEM ?= noop
 SANE_TEST ?= noop
 
 SANE_ALL_DEFAULT := deps check build
-SANE_ALL ?= $(SANE_ALL_DEFAULT)
+SANE_ALL ?= noop $(SANE_ALL_DEFAULT)
 
 SANE_CI_DEFAULT := all test
-SANE_CI ?= $(SANE_CI_DEFAULT)
+SANE_CI ?= noop $(SANE_CI_DEFAULT)
 
 SANE_DEPS_DEFAULT := deps/folders deps/files
 ifeq ($(MAKE_PATH),$(GIT_ROOT))
 SANE_DEPS_DEFAULT += deps/gitignore
 endif
+SANE_DEPS ?= noop $(SANE_DEPS_DEFAULT)
 
 # NOTE use *.generated.* to mark generated files
 GENERATED_FILES_FILTER_OUT = \
