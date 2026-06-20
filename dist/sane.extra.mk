@@ -1495,11 +1495,13 @@ export NBSTRIPOUT_VSN ?= >=0.9.0,<0.10
 
 # ------------------------------------------------------------------------------
 
+.PHONY: $(GIT_COMMON_DIR)/info/attributes
 $(GIT_COMMON_DIR)/info/attributes: $(SANE_MK_ROOT)/gitconfig/dot.gitattributes_global
 	$(MKDIR) $(dir $@)
 	$(LN) -s $< $@
 
 
+.PHONY: $(GIT_COMMON_DIR)/info/exclude
 $(GIT_COMMON_DIR)/info/exclude: $(SANE_MK_ROOT)/gitconfig/dot.gitignore_global
 	$(MKDIR) $(dir $@)
 	$(LN) -s $< $@
