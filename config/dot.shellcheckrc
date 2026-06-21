@@ -17,10 +17,14 @@ disable=SC2002
 # SC2004: $/${} is unnecessary on arithmetic variables.
 disable=SC2004
 
+# SC2112: 'function' keyword is non-standard. Delete it.
+disable=SC2112
+
 # SC2129: Consider using { cmd1; cmd2; } >> file instead of individual redirects.
 disable=SC2129
 
 # SC2155: Declare and assign separately to avoid masking return values.
+# NOTE possibly enforce this
 disable=SC2155
 
 # SC2164: Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
@@ -29,6 +33,3 @@ disable=SC2164
 # SC2317: Command appears to be unreachable. Check usage (or ignore if invoked indirectly).
 # false positives https://github.com/koalaman/shellcheck/issues?q=is%3Aissue+sort%3Aupdated-desc+SC2317
 disable=SC2317
-
-# SC2329: This function is never invoked. Check usage (or ignored if invoked indirectly).
-disable=SC2329
