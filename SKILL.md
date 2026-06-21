@@ -3,12 +3,17 @@ name: sane-mk
 description: |
   Understands and extends the sane.mk GNU Make framework
   for shared deps, check, build, test, dist, debug, and system workflows.
+  Detect a sane.mk repo by `include $(SANE_MK_ROOT)/...` in the Makefile or a
+  generated `Makefile.lazy` with `SANE_*` variables.
   Use when:
     * editing this repo
     * adding Make targets/includes
     * wiring behavior through `SANE_*` variables
     * adopting sane.mk in another project
     * debugging why a target is not reachable
+    * validating, linting, formatting, or testing in a sane.mk repo
+      (the entrypoint is `make check` / `make test`, never direct tool calls)
+    * editing any non-Make file in a sane.mk repo when you need to validate it
 ---
 
 # sane.mk
@@ -19,6 +24,20 @@ description: |
 * Extend behavior by appending leaf targets to `SANE_*` variables such as
   `SANE_DEPS`, `SANE_CHECK`, `SANE_TEST`, and `SANE_SYSTEM`.
 * Keep top-level verbs declarative; put real work in `deps/*`, `check/*`, `test/*`, `system/*`, `debug/*`.
+
+## Validation entrypoints
+
+In a sane.mk repo, NEVER invoke linters/formatters/test runners directly
+(e.g. `markdownlint`, `ruff`, `yamllint`, `shellcheck`, `pytest`). Always use:
+
+* `make check` — lint, format, static analysis, secret scanning
+* `make test` — tests
+* `make all` — build
+* `make clean` — clean generated files
+
+`Makefile.lazy` resolves tool paths and the repo's config files (e.g.
+`.markdownlintrc`, `.ruff.toml`) are wired into these targets. Direct
+invocation bypasses that wiring and runs a strict subset of the checks.
 
 ## Repo rules
 
