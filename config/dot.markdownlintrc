@@ -7,7 +7,8 @@
     "style": "asterisk"
   },
   "MD013": {
-    "line_length": 120
+    "line_length": 120,
+    "severity": "warning"
   },
   "MD024": {
     "siblings_only": true
