@@ -213,12 +213,11 @@ $(filter-out versions.$(TF_EXT),$(TF_FILES)):
 
 versions.$(TF_EXT):
 	$(TOUCH) $@
-	$(GREP) -q "required_version" $@ 2>/dev/null || \
-		$(CAT) > $@ <<'EOF'
-terraform {
-  required_version = ">= 1.6"
-}
-EOF
+	if ! $(GREP) -q "required_version" $@ 2>/dev/null; then \
+		$(ECHO) 'terraform {' > $@; \
+		$(ECHO) '  required_version = ">= 1.6"' >> $@; \
+		$(ECHO) '}' >> $@; \
+	fi
 
 
 $(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
