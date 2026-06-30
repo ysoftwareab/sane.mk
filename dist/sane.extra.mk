@@ -1403,8 +1403,8 @@ $(call make-lazy,COREPACK)
 endif
 
 DEFAULT_FILES_FILTER_OUT += \
-	$(shell $(GIT_LS) | $(GREP) -e "package-lock\.json$$" | $(NOSYM)) \
-	$(shell $(GIT_LS) | $(GREP) -e "pnpm-lock\.yaml$$" | $(NOSYM)) \
+	$(shell $(GIT_LS) | $(GREP) -e "package-lock\.json$$") \
+	$(shell $(GIT_LS) | $(GREP) -e "pnpm-lock\.yaml$$") \
 
 # ------------------------------------------------------------------------------
 
@@ -1495,13 +1495,11 @@ export NBSTRIPOUT_VSN ?= >=0.9.0,<0.10
 
 # ------------------------------------------------------------------------------
 
-.PHONY: $(GIT_COMMON_DIR)/info/attributes
 $(GIT_COMMON_DIR)/info/attributes: $(SANE_MK_ROOT)/gitconfig/dot.gitattributes_global
 	$(MKDIR) $(dir $@)
 	$(LN) -s $< $@
 
 
-.PHONY: $(GIT_COMMON_DIR)/info/exclude
 $(GIT_COMMON_DIR)/info/exclude: $(SANE_MK_ROOT)/gitconfig/dot.gitignore_global
 	$(MKDIR) $(dir $@)
 	$(LN) -s $< $@
@@ -1525,7 +1523,7 @@ UVX ?= $(call which,UVX,uvx)
 $(foreach VAR,UV UVX,$(call make-lazy,$(VAR)))
 
 DEFAULT_FILES_FILTER_OUT += \
-	$(shell $(GIT_LS) | $(GREP) -e "uv\.lock$$" | $(NOSYM)) \
+	$(shell $(GIT_LS) | $(GREP) -e "uv\.lock$$") \
 
 # ------------------------------------------------------------------------------
 
