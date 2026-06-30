@@ -7,8 +7,12 @@
     "style": "asterisk"
   },
   "MD013": {
+    "code_blocks": false,
+    "headings": false,
     "line_length": 120,
-    "severity": "warning"
+    "severity": "warning",
+    "stern": true,
+    "tables": false
   },
   "MD024": {
     "siblings_only": true
@@ -29,5 +33,6 @@
   },
   "MD050": {
     "style": "asterisk"
-  }
+  },
+  "MD060": false
 }
