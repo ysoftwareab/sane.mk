@@ -207,8 +207,18 @@ TRIVY_FLAGS += \
 	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 
-$(TF_FILES):
+$(filter-out versions.$(TF_EXT),$(TF_FILES)):
 	$(TOUCH) $@
+
+
+versions.$(TF_EXT):
+	$(TOUCH) $@
+	$(GREP) -q "required_version" $@ 2>/dev/null || \
+		$(CAT) > $@ <<'EOF'
+terraform {
+  required_version = ">= 1.6"
+}
+EOF
 
 
 $(TF_BACKEND_STATE_FILE): $(wildcard *.tf)
