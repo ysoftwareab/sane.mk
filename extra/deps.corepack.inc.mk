@@ -7,8 +7,8 @@ $(call make-lazy,COREPACK)
 endif
 
 DEFAULT_FILES_FILTER_OUT += \
-	$(shell $(GIT_LS) | $(GREP) -e "package-lock\.json$$" | $(NOSYM)) \
-	$(shell $(GIT_LS) | $(GREP) -e "pnpm-lock\.yaml$$" | $(NOSYM)) \
+	$(shell $(GIT_LS) | $(GREP) -e "package-lock\.json$$") \
+	$(shell $(GIT_LS) | $(GREP) -e "pnpm-lock\.yaml$$") \
 
 # ------------------------------------------------------------------------------
 

@@ -72,6 +72,10 @@ SANE_DEPS += \
 	deps/corepack \
 	deps/uv \
 
+SANE_DEPS_UPGRADE += \
+	deps/upgrade/corepack \
+	deps/upgrade/uv \
+
 SANE_CHECK_LINTERS_CORE += \
 	check/editorconfig-checker \
 	check/markdownlint \
