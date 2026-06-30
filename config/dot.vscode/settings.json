@@ -1,7 +1,5 @@
 {
   "autoDocstring.docstringFormat": "google",
-  "autoHide.autoHideAuxiliaryBar": false,
-  "autoHide.hideOnOpen": true,
   "bashIde.shfmt.binaryNextLine": true,
   "bashIde.shfmt.caseIndent": true,
   "comments.openView": "never",
