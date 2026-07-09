@@ -10,6 +10,9 @@ max_line_length = 120
 tab_width = 2
 trim_trailing_whitespace = true
 
+[*.bash]
+indent_size = 4
+
 [*.bats]
 indent_size = 4
 
