@@ -5,6 +5,7 @@ DEFAULT_FILES_FILTER_OUT += \
 	$(wildcard bin/transcrypt@*/transcrypt) \
 	gitconfig/dot.gitattributes_global \
 	gitconfig/dot.gitignore_global \
+	$(wildcard dist/*) \
 
 JSCPD_FILES_FILTER_OUT += \
 	template/sane.extra.mk.tpl \
