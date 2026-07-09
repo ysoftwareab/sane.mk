@@ -53,7 +53,7 @@ check/markdownlint:
 				|| [[ -e .markdownlint.yaml ]] \
 				|| [[ -e .markdownlint.yml ]] \
 				|| [[ -e .markdownlintrc ]] \
-				|| $(MAKE_DASH_F) .markdownlintrc; \
+				|| $(MAKE_DASH_F) .markdownlint.jsonc; \
 		}; \
 		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $${MARKDOWNLINT_FILES_TMP[@]} || { \
 			$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $${MARKDOWNLINT_FILES_TMP[@]}; \

@@ -1,19 +1,19 @@
 {
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json",
   "default": true,
-  "MD003": {
+  "MD003": { // heading-style
     "style": "atx"
   },
-  "MD004": {
+  "MD004": { // ul-style
     "style": "asterisk"
   },
-  "MD007": {
+  "MD007": { // ul-indent
     "indent": 4
   },
-  "MD009": {
+  "MD009": { // no-trailing-spaces
     "br_spaces": 0
   },
-  "MD013": {
+  "MD013": { // line-length
     "code_block_line_length": 120,
     "code_blocks": false,
     "heading_line_length": 120,
@@ -23,31 +23,31 @@
     "stern": true,
     "tables": false
   },
-  "MD024": {
+  "MD024": { // no-duplicate-heading
     "siblings_only": true
   },
-  "MD030": {
+  "MD030": { // list-marker-space
     "ol_multi": 2,
     "ol_single": 2,
     "ul_multi": 3,
     "ul_single": 3
   },
-  "MD033": false,
-  "MD034": false,
-  "MD035": {
+  "MD033": false, // no-inline-html
+  "MD034": false, // no-bare-urls
+  "MD035": { // hr-style
     "style": "---"
   },
-  "MD046": {
+  "MD046": { // code-block-style
     "style": "fenced"
   },
-  "MD048": {
+  "MD048": { // code-fence-style
     "style": "backtick"
   },
-  "MD049": {
+  "MD049": { // emphasis-style
     "style": "asterisk"
   },
-  "MD050": {
+  "MD050": { // strong-style
     "style": "asterisk"
   },
-  "MD060": false
+  "MD060": false // table-column-style
 }

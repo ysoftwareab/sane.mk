@@ -133,7 +133,7 @@ SANE_DEPS_FILES += \
 	.mailmap \
 
 ifeq (,$(wildcard .markdownlint.json .markdownlint.jsonc .markdownlint.yaml .markdownlint.yml .markdownlintrc))
-SANE_DEPS_FILES += .markdownlintrc
+SANE_DEPS_FILES += .markdownlint.jsonc
 endif
 
 ifeq (,$(wildcard .ruff.toml ruff.toml))
@@ -186,7 +186,7 @@ endif
 	$(TOUCH) $@
 
 
-.markdownlintrc:
+.markdownlint.jsonc:
 	$(LN) -s $(SANE_MK_ROOT_REL)/config/dot$@ $@
 
 

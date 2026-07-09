@@ -36,7 +36,7 @@ In a sane.mk repo, NEVER invoke linters/formatters/test runners directly
 *   `make clean` — clean generated files
 
 `Makefile.lazy` resolves tool paths and the repo's config files (e.g.
-`.markdownlintrc`, `.ruff.toml`) are wired into these targets. Direct
+`.markdownlint.jsonc`, `.ruff.toml`) are wired into these targets. Direct
 invocation bypasses that wiring and runs a strict subset of the checks.
 
 ## Repo rules
