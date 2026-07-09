@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json",
   "default": true,
   "MD003": {
     "style": "atx"
@@ -9,8 +10,13 @@
   "MD007": {
     "indent": 4
   },
+  "MD009": {
+    "br_spaces": 0
+  },
   "MD013": {
+    "code_block_line_length": 120,
     "code_blocks": false,
+    "heading_line_length": 120,
     "headings": false,
     "line_length": 120,
     "severity": "warning",
@@ -19,6 +25,12 @@
   },
   "MD024": {
     "siblings_only": true
+  },
+  "MD030": {
+    "ol_multi": 2,
+    "ol_single": 2,
+    "ul_multi": 3,
+    "ul_single": 3
   },
   "MD033": false,
   "MD034": false,
