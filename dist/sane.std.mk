@@ -822,7 +822,6 @@ shell/%:
 # BEGIN # target.std.inc.mk
 SANE_BUILD ?= noop
 SANE_CHECK ?= noop
-SANE_CI ?= noop
 SANE_CLEAN ?= noop
 SANE_DEBUG ?= noop
 SANE_DEPS_FILES ?= noop

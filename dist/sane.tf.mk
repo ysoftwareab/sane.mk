@@ -130,8 +130,8 @@ define tf-plan
 endef
 
 SANE_DEPS_TF += \
-	deps/tf-core \
 	deps/tenv \
+	deps/tf-core \
 	deps/tflint \
 
 SANE_DEPS_UPGRADE_TF += \
@@ -268,7 +268,6 @@ deps/tf:
 
 
 .PHONY: deps/upgrade/tf-core
-deps/upgrade/tf-core: $(TF_BACKEND_STATE_FILE)
 deps/upgrade/tf-core:
 	$(TERRAFORM) init -backend=false -upgrade
 	$(TERRAFORM) providers lock $(TF_PROVIDERS_LOCK_FLAGS)

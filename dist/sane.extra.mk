@@ -822,7 +822,6 @@ shell/%:
 # BEGIN # target.std.inc.mk
 SANE_BUILD ?= noop
 SANE_CHECK ?= noop
-SANE_CI ?= noop
 SANE_CLEAN ?= noop
 SANE_DEBUG ?= noop
 SANE_DEPS_FILES ?= noop
@@ -981,6 +980,144 @@ debug: ## Debug environment and software versions.
 verbose/%: ## Run a target with verbosity on (VERBOSE=1 or V=1).
 	@$(MAKE_DASH_F) V=1 $*
 # END # target.verbose.inc.mk
+
+# BEGIN # extra/misc.backlog.inc.mk
+BACKLOG ?= $(call which,BACKLOG,backlog)
+
+BACKLOG_AGENTS_MD ?= https://raw.githubusercontent.com/MrLesk/Backlog.md/main/src/guidelines/agent-guidelines.md
+BACKLOG_DIR ?= backlog
+
+# ------------------------------------------------------------------------------
+
+.PHONY: backlog/update-agents
+backlog/update-agents: ## Update Backlog.md AGENTS.md .
+	$(MKDIR) $(BACKLOG_DIR)
+	$(CURL) -o $(BACKLOG_DIR)/AGENTS.md $(BACKLOG_AGENTS_MD)
+
+
+.PHONY: backlog
+backlog: backlog/update-agents
+backlog: ## Initialize Backlog.md.
+	$(BACKLOG) init \
+		--defaults \
+		--agent-instructions none \
+		--backlog-dir $(BACKLOG_DIR) \
+		--integration-mode cli \
+		$(PKG_NAME)
+# END # extra/misc.backlog.inc.mk
+
+# BEGIN # extra/misc.gcp.inc.mk
+# CLOUDSDK_ACTIVE_CONFIG_NAME
+# CLOUDSDK_CORE_PROJECT
+GOOGLE_CLOUD_PROJECT_ID ?= $(shell $(GCLOUD) config get-value project 2>/dev/null)
+CLOUDSDK_CORE_ACCOUNT ?= $(shell $(GCLOUD) config get-value account 2>/dev/null)
+CLOUDSDK_QUOTA_PROJECT ?= $(CLOUDSDK_CORE_PROJECT)
+
+# ------------------------------------------------------------------------------
+
+.PHONY: deps/gcp/config
+deps/gcp/config:
+	$(GCLOUD) config configurations describe "$(CLOUDSDK_ACTIVE_CONFIG_NAME)" --format="get(name)" >/dev/null 2>&1 \
+		|| $(GCLOUD) config configurations create "$(CLOUDSDK_ACTIVE_CONFIG_NAME)" --no-activate --quiet >/dev/null
+	$(GCLOUD) config set project "$(CLOUDSDK_CORE_PROJECT)" --quiet >/dev/null
+	$(GCLOUD) config set billing/quota_project "$(CLOUDSDK_QUOTA_PROJECT)" --quiet >/dev/null
+	[[ -n "$(CLOUDSDK_CORE_ACCOUNT)" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CORE_ACCOUNT below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CORE_ACCOUNT=" CLOUDSDK_CORE_ACCOUNT; \
+		[[ -n "$${CLOUDSDK_CORE_ACCOUNT:-}" ]] || exit 1; \
+		$(GCLOUD) config set account "$${CLOUDSDK_CORE_ACCOUNT}" --quiet >/dev/null; \
+	}
+
+.PHONY: gcp/auth
+gcp/auth: ## Authenticate with GCP.
+	$(GCLOUD) auth application-default login --no-launch-browser
+
+
+.PHONY: gcp/auth/%
+gcp/auth/%: ## Authenticate with GCP as a service account.
+	$(GCLOUD) auth application-default login --no-launch-browser --impersonate-service-account=$*
+
+
+.PHONY: gcp/auth/quota
+gcp/auth/quota: ## Set quota project for Application Default Credentials.
+	$(GCLOUD) auth application-default set-quota-project $(GOOGLE_CLOUD_PROJECT_ID)
+
+
+.PHONY: gcp/config
+gcp/config: ## Show current GCP configuration.
+	$(GCLOUD) config list
+
+
+.PHONY: gcp/config/get/%
+gcp/config/get/%: ## Get a GCP configuration value.
+	$(GCLOUD) config get-value $*
+
+
+.PHONY: gcp/config/new
+gcp/config/new: ## Create a new GCP configuration.
+	[[ -n "$${CLOUDSDK_CONFIG_NAME}" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CONFIG_NAME below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CONFIG_NAME=" CLOUDSDK_CONFIG_NAME; \
+		[[ -n "$${CLOUDSDK_CONFIG_NAME:-}" ]] || exit 1; \
+	}; \
+	[[ -n "$${CLOUDSDK_CORE_ACCOUNT}" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CORE_ACCOUNT below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CORE_ACCOUNT=" CLOUDSDK_CORE_ACCOUNT; \
+		[[ -n "$${CLOUDSDK_CORE_ACCOUNT:-}" ]] || exit 1; \
+	}; \
+	[[ -n "$${CLOUDSDK_CORE_PROJECT}" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CORE_PROJECT below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CORE_PROJECT=" CLOUDSDK_CORE_PROJECT; \
+		[[ -n "$${CLOUDSDK_CORE_PROJECT:-}" ]] || exit 1; \
+	}; \
+	[[ -n "$${CLOUDSDK_QUOTA_PROJECT}" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_QUOTA_PROJECT below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_QUOTA_PROJECT=" CLOUDSDK_QUOTA_PROJECT; \
+		[[ -n "$${CLOUDSDK_QUOTA_PROJECT:-}" ]] || exit 1; \
+	}; \
+	$(GCLOUD) config configurations create $${CLOUDSDK_CONFIG_NAME} \
+		--no-activate \
+		--account $${CLOUDSDK_CORE_ACCOUNT} \
+		--project $${CLOUDSDK_CORE_PROJECT} \
+		--billing-project $${CLOUDSDK_QUOTA_PROJECT}; \
+	$(ECHO_INFO) "Authenticate via 'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/auth'."; \
+	$(ECHO_INFO) "Activate via     'CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME} make gcp/config/activate'."; \
+
+
+.PHONY: gcp/config/activate
+gcp/config/activate: gcp/configs
+gcp/config/activate: ## Activate a GCP configuration.
+	[[ -n "$${CLOUDSDK_CONFIG_NAME}" ]] || { \
+		$(ECHO_Q) "Please enter CLOUDSDK_CONFIG_NAME below. Press Ctrl+C to Cancel."; \
+		read -s -r -p "CLOUDSDK_CONFIG_NAME=" CLOUDSDK_CONFIG_NAME; \
+		[[ -n "$${CLOUDSDK_CONFIG_NAME:-}" ]] || exit 1; \
+	}; \
+	$(ECHO_INFO) Activate in the current shell: export CLOUDSDK_CONFIG_NAME=$${CLOUDSDK_CONFIG_NAME}; \
+	$(ECHO_INFO) Activate everywhere:           $(GCLOUD) config configurations activate $${CLOUDSDK_CONFIG_NAME}
+
+
+.PHONY: gcp/configs
+gcp/configs: ## List all GCP configurations.
+	$(GCLOUD) config configurations list
+
+
+.PHONY: gcp/project
+gcp/project: gcp/config/get/project
+gcp/project: ## Show current GCP project info.
+	$(GCLOUD) projects describe --format=json $(GOOGLE_CLOUD_PROJECT_ID)
+
+
+.PHONY: gcp/services
+gcp/services: gcp/config/get/project
+gcp/services: ## List enabled GCP APIs/services.
+	$(GCLOUD) services list --format=json --enabled --project $(GOOGLE_CLOUD_PROJECT_ID)
+
+
+.PHONY: gcp/services/all
+gcp/services/all: gcp/config/get/project
+gcp/services/all: ## List all available GCP APIs/services.
+	$(GCLOUD) services list --format=json --available --project $(GOOGLE_CLOUD_PROJECT_ID)
+# END # extra/misc.gcp.inc.mk
 
 # BEGIN # extra/misc.password.inc.mk
 PASSWORD_PREFIX = sane
@@ -1253,6 +1390,11 @@ CAT_BREWFILE = \
 		| $(SED) "s/^$(hash) source \\(.\\+\\)$$/cat \1/e"
 
 # ------------------------------------------------------------------------------
+
+.PHONY: debug/brewfile/cat
+debug/brewfile/cat:
+	$(CAT_BREWFILE)
+
 
 .PHONY: system/brewfile
 system/brewfile:
@@ -1660,6 +1802,15 @@ check/actionlint:
 		}; \
 		$(ACTIONLINT) $(ACTIONLINT_FLAGS) $${ACTIONLINT_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/actionlint/%
+check/actionlint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .github/actionlint.yaml ]] || $(MAKE_DASH_F) .github/actionlint.yaml; \
+		[[ -e .shellcheckrc ]] || $(MAKE_DASH_F) .shellcheckrc; \
+	}; \
+	$(ACTIONLINT) $(ACTIONLINT_FLAGS) $*
 # END # extra/check.actionlint.inc.mk
 
 # BEGIN # extra/check.editorconfig-checker.inc.mk
@@ -1705,6 +1856,13 @@ check/editorconfig-checker:
 			$${EDITORCONFIG_CHECKER_FILES_TMP[@]} 2>&1 \
 				| { $(GREP) -v -e "^0 errors found" || true; }; \
 	}
+
+
+.PHONY: check/editorconfig-checker/%
+check/editorconfig-checker/%:
+	$(EDITORCONFIG_CHECKER) -exclude "$(EDITORCONFIG_CHECKER_EXCLUDE)" $(EDITORCONFIG_CHECKER_FLAGS) \
+		$* 2>&1 \
+		| { $(GREP) -v -e "^0 errors found" || true; }
 # END # extra/check.editorconfig-checker.inc.mk
 
 # BEGIN # extra/check.jscpd.inc.mk
@@ -1750,6 +1908,11 @@ check/jscpd:
 	[[ "$${#JSCPD_FILES_TMP[@]}" = "0" ]] || { \
 		$(JSCPD) $(JSCPD_FLAGS) $${JSCPD_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/jscpd/%
+check/jscpd/%:
+	$(JSCPD) $(JSCPD_FLAGS) $*
 # END # extra/check.jscpd.inc.mk
 
 # BEGIN # extra/check.markdownlint.inc.mk
@@ -1808,12 +1971,28 @@ check/markdownlint:
 				|| [[ -e .markdownlint.yaml ]] \
 				|| [[ -e .markdownlint.yml ]] \
 				|| [[ -e .markdownlintrc ]] \
-				|| $(MAKE_DASH_F) .markdownlintrc; \
+				|| $(MAKE_DASH_F) .markdownlint.jsonc; \
 		}; \
 		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $${MARKDOWNLINT_FILES_TMP[@]} || { \
 			$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $${MARKDOWNLINT_FILES_TMP[@]}; \
 			exit 1; \
 		}; \
+	}
+
+
+.PHONY: check/markdownlint/%
+check/markdownlint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .markdownlint.json ]] \
+			|| [[ -e .markdownlint.jsonc ]] \
+			|| [[ -e .markdownlint.yaml ]] \
+			|| [[ -e .markdownlint.yml ]] \
+			|| [[ -e .markdownlintrc ]] \
+			|| $(MAKE_DASH_F) .markdownlint.jsonc; \
+	}; \
+	$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $* || { \
+		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $*; \
+		exit 1; \
 	}
 # END # extra/check.markdownlint.inc.mk
 
@@ -1877,6 +2056,20 @@ check/ruff:
 			exit 1; \
 		}; \
 	}
+
+
+.PHONY: check/ruff/%
+check/ruff/%:
+	$(RUFF) check --diff $(RUFF_FLAGS) $* || { \
+		[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+			$(RUFF) check $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $* || true; \
+		$(RUFF) check --fix-only $(RUFF_FLAGS) $* 2>/dev/null; \
+		exit 1; \
+	}; \
+	$(RUFF) format --diff $(RUFF_FLAGS) $* || { \
+		$(RUFF) format $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $* 2>/dev/null; \
+		exit 1; \
+	}
 # END # extra/check.ruff.inc.mk
 
 # BEGIN # extra/check.shellcheck.inc.mk
@@ -1933,6 +2126,16 @@ check/shellcheck:
 		}; \
 		$(SHELLCHECK) $(SHELLCHECK_FLAGS) $${SHELLCHECK_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/shellcheck/%
+check/shellcheck/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .shellcheckrc ]] \
+			|| [[ -e shellcheckrc ]] \
+			|| $(MAKE_DASH_F) .shellcheckrc; \
+	}; \
+	$(SHELLCHECK) $(SHELLCHECK_FLAGS) $*
 # END # extra/check.shellcheck.inc.mk
 
 # BEGIN # extra/check.shfmt.inc.mk
@@ -1980,6 +2183,14 @@ check/shfmt:
 			exit 1; \
 		}; \
 	}
+
+
+.PHONY: check/shfmt/%
+check/shfmt/%:
+	$(SHFMT) --diff $(SHFMT_FLAGS) $* || { \
+		$(SHFMT) --write $(SHFMT_FLAGS) $*; \
+		exit 1; \
+	}
 # END # extra/check.shfmt.inc.mk
 
 # BEGIN # extra/check.trufflehog.inc.mk
@@ -2024,6 +2235,16 @@ check/trufflehog:
 		--exclude-globs "$(TRUFFLEHOG_EXCLUDE_GLOBS_CSV)" \
 		$(TRUFFLEHOG_FLAGS) \
 		file://$(GIT_ROOT)
+
+
+.PHONY: check/trufflehog/%
+check/trufflehog/%:
+	$(TRUFFLEHOG) filesystem \
+		--fail \
+		--no-update \
+		--no-verification \
+		$(TRUFFLEHOG_FLAGS) \
+		$*
 # END # extra/check.trufflehog.inc.mk
 
 # BEGIN # extra/check.pyrefly.inc.mk
@@ -2073,6 +2294,15 @@ ifneq (,$(wildcard pyproject.toml))
 	[[ "$${#PYREFLY_FILES_TMP[@]}" = "0" ]] || { \
 		$(PYREFLY) check $(PYREFLY_FLAGS) $${PYREFLY_FILES_TMP[@]} || exit 1; \
 	}
+else
+	:
+endif
+
+
+.PHONY: check/pyrefly/%
+check/pyrefly/%:
+ifneq (,$(wildcard pyproject.toml))
+	$(PYREFLY) check $(PYREFLY_FLAGS) $* || exit 1
 else
 	:
 endif
@@ -2135,6 +2365,19 @@ ifneq (,$(wildcard pyproject.toml))
 else
 	:
 endif
+
+
+.PHONY: check/ty/%
+check/ty/%:
+ifneq (,$(wildcard pyproject.toml))
+	$(TY) check $(TY_FLAGS) $* || { \
+		[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+			$(TY) check --output-format github $(TY_FLAGS) $* || true; \
+		exit 1; \
+	}
+else
+	:
+endif
 # END # extra/check.ty.inc.mk
 
 # BEGIN # extra/check.yamllint.inc.mk
@@ -2193,6 +2436,17 @@ check/yamllint:
 		[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
 		$(YAMLLINT) $(YAMLLINT_FLAGS) $${YAMLLINT_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/yamllint/%
+check/yamllint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] \
+		|| [[ -e .yamllint ]] \
+		|| [[ -e .yamllint.yaml ]] \
+		|| [[ -e .yamllint.yml ]] \
+		|| $(MAKE_DASH_F) .yamllint; \
+	[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
+	$(YAMLLINT) $(YAMLLINT_FLAGS) $*
 # END # extra/check.yamllint.inc.mk
 
 # BEGIN # extra/test.bats.inc.mk
