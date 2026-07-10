@@ -13,5 +13,5 @@ jobs:
     steps:
       - uses: Homebrew/actions/setup-homebrew@main
       - uses: actions/checkout@v6
-      - run: make system
-      - run: make ci
+      - run: V=1 make system
+      - run: V=1 make ci
