@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/homebrew/ubuntu24.04:latest
-      options: --user linuxbrew
     steps:
       - uses: Homebrew/actions/setup-homebrew@main
       - uses: actions/checkout@v6
