@@ -40,3 +40,10 @@ check/editorconfig-checker:
 			$${EDITORCONFIG_CHECKER_FILES_TMP[@]} 2>&1 \
 				| { $(GREP) -v -e "^0 errors found" || true; }; \
 	}
+
+
+.PHONY: check/editorconfig-checker/%
+check/editorconfig-checker/%:
+	$(EDITORCONFIG_CHECKER) -exclude "$(EDITORCONFIG_CHECKER_EXCLUDE)" $(EDITORCONFIG_CHECKER_FLAGS) \
+		$* 2>&1 \
+		| { $(GREP) -v -e "^0 errors found" || true; }

@@ -57,3 +57,17 @@ check/ruff:
 			exit 1; \
 		}; \
 	}
+
+
+.PHONY: check/ruff/%
+check/ruff/%:
+	$(RUFF) check --diff $(RUFF_FLAGS) $* || { \
+		[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+			$(RUFF) check $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $* || true; \
+		$(RUFF) check --fix-only $(RUFF_FLAGS) $* 2>/dev/null; \
+		exit 1; \
+	}; \
+	$(RUFF) format --diff $(RUFF_FLAGS) $* || { \
+		$(RUFF) format $(RUFF_FLAGS_WITH_OUTPUT_FORMAT) $* 2>/dev/null; \
+		exit 1; \
+	}

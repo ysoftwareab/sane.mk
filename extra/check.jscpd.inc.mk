@@ -40,3 +40,8 @@ check/jscpd:
 	[[ "$${#JSCPD_FILES_TMP[@]}" = "0" ]] || { \
 		$(JSCPD) $(JSCPD_FLAGS) $${JSCPD_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/jscpd/%
+check/jscpd/%:
+	$(JSCPD) $(JSCPD_FLAGS) $*

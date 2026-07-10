@@ -60,3 +60,19 @@ check/markdownlint:
 			exit 1; \
 		}; \
 	}
+
+
+.PHONY: check/markdownlint/%
+check/markdownlint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .markdownlint.json ]] \
+			|| [[ -e .markdownlint.jsonc ]] \
+			|| [[ -e .markdownlint.yaml ]] \
+			|| [[ -e .markdownlint.yml ]] \
+			|| [[ -e .markdownlintrc ]] \
+			|| $(MAKE_DASH_F) .markdownlint.jsonc; \
+	}; \
+	$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) $* || { \
+		$(MARKDOWNLINT) $(MARKDOWNLINT_FLAGS_IGNORE) $(MARKDOWNLINT_FLAGS) --fix $*; \
+		exit 1; \
+	}

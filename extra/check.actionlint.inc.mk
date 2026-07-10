@@ -39,3 +39,12 @@ check/actionlint:
 		}; \
 		$(ACTIONLINT) $(ACTIONLINT_FLAGS) $${ACTIONLINT_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/actionlint/%
+check/actionlint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .github/actionlint.yaml ]] || $(MAKE_DASH_F) .github/actionlint.yaml; \
+		[[ -e .shellcheckrc ]] || $(MAKE_DASH_F) .shellcheckrc; \
+	}; \
+	$(ACTIONLINT) $(ACTIONLINT_FLAGS) $*

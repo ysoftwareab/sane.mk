@@ -35,3 +35,8 @@ debug/trivy:
 .PHONY: check/trivy
 check/trivy:
 	$(TRIVY) repo $(TRIVY_FLAGS) --quiet .
+
+
+.PHONY: check/trivy/%
+check/trivy/%:
+	$(TRIVY) fs $(TRIVY_FLAGS) --quiet $*

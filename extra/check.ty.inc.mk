@@ -54,3 +54,16 @@ ifneq (,$(wildcard pyproject.toml))
 else
 	:
 endif
+
+
+.PHONY: check/ty/%
+check/ty/%:
+ifneq (,$(wildcard pyproject.toml))
+	$(TY) check $(TY_FLAGS) $* || { \
+		[[ -z "$${GITHUB_ACTIONS:-}" ]] || \
+			$(TY) check --output-format github $(TY_FLAGS) $* || true; \
+		exit 1; \
+	}
+else
+	:
+endif

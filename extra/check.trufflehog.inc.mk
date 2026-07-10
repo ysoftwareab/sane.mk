@@ -39,3 +39,13 @@ check/trufflehog:
 		--exclude-globs "$(TRUFFLEHOG_EXCLUDE_GLOBS_CSV)" \
 		$(TRUFFLEHOG_FLAGS) \
 		file://$(GIT_ROOT)
+
+
+.PHONY: check/trufflehog/%
+check/trufflehog/%:
+	$(TRUFFLEHOG) filesystem \
+		--fail \
+		--no-update \
+		--no-verification \
+		$(TRUFFLEHOG_FLAGS) \
+		$*

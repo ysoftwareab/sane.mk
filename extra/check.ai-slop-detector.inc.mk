@@ -52,3 +52,12 @@ check/ai-slop-detector:
 	[[ "$${#AI_SLOP_DETECTOR_FILES_TMP[@]}" = "0" ]] || { \
 		$(AI_SLOP_DETECTOR) $(AI_SLOP_DETECTOR_FLAGS) --project .; \
 	}
+
+
+.PHONY: check/ai-slop-detector/%
+check/ai-slop-detector/%:
+	AI_SLOP_DETECTOR_FLAGS_EXTRA=; \
+	case "$*" in \
+		*.js|*.jsx|*.ts|*.tsx) AI_SLOP_DETECTOR_FLAGS_EXTRA=--js ;; \
+	esac; \
+	$(AI_SLOP_DETECTOR) $(AI_SLOP_DETECTOR_FLAGS) $${AI_SLOP_DETECTOR_FLAGS_EXTRA} $*

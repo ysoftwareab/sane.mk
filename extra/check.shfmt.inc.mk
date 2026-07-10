@@ -42,3 +42,11 @@ check/shfmt:
 			exit 1; \
 		}; \
 	}
+
+
+.PHONY: check/shfmt/%
+check/shfmt/%:
+	$(SHFMT) --diff $(SHFMT_FLAGS) $* || { \
+		$(SHFMT) --write $(SHFMT_FLAGS) $*; \
+		exit 1; \
+	}

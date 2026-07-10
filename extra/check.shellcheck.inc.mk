@@ -51,3 +51,13 @@ check/shellcheck:
 		}; \
 		$(SHELLCHECK) $(SHELLCHECK_FLAGS) $${SHELLCHECK_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/shellcheck/%
+check/shellcheck/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] || { \
+		[[ -e .shellcheckrc ]] \
+			|| [[ -e shellcheckrc ]] \
+			|| $(MAKE_DASH_F) .shellcheckrc; \
+	}; \
+	$(SHELLCHECK) $(SHELLCHECK_FLAGS) $*

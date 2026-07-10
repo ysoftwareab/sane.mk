@@ -53,3 +53,14 @@ check/yamllint:
 		[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
 		$(YAMLLINT) $(YAMLLINT_FLAGS) $${YAMLLINT_FILES_TMP[@]}; \
 	}
+
+
+.PHONY: check/yamllint/%
+check/yamllint/%:
+	[[ "$(MAKE_PATH)" != "$(GIT_ROOT)" ]] \
+		|| [[ -e .yamllint ]] \
+		|| [[ -e .yamllint.yaml ]] \
+		|| [[ -e .yamllint.yml ]] \
+		|| $(MAKE_DASH_F) .yamllint; \
+	[[ -e .gitignore ]] || $(TOUCH) .gitignore; \
+	$(YAMLLINT) $(YAMLLINT_FLAGS) $*

@@ -47,3 +47,12 @@ ifneq (,$(wildcard pyproject.toml))
 else
 	:
 endif
+
+
+.PHONY: check/pyrefly/%
+check/pyrefly/%:
+ifneq (,$(wildcard pyproject.toml))
+	$(PYREFLY) check $(PYREFLY_FLAGS) $* || exit 1
+else
+	:
+endif
