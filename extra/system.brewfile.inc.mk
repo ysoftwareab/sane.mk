@@ -84,6 +84,11 @@ CAT_BREWFILE = \
 
 # ------------------------------------------------------------------------------
 
+.PHONY: debug/brewfile/cat
+debug/brewfile/cat:
+	$(CAT_BREWFILE)
+
+
 .PHONY: system/brewfile
 system/brewfile:
 ifneq (,$(wildcard $(BREWFILE)))

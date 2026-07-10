@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 
 brew "actionlint" # Static checker for GitHub Actions workflow files
+brew "bats-core" # Bash Automated Testing System
 brew "editorconfig-checker" # Tool to verify that your files are in harmony with your .editorconfig
 brew "jscpd" # Copy/paste detector for programming source code
 brew "markdownlint-cli" # CLI for Node.js style checker and lint tool for Markdown files
