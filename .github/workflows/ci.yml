@@ -11,6 +11,7 @@ jobs:
       image: ghcr.io/homebrew/ubuntu24.04:latest
     steps:
       - uses: Homebrew/actions/setup-homebrew@main
+      - run: brew install node
       - uses: actions/checkout@v6
       - run: V=1 make system
       - run: V=1 make ci
