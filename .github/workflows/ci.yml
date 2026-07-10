@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/homebrew/ubuntu24.04:latest
+      options: --user linuxbrew
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: system
+        run: make system
+
+      - name: ci
+        run: make ci
