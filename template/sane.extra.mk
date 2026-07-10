@@ -33,6 +33,8 @@ include $(SANE_MK_ROOT)/target.verbose.inc.mk
 
 # BEGIN # extra
 
+include $(SANE_MK_ROOT)/extra/misc.backlog.inc.mk
+include $(SANE_MK_ROOT)/extra/misc.gcp.inc.mk
 include $(SANE_MK_ROOT)/extra/misc.password.inc.mk
 include $(SANE_MK_ROOT)/extra/misc.python.inc.mk
 include $(SANE_MK_ROOT)/extra/misc.transcrypt.inc.mk
@@ -84,7 +86,6 @@ SANE_CHECK_LINTERS_CORE += \
 SANE_CHECK_LINTERS_PYTHON += \
 	check/ruff \
 	check/ty \
-	check/pyrefly \
 
 SANE_CHECK_LINTERS_SHELL += \
 	check/shellcheck \
