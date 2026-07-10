@@ -11,8 +11,7 @@ jobs:
       image: ghcr.io/homebrew/ubuntu24.04:latest
       options: --user linuxbrew
     steps:
+      - uses: Homebrew/actions/setup-homebrew@main
       - uses: actions/checkout@v4
-
       - run: make system
-
       - run: make ci
