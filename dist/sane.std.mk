@@ -1,7 +1,7 @@
 ifndef SANE_MK_INCLUDED
 
 ifndef SANE_MK_ROOT
-SANE_MK_ROOT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+SANE_MK_ROOT := $(shell dirname $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST)))))
 endif
 
 # BEGIN # includes
