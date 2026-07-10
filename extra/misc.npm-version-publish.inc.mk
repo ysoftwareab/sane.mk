@@ -1,7 +1,7 @@
 .PHONY: npm-preversion-publish
 npm-preversion-publish:
-	[[ "$$($(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null)" = "master" ]] || { \
-		$(ECHO_ERR) "You can only publish from the master branch."; \
+	[[ "$$($(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null)" = "$(GIT_BRANCH_DEFAULT)" ]] || { \
+		$(ECHO_ERR) "You can only publish from the default branch ($(GIT_BRANCH_DEFAULT))."; \
 		exit 1; \
 	}
 	$(GIT) diff-files --quiet
@@ -19,7 +19,7 @@ npm-postversion-publish: dist
 		$(GIT) commit --allow-empty -m $${VSN}-dist; \
 		$(GIT) tag v$${VSN}-dist; \
 		$(GIT) push --no-verify -f origin \
-			master:master \
+			$(GIT_BRANCH_DEFAULT):$(GIT_BRANCH_DEFAULT) \
 			dist:dist \
 			v$${VSN}:refs/tags/v$${VSN} \
 			v$${VSN}-dist:refs/tags/v$${VSN}-dist
