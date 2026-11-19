@@ -1,0 +1,29 @@
+Makefile
+  s_9bd9075357099d::t_9dea993ea78788 52-55
+NOTICE
+  s_9bd9075357099d::t_6d7d27dfdec7de 1-5
+dist/sane.extra.mk
+  s_9bd9075357099d::t_571b34e30c340f 1-6
+dist/sane.mk
+  s_9bd9075357099d::t_1bc855338547fd 1-6
+dist/sane.std.mk
+  s_9bd9075357099d::t_4131830962ab61 1-6
+dist/sane.tf.mk
+  s_9bd9075357099d::t_1c2818e26e4256 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58cd8ab083d13f3ab7fbfc2c985728d6f1ef18bf",
+  "prompts": {},
+  "sessions": {
+    "s_9bd9075357099d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a22ef6f3-1d83-4959-bddf-dc4465a9b9bb",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Andrei Neculau <andrei.neculau@gmail.com>"
+    }
+  }
+}
