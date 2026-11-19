@@ -1,0 +1,14 @@
+.devcontainer/devcontainer.json
+  h_aad1b8d8fc64af 74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "10554674a17a34d5a446620da4ec41575de107a1",
+  "prompts": {},
+  "humans": {
+    "h_aad1b8d8fc64af": {
+      "author": "Andrei Neculau <andrei.neculau@gmail.com>"
+    }
+  }
+}
