@@ -49,3 +49,7 @@ dist/mk:
 	$(CP) template/sane.tf.mk dist/sane.tf.mk
 	./template/sane.std.mk.tpl > dist/sane.std.mk
 	./template/sane.extra.mk.tpl > dist/sane.extra.mk
+	for FILE in dist/sane.mk dist/sane.tf.mk dist/sane.std.mk dist/sane.extra.mk; do \
+		{ $(SED) 's/^/# /; s/ *$$//' NOTICE; echo; cat "$${FILE}"; } > "$${FILE}.tmp"; \
+		$(MV) "$${FILE}.tmp" "$${FILE}"; \
+	done

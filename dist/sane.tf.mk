@@ -1,3 +1,9 @@
+# sane.mk
+# Copyright (c) Andrei Neculau
+# https://github.com/ysoftwareab/sane.mk
+#
+# Licensed under the MIT License. See LICENSE.
+
 MAKE_SELF_PATH := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 SANE_MK_ROOT ?=
 ifneq (,$(MAKE_SELF_PATH)/../template/sane.extra.mk)

@@ -1,3 +1,9 @@
+# sane.mk
+# Copyright (c) Andrei Neculau
+# https://github.com/ysoftwareab/sane.mk
+#
+# Licensed under the MIT License. See LICENSE.
+
 ifndef SANE_MK_INCLUDED
 
 ifndef SANE_MK_ROOT
